@@ -105,10 +105,10 @@ jobs:
     release: etcd
 
 properties:
-  support_address: "email@example.com"
+  support_address: email@example.com
   system_domain: placeholder.system-domain
   system_domain_organization: placeholder-system-domain-org
-  app_domains: ["placeholder.system-domain"]
+  app_domains: [placeholder.system-domain]
 
   # For Diego:
   diego:
@@ -122,9 +122,10 @@ properties:
         client_key: ""
         require_ssl: false
       cc:
-        base_url: "http://cloud-controller-ng.service.cf.internal:9022"
-        basic_auth_password: "internal-api-password"
+        base_url: http://cloud-controller-ng.service.cf.internal:9022
+        basic_auth_password: internal-api-password
     stager:
+      stager_url: http://stager.service.cf.internal:8890
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -132,7 +133,7 @@ properties:
         client_key: ""
         require_ssl: false
       cc:
-        basic_auth_password: "internal-api-password"
+        basic_auth_password: internal-api-password
     tps:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -141,7 +142,7 @@ properties:
         client_key: ""
         require_ssl: false
       cc:
-        basic_auth_password: "internal-api-password"
+        basic_auth_password: internal-api-password
       watcher:
         debug_addr: 0.0.0.0:17020
       listener:
@@ -456,7 +457,7 @@ properties:
         override: true
       users:
       - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
-    issuer: "http://localhost/"
+    issuer: http://localhost/
     no_ssl: true
     jwt:
       verification_key: ""
@@ -474,15 +475,15 @@ properties:
     - name: doppler
       port: 8081
       uris:
-      - "doppler.placeholder.system-domain"
+      - doppler.placeholder.system-domain
     - name: loggregator
       port: 8084
       uris:
-      - "loggregator.placeholder.system-domain"
+      - loggregator.placeholder.system-domain
     - name: api
       port: 9022
       uris:
-      - "api.placeholder.system-domain"
+      - api.placeholder.system-domain
     - name: uaa
       port: 8085
       uris:
@@ -507,15 +508,17 @@ properties:
     - {name: uaaadmin, password: admin, tag: admin}
     - {name: ccadmin, password: admin, tag: admin}
   cc:
-    srv_api_uri: ""
+    diego:
+      stager_url: http://stager.service.cf.internal:8890
+    srv_api_uri: http://api.placeholder.system-domain
     info:
-      name: "lattice-cc"
+      name: lattice-cc
       build: ""
       version: ""
       description: ""
     bulk_api_password: bulk-api-password
     internal_api_password: internal-api-password
-    db_encryption_key: "db-encryption-key"
+    db_encryption_key: db-encryption-key
     quota_definitions:
       default:
           memory_limit: 102400
@@ -534,8 +537,8 @@ properties:
       rules:
       - {destination: 0.0.0.0/0, ports: '53', protocol: tcp}
       - {destination: 0.0.0.0/0, ports: '53', protocol: udp}
-    staging_upload_user: "staging-user"
-    staging_upload_password: "staging-pass"
+    staging_upload_user: staging-user
+    staging_upload_password: staging-pass
     default_running_security_groups: [public_networks, dns]
     default_staging_security_groups: [public_networks, dns]
     external_protocol: http
