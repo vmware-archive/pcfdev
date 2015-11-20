@@ -359,7 +359,6 @@ properties:
       gorouter_secret: router-secret
       routing_api_auth_disabled: true
     tcp_emitter:
-      diego_api_url: http://placeholder-username:placeholder-password@receptor.service.cf.internal:8888
       gorouter_secret: router-secret
       debug_addr: 0.0.0.0:17019
       routing_api_auth_disabled: true
@@ -413,6 +412,7 @@ properties:
         nsync: {}
         stager: {}
         tps: {}
+        cloud_controller_ng: {}
       servers:
         lan: [placeholder-ip]
     require_ssl: false
