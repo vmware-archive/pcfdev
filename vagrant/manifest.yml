@@ -107,7 +107,7 @@ jobs:
 properties:
   support_address: email@example.com
   system_domain: placeholder.system-domain
-  system_domain_organization: placeholder-system-domain-org
+  system_domain_organization: placeholder.system-domain-org
   app_domains: [placeholder.system-domain]
 
   # For Diego:
@@ -508,6 +508,7 @@ properties:
     - {name: uaaadmin, password: admin, tag: admin}
     - {name: ccadmin, password: admin, tag: admin}
   cc:
+    default_to_diego_backend: true
     diego:
       stager_url: http://stager.service.cf.internal:8890
     srv_api_uri: http://api.placeholder.system-domain
