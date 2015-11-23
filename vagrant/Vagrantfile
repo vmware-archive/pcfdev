@@ -174,19 +174,19 @@ def download_lattice_tgz(url)
   end
 end
 
-def get_lattice_tgz_version(filename)
-    Zlib::GzipReader.open(filename) do |gz|
-      tr = Gem::Package::TarReader.new(gz)
-      tr.seek 'brain/var/lattice/versions/LATTICE_TGZ' do |entry|
-        return entry.read.chomp
-      end
+def extract_version(tgz_file, version_file)
+  Zlib::GzipReader.open(tgz_file) do |gz|
+    tr = Gem::Package::TarReader.new(gz)
+    tr.seek "brain/var/lattice/versions/#{version_file}" do |entry|
+      return entry.read.chomp
     end
-    return nil
+  end
+  return nil
 end
 
 if provision_required && File.exists?(lattice_tgz)
-  tgz_version = get_lattice_tgz_version(lattice_tgz)
   if lattice_tgz_url
+    tgz_version = extract_version(lattice_tgz, 'LATTICE_TGZ')
     url_version = lattice_tgz_url.match(/\/lattice-v([^\/]+)\.tgz$/)[1]
     if tgz_version != url_version
       puts "Warning: lattice.tgz file version (#{tgz_version}) does not match Vagrantfile version (#{url_version})."
@@ -194,6 +194,7 @@ if provision_required && File.exists?(lattice_tgz)
       download_lattice_tgz(lattice_tgz_url)
     end
   else
+    tgz_version = extract_version(lattice_tgz, 'LATTICE_RELEASE')
     repo_version = `git rev-parse HEAD`.chomp
     if tgz_version != repo_version && ENV['IGNORE_VERSION_MISMATCH'] != "true"
       puts <<-EOM.gsub(/^ +/, '')
