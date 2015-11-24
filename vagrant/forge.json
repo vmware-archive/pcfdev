@@ -8,7 +8,7 @@
             "region": "us-east-1",
             "source_ami": "ami-2dcf7b46",
             "instance_type": "m4.large",
-            "ami_name": "lattice-vagrant-{{isotime \"20060102-1504\"}}",
+            "ami_name": "forge-vagrant-{{isotime \"20060102-1504\"}}",
             "ami_groups": ["all"],
             "ami_regions": [
                 "ap-northeast-1", "ap-southeast-1", "ap-southeast-2", "sa-east-1",
@@ -20,7 +20,7 @@
         {
             "type": "vmware-iso",
             "headless": true,
-            "vm_name": "lattice-vagrant-{{isotime \"20060102-1504\"}}",
+            "vm_name": "forge-vagrant-{{isotime \"20060102-1504\"}}",
             "guest_os_type": "ubuntu-64",
             "disk_size": 25000,
             "ssh_username": "vagrant",
@@ -37,7 +37,7 @@
                 "/install/vmlinuz noapic ",
                 "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
                 "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-                "hostname=lattice ",
+                "hostname=forge ",
                 "fb=false debconf/frontend=noninteractive ",
                 "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
                 "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -50,7 +50,7 @@
         {
             "type": "virtualbox-iso",
             "headless": true,
-            "vm_name": "lattice-vagrant-{{isotime \"20060102-1504\"}}",
+            "vm_name": "forge-vagrant-{{isotime \"20060102-1504\"}}",
             "guest_os_type": "Ubuntu_64",
             "disk_size": 25000,
             "ssh_username": "vagrant",
@@ -66,7 +66,7 @@
                 "/install/vmlinuz noapic ",
                 "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
                 "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-                "hostname=lattice ",
+                "hostname=forge ",
                 "fb=false debconf/frontend=noninteractive ",
                 "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
                 "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -133,16 +133,16 @@
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
-                "mkdir -p /var/lattice",
-                "ip route get 1 | awk '{print $NF;exit}' > /var/lattice/ip",
-                "sed \"s/placeholder-ip/$(cat /var/lattice/ip)/\" /tmp/manifest.yml > /var/lattice/manifest.yml",
+                "mkdir -p /var/forge",
+                "ip route get 1 | awk '{print $NF;exit}' > /var/forge/ip",
+                "sed \"s/placeholder-ip/$(cat /var/forge/ip)/\" /tmp/manifest.yml > /var/forge/manifest.yml",
                 "mkdir -p /var/vcap/store"
             ]
         },
         {
             "type": "packer-bosh",
             "assets_dir": "assets",
-            "remote_manifest_path": "/var/lattice/manifest.yml"
+            "remote_manifest_path": "/var/forge/manifest.yml"
         },
         {
             "type": "shell",
@@ -153,7 +153,7 @@
             },
             "inline": [
                 "chmod 1777 /tmp",
-                "mv /opt/bosh-provisioner/assets/versions /var/lattice/",
+                "mv /opt/bosh-provisioner/assets/versions /var/forge/",
                 "rm -rf /opt/bosh-provisioner",
                 "rm -f /var/vcap/data/garden/garden_graph_backing_store",
                 "echo manual > /etc/init/runsvdir.override"
@@ -198,7 +198,7 @@
     "post-processors": [
         {
             "type": "vagrant",
-            "output": "lattice-{{.Provider}}-v{{user `version`}}.box"
+            "output": "forge-{{.Provider}}-v{{user `version`}}.box"
         }
     ]
 }

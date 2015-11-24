@@ -4,20 +4,20 @@ set -e
 
 if [[ ! -f $1 ]]; then
   echo "Usage:"
-  echo -e "\t$0 /path/to/lattice.tgz"
+  echo -e "\t$0 /path/to/forge.tgz"
   exit 1
 fi
 
-export $(cat /var/lattice/setup)
+export $(cat /var/forge/setup)
 
 /etc/init.d/lighttpd stop >/dev/null
 tar xzf "$1" --strip-components 1 --keep-directory-symlink --no-overwrite-dir --no-same-owner -C / -- brain
 
 # Configure proxy support
-mkdir -p /var/lattice/lighttpd
-if [[ -f /var/lattice/proxy ]]; then
-  export $(cat /var/lattice/proxy)
-  cat > /var/lattice/lighttpd/proxyconf.json <<JSON
+mkdir -p /var/forge/lighttpd
+if [[ -f /var/forge/proxy ]]; then
+  export $(cat /var/forge/proxy)
+  cat > /var/forge/lighttpd/proxyconf.json <<JSON
   {
       "http_proxy": $(echo $http_proxy | jq -R .),
       "https_proxy": $(echo $https_proxy | jq -R .),
@@ -27,10 +27,10 @@ JSON
 fi
 
 # Configure and secure lighttpd
-mkdir -p /var/lattice/lighttpd/blobs
-chown -R www-data:www-data /var/lattice/lighttpd
+mkdir -p /var/forge/lighttpd/blobs
+chown -R www-data:www-data /var/forge/lighttpd
 lighttpd_password=$(openssl passwd -crypt "$PASSWORD")
-echo $USERNAME:$lighttpd_password > /var/lattice/lighttpd.user
+echo $USERNAME:$lighttpd_password > /var/forge/lighttpd.user
 
 # Configure receptor
 new_ip=$(ip route get 1 | awk '{print $NF;exit}')

@@ -1,5 +1,5 @@
 ---
-name: lattice
+name: forge
 
 releases:
 - name: diego
@@ -11,9 +11,9 @@ releases:
 - name: cf-routing
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-routing-0.tgz
-- name: cf-lattice
+- name: cf-forge
   version: 0
-  url: file:///opt/bosh-provisioner/assets/releases/cf-lattice-0.tgz
+  url: file:///opt/bosh-provisioner/assets/releases/cf-forge-0.tgz
 - name: etcd
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/etcd-0.tgz
@@ -29,7 +29,7 @@ compilation:
   network: default
 
 jobs:
-- name: lattice-colocated
+- name: forge-colocated
   instances: 1
   persistent_disk: 1024
 
@@ -77,29 +77,29 @@ jobs:
     release: cf-routing
 
   - name: consul_agent
-    release: cf-lattice
+    release: cf-forge
   - name: doppler
-    release: cf-lattice
+    release: cf-forge
   - name: gorouter
-    release: cf-lattice
+    release: cf-forge
   - name: loggregator_trafficcontroller
-    release: cf-lattice
+    release: cf-forge
   - name: metron_agent
-    release: cf-lattice
+    release: cf-forge
   - name: nats
-    release: cf-lattice
+    release: cf-forge
   - name: uaa
-    release: cf-lattice
+    release: cf-forge
   - name: postgres
-    release: cf-lattice
+    release: cf-forge
   - name: cloud_controller_ng
-    release: cf-lattice
+    release: cf-forge
   - name: cloud_controller_worker
-    release: cf-lattice
+    release: cf-forge
   - name: cloud_controller_clock
-    release: cf-lattice
+    release: cf-forge
   - name: route_registrar
-    release: cf-lattice
+    release: cf-forge
 
   - name: etcd
     release: etcd
@@ -395,7 +395,7 @@ properties:
   metron_agent:
     shared_secret: loggregator-secret
     zone: z1
-    deployment: lattice
+    deployment: forge
   consul:
     agent:
       mode: server
@@ -524,7 +524,7 @@ properties:
         staging_task_callback_url: http://stager.service.cf.internal:8890
     srv_api_uri: http://api.placeholder.system-domain
     info:
-      name: lattice-cc
+      name: forge-cc
       build: ""
       version: ""
       description: ""

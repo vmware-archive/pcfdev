@@ -9,15 +9,15 @@ if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
 fi
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-lattice_release_dir=$(cd `dirname $0` && cd .. && pwd)
+forge_dir=$(cd `dirname $0` && cd .. && pwd)
 
 rm -rf $assets_dir/{releases,versions}
 mkdir $assets_dir/{releases,versions}
 
-git -C "$lattice_release_dir" rev-parse HEAD > $assets_dir/versions/LATTICE_RELEASE_IMAGE
+git -C "$forge_dir" rev-parse HEAD > $assets_dir/versions/FORGE_IMAGE
 
-for release in diego garden-linux cf-routing etcd cf-lattice; do
-  pushd $lattice_release_dir/$release-release >/dev/null
+for release in diego garden-linux cf-routing etcd cf-forge; do
+  pushd $forge_dir/$release-release >/dev/null
     yes yes | bosh -n reset release
     bosh -n create release --name $release --version 0 --with-tarball --force
     mv dev_releases/$release/$release-0.tgz $assets_dir/releases/
