@@ -2,19 +2,19 @@
 
 set -e
 
-export $(cat /var/lattice/setup)
+export $(cat /var/forge/setup)
 
 # Replace placeholder / BOSH generated configuration
 
 job_files=$(find /var/vcap/jobs/*/ -type f)
-old_ip=$(cat /var/lattice/ip)
+old_ip=$(cat /var/forge/ip)
 new_ip=$(ip route get 1 | awk '{print $NF;exit}')
 
 perl -p -i -e "s/\\Q$old_ip\\E/$new_ip/g" $job_files
 perl -p -i -e "s/placeholder\.system-domain/$DOMAIN/g" $job_files
 perl -p -i -e "s/placeholder-username/$USERNAME/g" $job_files
 perl -p -i -e "s/placeholder-password/$PASSWORD/g" $job_files
-perl -p -i -e "s/lattice-(cell|brain|colocated)-0/$HOST_ID/g" $job_files
+perl -p -i -e "s/forge-(cell|brain|colocated)-0/$HOST_ID/g" $job_files
 
 # Set hostname to provided host ID
 

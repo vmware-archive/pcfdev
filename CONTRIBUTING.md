@@ -4,7 +4,7 @@ Everyone is encouraged to help improve this project.
 
 Please submit pull requests against the **master branch**. 
 
-Our [Concourse](http://concourse.ci) CI system is available at [ci.lattice.cf](https://ci.lattice.cf).
+Our [Concourse](http://concourse.ci) CI system is available at [ci.forge.cf](https://ci.forge.cf).
 
 Here are some ways *you* can contribute:
 
@@ -15,17 +15,17 @@ Here are some ways *you* can contribute:
 * by writing specifications
 * by writing code (**no patch is too small**: fix typos, add comments, clean up inconsistent whitespace)
 * by refactoring code
-* by closing [issues](https://github.com/cloudfoundry-incubator/lattice/issues)
+* by closing [issues](https://github.com/cloudfoundry-incubator/forge/issues)
 * by reviewing patches
 
 Also see the [Development Readme](development/README.md)
 
 ## Submitting an Issue
-We use the [GitHub issue tracker](https://github.com/cloudfoundry-incubator/lattice/issues) to track bugs and features.
+We use the [GitHub issue tracker](https://github.com/cloudfoundry-incubator/forge/issues) to track bugs and features.
 Before submitting a bug report or feature request, check to make sure it hasn't already been submitted.
 You can indicate support for an existing issue by voting it up.
 When submitting a bug report, please include a [Gist](http://gist.github.com/) that includes a stack trace and any
-details that may be necessary to reproduce the bug including the Lattice version.
+details that may be necessary to reproduce the bug including the Forge version.
 
 ## Submitting a Pull Request
 
@@ -42,4 +42,4 @@ details that may be necessary to reproduce the bug including the Lattice version
 
 Stories not (yet) prioritized are kept in the Icebox. The Icebox is a grab-bag of feature requests, GitHub Issues, or partially-developed ideas. Stories in the Icebox may never be prioritized, and may not always be maintained in the same disciplined manner as the Backlog.
 
-Periodically, the Lattice team goes through both the Backlog and the Icebox, and tags stories using the 'community' label.   These are stories that are particularly well-suited to community contribution, and make excellent candidates for people to work on.
+Periodically, the Forge team goes through both the Backlog and the Icebox, and tags stories using the 'community' label.   These are stories that are particularly well-suited to community contribution, and make excellent candidates for people to work on.

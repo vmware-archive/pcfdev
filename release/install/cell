@@ -4,11 +4,11 @@ set -e
 
 if [[ ! -f $1 ]]; then
   echo "Usage:"
-  echo -e "\t$0 /path/to/lattice.tgz"
+  echo -e "\t$0 /path/to/forge.tgz"
   exit 1
 fi
 
-export $(cat /var/lattice/setup)
+export $(cat /var/forge/setup)
 
 tar xzf "$1" --strip-components 1 --keep-directory-symlink --no-overwrite-dir --no-same-owner -C / -- cell
 
