@@ -197,8 +197,9 @@ properties:
         client_key: ""
         require_ssl: false
       host_key: "$(openssl genrsa 2048 2> /dev/null)"
-      enable_diego_auth: true
-      diego_credentials: placeholder-username:placeholder-password
+      enable_cf_auth: true
+      uaa_token_url: "http://login.placeholder.system-domain/oauth/token"
+      uaa_secret: ssh-proxy-secret
     rep:
       zone: z1
       bbs:
@@ -447,6 +448,13 @@ properties:
         secret: cloud-controller-username-lookup-secret
       cc_routing:
         secret: cc-routing-secret
+      ssh-proxy:
+        authorized-grant-types: authorization_code
+        autoapprove: true
+        override: true
+        redirect-uri: "/login"
+        scope: openid,cloud_controller.read,cloud_controller.write
+        secret: ssh-proxy-secret
     admin:
       client_secret: admin-client-secret
     cc:
