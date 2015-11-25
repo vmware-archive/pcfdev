@@ -125,7 +125,8 @@ properties:
         base_url: http://cloud-controller-ng.service.cf.internal:9022
         basic_auth_password: internal-api-password
     stager:
-      stager_url: http://stager.service.cf.internal:8890
+      listen_addr: 0.0.0.0:8890
+      staging_task_callback_url: http://stager.service.cf.internal:8890
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -518,7 +519,9 @@ properties:
   cc:
     default_to_diego_backend: true
     diego:
-      stager_url: http://stager.service.cf.internal:8890
+      stager:
+        listen_adder: http://stager.service.cf.internal:8890
+        staging_task_callback_url: http://stager.service.cf.internal:8890
     srv_api_uri: http://api.placeholder.system-domain
     info:
       name: lattice-cc
