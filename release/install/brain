@@ -41,6 +41,8 @@ sed -i "s/replace-receptor-username/$USERNAME/g" "$receptor_ctl"
 sed -i "s/replace-receptor-password/$PASSWORD/g" "$receptor_ctl"
 ln -sf /var/vcap/jobs/receptor/monit /var/vcap/monit/job/0019_receptor.monitrc
 
+sed -i "s@#\!/bin/bash@#\!/bin/bash\n\nmkdir /tmp/cctmp||true\nchown 0:vcap /tmp/cctmp||true\nchmod 1777 /tmp/cctmp||true\nexport TMPDIR=/tmp/cctmp@" /var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
+
 # Configure loggregator
 sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
   /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl
