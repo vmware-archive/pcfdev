@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+CF_RELEASE_TAG=$1
+
+pushd cf-release
+  git checkout $CF_RELEASE_TAG
+  git submodule update --init --recursive
+  git clean -dffx
+  cf_release_sha=$(git rev-parse --short HEAD~1)
+popd
+
+curl -O https://raw.githubusercontent.com/cloudfoundry-incubator/diego-cf-compatibility/master/compatibility-v2.csv
+
+while IFS=',' read a b c cf_sha e diego g h garden etcd
+do
+  if [[ "$cf_sha" =~ "$cf_release_sha" ]]; then
+    diego_release_version=$diego
+    garden_linux_release_version=$garden
+    etcd_release_version=$etcd
+  fi
+done <compatibility-v2.csv
+
+pushd diego-release
+  git checkout v$diego_release_version
+  git submodule update --init --recursive
+  git clean -dffx
+popd
+
+pushd garden-linux-release
+  git checkout v$garden_linux_release_version
+  git submodule update --init --recursive
+  git clean -dffx
+popd
+
+pushd etcd-release
+  git checkout v$etcd_release_version
+  git submodule update --init --recursive
+  git clean -dffx
+popd
+
+rm compatibility-v2.csv
+
+exit 0
