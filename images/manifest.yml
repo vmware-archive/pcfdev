@@ -1,5 +1,5 @@
 ---
-name: forge
+name: micropcf
 
 releases:
 - name: diego
@@ -11,9 +11,9 @@ releases:
 - name: cf-routing
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-routing-0.tgz
-- name: cf-forge
+- name: cf-micropcf
   version: 0
-  url: file:///opt/bosh-provisioner/assets/releases/cf-forge-0.tgz
+  url: file:///opt/bosh-provisioner/assets/releases/cf-micropcf-0.tgz
 - name: etcd
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/etcd-0.tgz
@@ -29,7 +29,7 @@ compilation:
   network: default
 
 jobs:
-- name: forge-colocated
+- name: micropcf-colocated
   instances: 1
   persistent_disk: 1024
 
@@ -77,29 +77,29 @@ jobs:
     release: cf-routing
 
   - name: consul_agent
-    release: cf-forge
+    release: cf-micropcf
   - name: doppler
-    release: cf-forge
+    release: cf-micropcf
   - name: gorouter
-    release: cf-forge
+    release: cf-micropcf
   - name: loggregator_trafficcontroller
-    release: cf-forge
+    release: cf-micropcf
   - name: metron_agent
-    release: cf-forge
+    release: cf-micropcf
   - name: nats
-    release: cf-forge
+    release: cf-micropcf
   - name: uaa
-    release: cf-forge
+    release: cf-micropcf
   - name: postgres
-    release: cf-forge
+    release: cf-micropcf
   - name: cloud_controller_ng
-    release: cf-forge
+    release: cf-micropcf
   - name: cloud_controller_worker
-    release: cf-forge
+    release: cf-micropcf
   - name: cloud_controller_clock
-    release: cf-forge
+    release: cf-micropcf
   - name: route_registrar
-    release: cf-forge
+    release: cf-micropcf
 
   - name: etcd
     release: etcd
@@ -395,7 +395,7 @@ properties:
   metron_agent:
     shared_secret: loggregator-secret
     zone: z1
-    deployment: forge
+    deployment: micropcf
   consul:
     agent:
       mode: server
@@ -524,7 +524,7 @@ properties:
         staging_task_callback_url: http://stager.service.cf.internal:8890
     srv_api_uri: http://api.placeholder.system-domain
     info:
-      name: forge-cc
+      name: micropcf-cc
       build: ""
       version: ""
       description: ""

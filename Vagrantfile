@@ -2,11 +2,11 @@ HTTP_PROXY = ENV["http_proxy"] || ENV["HTTP_PROXY"] unless defined? HTTP_PROXY
 HTTPS_PROXY = ENV["https_proxy"] || ENV["HTTPS_PROXY"] unless defined? HTTPS_PROXY
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "forge/colocated"
+  config.vm.box = "micropcf/colocated"
   config.vm.box_version = "0"
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
-  config.vm.provision "file", source: "forge.tgz", destination: "/tmp/forge.tgz"
+  config.vm.provision "file", source: "micropcf.tgz", destination: "/tmp/micropcf.tgz"
 
   provider_is_aws = (!ARGV.nil? && ARGV.join(' ').match(/provider(=|\s+)aws/))
 
@@ -15,12 +15,12 @@ Vagrant.configure("2") do |config|
     config.proxy.https = HTTPS_PROXY
     config.proxy.no_proxy = [
       "localhost", "127.0.0.1",
-      (ENV["FORGE_IP"] || "192.168.11.11"),
-      (ENV["FORGE_DOMAIN"] || "192.168.11.11.xip.io"),
+      (ENV["MICROPCF_IP"] || "192.168.11.11"),
+      (ENV["MICROPCF_DOMAIN"] || "192.168.11.11.xip.io"),
       ".consul"
     ].join(',')
 
-    config.vm.provision "shell", inline: "grep -i proxy /etc/environment > /var/forge/proxy || true"
+    config.vm.provision "shell", inline: "grep -i proxy /etc/environment > /var/micropcf/proxy || true"
   end
 
   cpus = ENV['VM_CORES'] ? ENV['VM_CORES'].to_i : nil
@@ -85,15 +85,15 @@ Vagrant.configure("2") do |config|
   if provider_is_aws
     network_config = <<-SCRIPT
       public_ip="$(curl http://169.254.169.254/latest/meta-data/public-ipv4)"
-      domain="#{ENV["FORGE_DOMAIN"] || "${public_ip}.xip.io"}"
+      domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
       garden_ip="$(ip route get 1 | awk '{print $NF;exit}')"
     SCRIPT
   else
-    public_ip = ENV["FORGE_IP"] || "192.168.11.11"
-    default_domain = (public_ip == "192.168.11.11") ? "local.forge.cf" : "#{public_ip}.xip.io"
+    public_ip = ENV["MICROPCF_IP"] || "192.168.11.11"
+    default_domain = (public_ip == "192.168.11.11") ? "local.micropcf.cf" : "#{public_ip}.xip.io"
 
     network_config = <<-SCRIPT
-      domain="#{ENV["FORGE_DOMAIN"] || default_domain}"
+      domain="#{ENV["MICROPCF_DOMAIN"] || default_domain}"
       garden_ip="#{public_ip}"
     SCRIPT
 
@@ -114,19 +114,19 @@ Vagrant.configure("2") do |config|
       set -e
       #{network_config}
 
-      echo "GARDEN_IP=$garden_ip" >> /var/forge/setup
-      echo "DOMAIN=$domain" >> /var/forge/setup
-      echo 'HOST_ID=forge-colocated-0' >> /var/forge/setup
-      echo 'USERNAME=#{ENV["FORGE_USERNAME"]}' >> /var/forge/setup
-      echo 'PASSWORD=#{ENV["FORGE_PASSWORD"]}' >> /var/forge/setup
+      echo "GARDEN_IP=$garden_ip" >> /var/micropcf/setup
+      echo "DOMAIN=$domain" >> /var/micropcf/setup
+      echo 'HOST_ID=micropcf-colocated-0' >> /var/micropcf/setup
+      echo 'USERNAME=#{ENV["MICROPCF_USERNAME"]}' >> /var/micropcf/setup
+      echo 'PASSWORD=#{ENV["MICROPCF_PASSWORD"]}' >> /var/micropcf/setup
 
-      tar xzf /tmp/forge.tgz -C /tmp install
+      tar xzf /tmp/micropcf.tgz -C /tmp install
       /tmp/install/common
-      /tmp/install/brain /tmp/forge.tgz
-      /tmp/install/cell /tmp/forge.tgz
+      /tmp/install/brain /tmp/micropcf.tgz
+      /tmp/install/cell /tmp/micropcf.tgz
       /tmp/install/start
 
-      echo "Forge is now installed and running."
+      echo "MicroPCF is now installed and running."
       echo "----------------------------------------------------------------"
       echo "To obtain a version of ltc that is compatible with your cluster:"
       if [ "#{ltc_arch_path}" = "windows/ltc.exe" ]; then
@@ -148,10 +148,10 @@ require 'uri'
 require 'zlib'
 
 provision_required = (!ARGV.nil? && ['up', 'provision', 'reload'].include?(ARGV[0]))
-forge_tgz = File.join(File.dirname(__FILE__), "forge.tgz")
-forge_tgz_url = defined?(FORGE_TGZ_URL) && FORGE_TGZ_URL
+micropcf_tgz = File.join(File.dirname(__FILE__), "micropcf.tgz")
+micropcf_tgz_url = defined?(MICROPCF_TGZ_URL) && MICROPCF_TGZ_URL
 
-def download_forge_tgz(url)
+def download_micropcf_tgz(url)
   uri = URI(url)
 
   http_args = [uri.host, uri.port]
@@ -164,7 +164,7 @@ def download_forge_tgz(url)
 
   Net::HTTP.start(*http_args, use_ssl: uri.scheme == 'https') do |http|
     http.request_get(uri) do |response|
-      open('forge.tgz', 'wb') do |file|
+      open('micropcf.tgz', 'wb') do |file|
         response.read_body do |chunk|
           file.write(chunk)
           sleep(0.005)
@@ -177,36 +177,36 @@ end
 def extract_version(tgz_file, version_file)
   Zlib::GzipReader.open(tgz_file) do |gz|
     tr = Gem::Package::TarReader.new(gz)
-    tr.seek "brain/var/forge/versions/#{version_file}" do |entry|
+    tr.seek "brain/var/micropcf/versions/#{version_file}" do |entry|
       return entry.read.chomp
     end
   end
   return nil
 end
 
-if provision_required && File.exists?(forge_tgz)
-  if forge_tgz_url
-    tgz_version = extract_version(forge_tgz, 'FORGE_TGZ')
-    url_version = forge_tgz_url.match(/\/forge-v([^\/]+)\.tgz$/)[1]
+if provision_required && File.exists?(micropcf_tgz)
+  if micropcf_tgz_url
+    tgz_version = extract_version(micropcf_tgz, 'MICROPCF_TGZ')
+    url_version = micropcf_tgz_url.match(/\/micropcf-v([^\/]+)\.tgz$/)[1]
     if tgz_version != url_version
-      puts "Warning: forge.tgz file version (#{tgz_version}) does not match Vagrantfile version (#{url_version})."
-      puts 'Re-downloading and replacing local forge.tgz...'
-      download_forge_tgz(forge_tgz_url)
+      puts "Warning: micropcf.tgz file version (#{tgz_version}) does not match Vagrantfile version (#{url_version})."
+      puts 'Re-downloading and replacing local micropcf.tgz...'
+      download_micropcf_tgz(micropcf_tgz_url)
     end
   else
-    tgz_version = extract_version(forge_tgz, 'FORGE')
+    tgz_version = extract_version(micropcf_tgz, 'MICROPCF')
     repo_version = `git rev-parse HEAD`.chomp
     if tgz_version != repo_version && ENV['IGNORE_VERSION_MISMATCH'] != "true"
       puts <<-EOM.gsub(/^ +/, '')
       *******************************************************************************
-      Error: forge.tgz #{tgz_version[0..6]} != current commit #{repo_version[0..6]}
+      Error: micropcf.tgz #{tgz_version[0..6]} != current commit #{repo_version[0..6]}
 
-      The forge.tgz file was built using a different commit than the current one.
+      The micropcf.tgz file was built using a different commit than the current one.
       To ignore this error, set IGNORE_VERSION_MISMATCH=true in your environment.
 
-      NOTE: As of v0.4.0, the process for deploying Forge via Vagrant has changed.
+      NOTE: As of v0.4.0, the process for deploying MicroPCF via Vagrant has changed.
       Please use the process documented here:
-      \thttp://forge.cf/docs/vagrant/
+      \thttp://micropcf.cf/docs/vagrant/
       *******************************************************************************
       EOM
       exit(1)
@@ -214,18 +214,18 @@ if provision_required && File.exists?(forge_tgz)
   end
 end
 
-if provision_required && !File.exists?(forge_tgz)
-  if forge_tgz_url
-    puts 'Local forge.tgz not found, downloading...'
-    download_forge_tgz(forge_tgz_url)
+if provision_required && !File.exists?(micropcf_tgz)
+  if micropcf_tgz_url
+    puts 'Local micropcf.tgz not found, downloading...'
+    download_micropcf_tgz(micropcf_tgz_url)
   else
     puts <<-EOM.gsub(/^ +/, '')
     *******************************************************************************
-    Could not determine Forge version, and no local forge.tgz present.
+    Could not determine MicroPCF version, and no local micropcf.tgz present.
 
-    NOTE: As of v0.4.0, the process for deploying Forge via Vagrant has changed.
+    NOTE: As of v0.4.0, the process for deploying MicroPCF via Vagrant has changed.
     Please use the process documented here:
-    \thttp://forge.cf/docs/vagrant/
+    \thttp://micropcf.cf/docs/vagrant/
     *******************************************************************************
     EOM
     exit(1)

@@ -4,31 +4,31 @@ set -e
 
 if [[ -z $1 ]] && [[ -t 1 ]]; then
     >&2 echo "Usage:"
-    >&2 echo -e "\t$0 /path/to/forge.tgz [forge tgz version]"
-    >&2 echo -e "\t$0 [forge tgz version] > /path/to/forge.tgz"
+    >&2 echo -e "\t$0 /path/to/micropcf.tgz [micropcf tgz version]"
+    >&2 echo -e "\t$0 [micropcf tgz version] > /path/to/micropcf.tgz"
     exit 1
 fi
 
 if [[ -t 1 ]]; then
-  forge_tgz=$1
-  forge_tgz_version=$2
+  micropcf_tgz=$1
+  micropcf_tgz_version=$2
 else
-  forge_tgz="-"
-  forge_tgz_version=$1
+  micropcf_tgz="-"
+  micropcf_tgz_version=$1
 fi
 
-forge_dir=$(cd `dirname $0` && cd .. && pwd)
-forge_version=$(git -C "$forge_dir" rev-parse HEAD)
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+micropcf_version=$(git -C "$micropcf_dir" rev-parse HEAD)
 
-tmp_dir=$(mktemp -d /tmp/forge.XXXXXX)
-versions_dir=$tmp_dir/root/var/forge/versions
+tmp_dir=$(mktemp -d /tmp/micropcf.XXXXXX)
+versions_dir=$tmp_dir/root/var/micropcf/versions
 mkdir -p $versions_dir
 
-cp $forge_dir/release/install $tmp_dir/
+cp $micropcf_dir/release/install $tmp_dir/
 
-echo $forge_version > $versions_dir/FORGE
-echo $forge_tgz_version > $versions_dir/FORGE_TGZ
+echo $micropcf_version > $versions_dir/MICROPCF
+echo $micropcf_tgz_version > $versions_dir/MICROPCF_TGZ
 
-tar -czf "$forge_tgz" -C "$tmp_dir" root install
+tar -czf "$micropcf_tgz" -C "$tmp_dir" root install
 
 rm -rf "$tmp_dir"

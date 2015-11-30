@@ -10,5 +10,5 @@ $images_dir/bosh/build $images_dir/base/assets
 cp $images_dir/manifest.yml $images_dir/base/
 
 pushd $images_dir/base >/dev/null
-  packer build $@ ../forge.json
+  packer build $@ ../micropcf.json
 popd >/dev/null
