@@ -1,20 +1,10 @@
 .DS_Store
-
 *.box
-*.tfstate
-*.tfstate.backup
-*.tfvars
-lattice.tf.json
-lattice.tgz
 
-/bin
-/pkg
-/bosh/bin
-/bosh/pkg
+/images/bosh/bin
+/images/bosh/pkg
 
-/vagrant/assets
-/vagrant/packer_cache
-/vagrant/.vagrant
-/vagrant/output-*
-
-/terraform/assets
+/images/base/assets
+/images/base/packer_cache
+/images/base/.vagrant
+/images/base/output-*

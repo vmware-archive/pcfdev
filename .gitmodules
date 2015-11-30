@@ -1,60 +1,21 @@
-[submodule "diego-release"]
-	path = diego-release
+[submodule "images/releases/diego-release"]
+	path = images/releases/diego-release
 	url = https://github.com/cloudfoundry-incubator/diego-release
-[submodule "cf-routing-release"]
-	path = cf-routing-release
+[submodule "images/releases/cf-routing-release"]
+	path = images/releases/cf-routing-release
 	url = https://github.com/cloudfoundry-incubator/cf-routing-release
-[submodule "garden-linux-release"]
-	path = garden-linux-release
+[submodule "images/releases/garden-linux-release"]
+	path = images/releases/garden-linux-release
 	url = https://github.com/cloudfoundry-incubator/garden-linux-release
-[submodule "src/github.com/cloudfoundry-incubator/receptor"]
-	path = src/github.com/cloudfoundry-incubator/receptor
-	url = git@github.com:cloudfoundry-incubator/receptor
-[submodule "cf-release"]
-	path = cf-release
+[submodule "images/releases/cf-release"]
+	path = images/releases/cf-release
 	url = https://github.com/cloudfoundry/cf-release
-[submodule "src/github.com/cloudfoundry-incubator/natbeat"]
-	path = src/github.com/cloudfoundry-incubator/natbeat
-	url = git@github.com:cloudfoundry-incubator/natbeat
-[submodule "src/github.com/goji/httpauth"]
-	path = src/github.com/goji/httpauth
-	url = https://github.com/goji/httpauth
-[submodule "src/github.com/aws/aws-sdk-go"]
-	path = src/github.com/aws/aws-sdk-go
-	url = https://github.com/aws/aws-sdk-go
-[submodule "src/github.com/vaughan0/go-ini"]
-	path = src/github.com/vaughan0/go-ini
-	url = https://github.com/vaughan0/go-ini
-[submodule "src/github.com/codegangsta/cli"]
-	path = src/github.com/codegangsta/cli
-	url = https://github.com/codegangsta/cli
-[submodule "src/github.com/gizak/termui"]
-	path = src/github.com/gizak/termui
-	url = https://github.com/gizak/termui
-[submodule "src/github.com/gorilla/context"]
-	path = src/github.com/gorilla/context
-	url = https://github.com/gorilla/context
-[submodule "src/github.com/gorilla/mux"]
-	path = src/github.com/gorilla/mux
-	url = https://github.com/gorilla/mux
-[submodule "src/github.com/mattn/go-runewidth"]
-	path = src/github.com/mattn/go-runewidth
-	url = https://github.com/mattn/go-runewidth
-[submodule "src/github.com/nsf/termbox-go"]
-	path = src/github.com/nsf/termbox-go
-	url = https://github.com/nsf/termbox-go
-[submodule "bosh/src/github.com/sclevine/packer-bosh"]
-	path = bosh/src/github.com/sclevine/packer-bosh
+[submodule "images/releases/etcd-release"]
+	path = images/releases/etcd-release
+	url = https://github.com/cloudfoundry-incubator/etcd-release
+[submodule "images/bosh/src/github.com/sclevine/packer-bosh"]
+	path = images/bosh/src/github.com/sclevine/packer-bosh
 	url = git@github.com:sclevine/packer-bosh
-[submodule "bosh/src/github.com/sclevine/bosh-provisioner"]
-	path = bosh/src/github.com/sclevine/bosh-provisioner
+[submodule "images/bosh/src/github.com/sclevine/bosh-provisioner"]
+	path = images/bosh/src/github.com/sclevine/bosh-provisioner
 	url = git@github.com:sclevine/bosh-provisioner
-[submodule "src/github.com/cloudfoundry-incubator/ltc"]
-	path = src/github.com/cloudfoundry-incubator/ltc
-	url = git@github.com:cloudfoundry-incubator/ltc
-[submodule "src/github.com/kardianos/osext"]
-	path = src/github.com/kardianos/osext
-	url = https://github.com/kardianos/osext
-[submodule "etcd-release"]
-	path = etcd-release
-	url = https://github.com/cloudfoundry-incubator/etcd-release.git

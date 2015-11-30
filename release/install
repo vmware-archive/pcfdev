@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+if [[ ! -f $1 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 /path/to/forge.tgz"
+  exit 1
+fi
+
+export $(cat /var/forge/setup)
+
+tar xzf "$1" --strip-components 1 --keep-directory-symlink --no-overwrite-dir --no-same-owner -C / -- root
+
+job_files=$(find /var/vcap/jobs/*/ -type f)
+old_ip=$(cat /var/forge/ip)
+new_ip=$(ip route get 1 | awk '{print $NF;exit}')
+
+perl -p -i -e "s/\\Q$old_ip\\E/$new_ip/g" $job_files
+perl -p -i -e "s/placeholder\.system-domain/$DOMAIN/g" $job_files
+perl -p -i -e "s/placeholder-username/$USERNAME/g" $job_files
+perl -p -i -e "s/placeholder-password/$PASSWORD/g" $job_files
+perl -p -i -e "s/forge-(cell|brain|colocated)-0/$HOST_ID/g" $job_files
+
+sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
+  /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl
+sed -i "s%/var/vcap/packages/garden-linux/bin/garden-linux%& -externalIP=$GARDEN_IP%" \
+  /var/vcap/jobs/garden/bin/garden_ctl
+sed -i "s%#\!/bin/bash%#\!/bin/bash\n\nmkdir -p /tmp/cctmp\nchown 0:vcap /tmp/cctmp||true\nchmod 1777 /tmp/cctmp||true\nexport TMPDIR=/tmp/cctmp%" \
+  /var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
+
+bosh_config=/var/vcap/bosh/warden-cpi-agent-env.json
+bosh_config_json=$(cat "$bosh_config")
+echo $bosh_config_json | jq '. + {"agent_id": "'$HOST_ID'"}' > "$bosh_config"
+
+rm -rf /var/vcap/store/*
+rm -f /etc/init/runsvdir.override
+start runsvdir >/dev/null
+
+echo "Waiting for services to start..."
+monit_summary="/var/vcap/bosh/bin/monit summary"
+started_services() { $monit_summary 2>/dev/null | grep -E '(running|accessible)' | wc -l; }
+total_services() { $monit_summary 2>/dev/null | grep -E '^(Process|File|System)' | wc -l; }
+while [[ $(total_services) = 0 ]] || [[ $(started_services) -lt $(total_services) ]]; do
+  sleep 1
+done

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+images_dir=$(cd `dirname $0` && cd .. && pwd)
+
+$images_dir/bosh/setup $images_dir/base/assets
+$images_dir/bosh/build $images_dir/base/assets
+
+cp $images_dir/manifest.yml $images_dir/base/
+
+pushd $images_dir/base >/dev/null
+  packer build $@ ../forge.json
+popd >/dev/null
