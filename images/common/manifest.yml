@@ -29,7 +29,7 @@ compilation:
   network: default
 
 jobs:
-- name: micropcf-colocated
+- name: micropcf
   instances: 1
   persistent_disk: 1024
 

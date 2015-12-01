@@ -4,7 +4,4 @@
 /images/bosh/bin
 /images/bosh/pkg
 
-/images/base/assets
-/images/base/packer_cache
-/images/base/.vagrant
-/images/base/output-*
+/images/base/output

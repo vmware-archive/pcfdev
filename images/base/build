@@ -3,12 +3,17 @@
 set -e
 
 images_dir=$(cd `dirname $0` && cd .. && pwd)
+output_dir=$images_dir/base/output
+mkdir -p $output_dir
 
-$images_dir/bosh/setup $images_dir/base/assets
-$images_dir/bosh/build $images_dir/base/assets
+pushd $images_dir/bosh >/dev/null
+  bundle install
+  ./setup $output_dir/assets
+  ./build $output_dir/assets
+popd >/dev/null
 
-cp $images_dir/manifest.yml $images_dir/base/
+cp -a $images_dir/common/* $output_dir/
 
-pushd $images_dir/base >/dev/null
-  packer build $@ ../micropcf.json
+pushd "$output_dir" >/dev/null
+  packer build $@ $images_dir/micropcf.json
 popd >/dev/null
