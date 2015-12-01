@@ -2,15 +2,7 @@
 
 set -e
 
-if [[ ! -f $1 ]]; then
-  echo "Usage:"
-  echo -e "\t$0 /path/to/micropcf.tgz"
-  exit 1
-fi
-
 export $(cat /var/micropcf/setup)
-
-tar xzf "$1" --strip-components 1 --keep-directory-symlink --no-overwrite-dir --no-same-owner -C / -- root
 
 job_files=$(find /var/vcap/jobs/*/ -type f)
 old_ip=$(cat /var/micropcf/ip)
@@ -20,7 +12,7 @@ perl -p -i -e "s/\\Q$old_ip\\E/$new_ip/g" $job_files
 perl -p -i -e "s/placeholder\.system-domain/$DOMAIN/g" $job_files
 perl -p -i -e "s/placeholder-username/$USERNAME/g" $job_files
 perl -p -i -e "s/placeholder-password/$PASSWORD/g" $job_files
-perl -p -i -e "s/micropcf-(cell|brain|colocated)-0/$HOST_ID/g" $job_files
+perl -p -i -e "s/micropcf-0/$HOST_ID/g" $job_files
 
 sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
   /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl

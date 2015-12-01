@@ -9,8 +9,8 @@ if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
 fi
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
-bosh_gopath=$micropcf_dir/bosh
+micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
+bosh_gopath=$micropcf_dir/images/bosh
 packer_bosh_dir=$bosh_gopath/src/github.com/sclevine/packer-bosh
 bosh_provisioner_dir=$bosh_gopath/src/github.com/sclevine/bosh-provisioner
 

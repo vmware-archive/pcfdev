@@ -9,7 +9,7 @@ if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
 fi
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
 
 rm -rf $assets_dir/{releases,versions}
 mkdir $assets_dir/{releases,versions}
@@ -17,7 +17,7 @@ mkdir $assets_dir/{releases,versions}
 git -C "$micropcf_dir" rev-parse HEAD > $assets_dir/versions/MICROPCF_IMAGE
 
 for release in diego garden-linux cf-routing etcd cf-micropcf; do
-  pushd $micropcf_dir/$release-release >/dev/null
+  pushd $micropcf_dir/images/releases/$release-release >/dev/null
     yes yes | bosh -n reset release
     bosh -n create release --name $release --version 0 --with-tarball --force
     mv dev_releases/$release/$release-0.tgz $assets_dir/releases/
@@ -25,3 +25,5 @@ for release in diego garden-linux cf-routing etcd cf-micropcf; do
     git describe --tags --always > $assets_dir/versions/$version_file
   popd >/dev/null
 done
+
+git -C $micropcf_dir/images/releases/cf-release describe --tags --always > $assets_dir/versions/CF_RELEASE
