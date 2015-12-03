@@ -1,7 +1,8 @@
 {
     "variables": {
         "version": "0",
-        "distro": "base"
+        "distro": "base",
+        "dev": "false"
     },
     "builders": [
         {
@@ -174,7 +175,7 @@
             "inline": [
                 "chmod 1777 /tmp",
                 "mv /opt/bosh-provisioner/assets/versions /var/micropcf/",
-                "rm -rf /opt/bosh-provisioner",
+                "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "echo manual > /etc/init/runsvdir.override"
             ]
         },
