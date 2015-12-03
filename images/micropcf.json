@@ -15,6 +15,18 @@
                 "ap-northeast-1", "ap-southeast-1", "ap-southeast-2", "sa-east-1",
                 "eu-central-1", "eu-west-1", "us-west-1", "us-west-2"
             ],
+            "ami_block_device_mappings": [{
+              "device_name": "/dev/sda1",
+              "volume_type": "gp2",
+              "volume_size": 25,
+              "delete_on_termination": true
+            }],
+            "launch_block_device_mappings": [{
+              "device_name": "/dev/sda1",
+              "volume_type": "gp2",
+              "volume_size": 25,
+              "delete_on_termination": true
+            }],
             "ssh_username": "ubuntu",
             "tags": {"Name": "{{user `version`}}"}
         },
@@ -143,6 +155,7 @@
                 "ip route get 1 | awk '{print $NF;exit}' > /var/micropcf/ip",
                 "sed \"s/placeholder-ip/$(cat /var/micropcf/ip)/\" /tmp/manifest.yml > /var/micropcf/manifest.yml",
                 "mv /tmp/run /var/micropcf/run",
+                "chmod +x /var/micropcf/run",
                 "mkdir -p /var/vcap/store"
             ]
         },

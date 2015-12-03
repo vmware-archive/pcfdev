@@ -43,14 +43,6 @@ Vagrant.configure("2") do |config|
     aws.ebs_optimized = true
     aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "micropcf") }
     aws.ami = ""
-    aws.block_device_mapping = [
-      {
-        "DeviceName" => "/dev/sda1",
-        "Ebs.VolumeType" => "gp2",
-        "Ebs.VolumeSize" => 15,
-        "Ebs.DeleteOnTermination" => true
-      }
-    ]
 
     override.ssh.username = "ubuntu"
     override.ssh.private_key_path = ENV["AWS_SSH_PRIVATE_KEY_PATH"]

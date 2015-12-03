@@ -519,9 +519,7 @@ properties:
   cc:
     default_to_diego_backend: true
     diego:
-      stager:
-        listen_adder: http://stager.service.cf.internal:8890
-        staging_task_callback_url: http://stager.service.cf.internal:8890
+      stager_url: http://stager.service.cf.internal:8890
     srv_api_uri: http://api.placeholder.system-domain
     info:
       name: micropcf-cc
