@@ -6,11 +6,8 @@ images_dir=$(cd `dirname $0` && cd .. && pwd)
 output_dir=$images_dir/base/output
 mkdir -p $output_dir
 
-pushd $images_dir/bosh >/dev/null
-  bundle install
-  ./setup $output_dir/assets
-  ./build $output_dir/assets
-popd >/dev/null
+$images_dir/bosh/setup $output_dir/assets
+$images_dir/bosh/build $output_dir/assets
 
 cp -a $images_dir/common/* $output_dir/
 
