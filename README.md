@@ -2,7 +2,7 @@
 
 microPCF is an open source project for running a local version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), and [Amazon Web Services](http://aws.amazon.com/).
 
-[ [Website](http://micropcf.cf) | [Latest Release](https://github.com/pivotal-cf/micropcf/releases/latest) | [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html) ]
+[ [Website](http://micropcf.io) | [Latest Release](https://github.com/pivotal-cf/micropcf/releases/latest) | [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html) ]
 
 ## Deploy microPCF with Vagrant
 
@@ -21,7 +21,7 @@ Download the Vagrantfile into a new local folder, and open a prompt to that fold
 vagrant up --provider virtualbox
 ```
 
-This spins up a virtual environment that is accessible at `local.micropcf.cf`
+This spins up a virtual environment that is accessible at `local.micropcf.io`
 
 
 ##### Install `cf` - CF CLI
