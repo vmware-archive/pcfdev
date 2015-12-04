@@ -14,7 +14,7 @@ micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
 rm -rf $assets_dir/{releases,versions}
 mkdir $assets_dir/{releases,versions}
 
-git -C "$micropcf_dir" rev-parse HEAD > $assets_dir/versions/MICROPCF_IMAGE
+git -C "$micropcf_dir" rev-parse HEAD > $assets_dir/versions/MICROPCF
 
 for release in diego garden-linux cf-routing etcd cf-micropcf; do
   pushd $micropcf_dir/images/releases/$release-release >/dev/null
@@ -26,4 +26,5 @@ for release in diego garden-linux cf-routing etcd cf-micropcf; do
   popd >/dev/null
 done
 
+rm -f $assets_dir/versions/CF_MICROPCF_RELEASE
 git -C $micropcf_dir/images/releases/cf-release describe --tags --always > $assets_dir/versions/CF_RELEASE
