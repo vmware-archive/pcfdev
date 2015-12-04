@@ -74,8 +74,6 @@ Vagrant.configure("2") do |config|
       echo "GARDEN_IP=$garden_ip" >> /var/micropcf/setup
       echo "DOMAIN=$domain" >> /var/micropcf/setup
       echo 'HOST_ID=micropcf' >> /var/micropcf/setup
-      echo 'USERNAME=#{ENV["MICROPCF_USERNAME"]}' >> /var/micropcf/setup
-      echo 'PASSWORD=#{ENV["MICROPCF_PASSWORD"]}' >> /var/micropcf/setup
 
       /var/micropcf/run
       echo "MicroPCF is now running."
