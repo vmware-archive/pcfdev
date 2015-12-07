@@ -76,7 +76,6 @@ Vagrant.configure("2") do |config|
       echo 'HOST_ID=micropcf' >> /var/micropcf/setup
 
       /var/micropcf/run
-      echo "MicroPCF is now running."
     SCRIPT
   end
 end
