@@ -4,7 +4,7 @@ set -e
 
 if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
   echo "Usage:"
-  echo -e "\t$0 /new/or/existing/assets/directory"
+  echo -e "\t$0 /new/or/existing/assets/directory [first-extra-release] [second-extra-release] ..."
   exit 1
 fi
 
@@ -16,7 +16,7 @@ mkdir $assets_dir/{releases,versions}
 
 git -C "$micropcf_dir" rev-parse HEAD > $assets_dir/versions/MICROPCF
 
-for release in diego garden-linux cf-routing etcd cf-micropcf; do
+for release in diego garden-linux cf-routing etcd cf-micropcf ${@:2}; do
   pushd $micropcf_dir/images/releases/$release-release >/dev/null
     yes yes | bosh -n reset release
     bosh -n create release --name $release --version 0 --with-tarball --force

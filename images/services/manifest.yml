@@ -1,0 +1,42 @@
+---
+
+<<: (( merge ))
+
+releases:
+- <<: (( merge ))
+- name: cf-redis
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/cf-redis-0.tgz
+
+jobs:
+- <<: (( merge ))
+- name: micropcf
+  <<: (( merge ))
+  templates:
+  - <<: (( merge ))
+  - name: syslog-configurator
+    release: cf-redis
+  - name: cf-redis-broker
+    release: cf-redis
+  - name: syslog-configurator
+    release: cf-redis
+
+properties:
+  <<: (( merge ))
+
+  cf:
+    apps_domain: (( app_domains.[0] ))
+    nats:
+      host: (( properties.nats.machines.[0] ))
+      port: (( properties.nats.port ))
+      username: (( properties.nats.user ))
+      password: (( properties.nats.password ))
+
+  redis:
+    maxmemory: 262144000
+    config_command: CONFIG
+    save_command: SAVE
+    bg_save_command: BGSAVE
+    broker:
+      network: (( networks.[0].name ))
+      service_instance_limit: 3

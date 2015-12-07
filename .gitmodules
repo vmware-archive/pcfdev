@@ -19,3 +19,6 @@
 [submodule "images/bosh/src/github.com/sclevine/bosh-provisioner"]
 	path = images/bosh/src/github.com/sclevine/bosh-provisioner
 	url = git@github.com:sclevine/bosh-provisioner
+[submodule "images/releases/cf-redis-release"]
+	path = images/releases/cf-redis-release
+	url = https://github.com/pivotal-cf/cf-redis-release
