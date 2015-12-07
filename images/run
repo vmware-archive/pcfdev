@@ -4,7 +4,7 @@ set -e
 
 export $(cat /var/micropcf/setup)
 
-job_files=$(find /var/vcap/jobs/*/ -type f)
+job_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)
 old_ip=$(cat /var/micropcf/ip)
 new_ip=$(ip route get 1 | awk '{print $NF;exit}')
 
