@@ -1,7 +1,9 @@
 .DS_Store
 *.box
+.vagrant
 
 /images/bosh/bin
 /images/bosh/pkg
 
 /images/base/output
+/images/services/output

@@ -2,14 +2,16 @@
 
 set -e
 
-images_dir=$(cd `dirname $0` && cd .. && pwd)
-output_dir=$images_dir/base/output
+base_dir=$(cd `dirname $0`  && pwd)
+images_dir=$base_dir/..
+output_dir=$base_dir/output
+
 mkdir -p $output_dir
 
 $images_dir/bosh/setup $output_dir/assets
 $images_dir/bosh/build $output_dir/assets
 
-cp -a $images_dir/common/* $output_dir/
+cp -a $images_dir/{run,http,manifest.yml} $output_dir/
 
 pushd "$output_dir" >/dev/null
   packer build $@ $images_dir/micropcf.json
