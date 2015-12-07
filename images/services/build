@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+services_dir=$(cd `dirname $0` && pwd)
+images_dir=$services_dir/..
+output_dir=$services_dir/output
+
+mkdir -p $output_dir
+
+$images_dir/bosh/setup $output_dir/assets
+$images_dir/bosh/build $output_dir/assets cf-redis
+
+cp -a $images_dir/{run,http} $output_dir/
+spiff merge $services_dir/manifest.yml $images_dir/manifest.yml > $output_dir/manifest.yml
+
+pushd "$output_dir" >/dev/null
+  packer build $@ $images_dir/micropcf.json
+popd >/dev/null
