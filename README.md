@@ -1,14 +1,14 @@
 # microPCF (Pivotal Cloud Foundry)
 
-microPCF is an open source project for running a local version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), and [Amazon Web Services](http://aws.amazon.com/).
+MicroPCF is an open source project for running a local version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), and [Amazon Web Services](http://aws.amazon.com/).
 
 [ [Website](http://micropcf.io) | [Latest Release](https://github.com/pivotal-cf/micropcf/releases/latest) | [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html) ]
 
 ## Deploy microPCF with Vagrant
 
-A colocated deployment of MicroPCF can be launched locally with [Vagrant](https://vagrantup.com/). You will need:
+A colocated deployment of microPCF can be launched locally with [Vagrant](https://vagrantup.com/). You will need:
 
-* A MicroPCF bundle from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
+* A microPCF Vagrantfile from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
 * [Vagrant](https://vagrantup.com/) 1.7+ installed
 
 > NOTE: Ubuntu 14.04 LTS does not install a compatible version of Vagrant by default. You can upgrade the version that you get out of the box by downloading the `.deb` file from [Vagrant](http://www.vagrantup.com/downloads.html).
@@ -64,16 +64,7 @@ If you change any Diego components, you'll need to build a local Vagrant box wit
 vagrant box add --force micropcf-virtualbox-v0.box --name micropcf/base
 ```
 
-#### Building a release of microPCF
-
-```bash
-# in micropcf/vagrant
-../release/build micropcf.tgz
-```
-
 ### Deploy microPCF
-
-Once you have a microPCF tarball, use `vagrant` to deploy microPCF:
 
 ```bash
 # in micropcf/vagrant
