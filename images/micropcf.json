@@ -161,6 +161,21 @@
             ]
         },
         {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "mkdir -p /var/micropcf/buildpacks/",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/binary_buildpack-v1.0.1.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/go_buildpack-v1.7.0.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/nodejs_buildpack-v1.5.4.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/php_buildpack-v4.3.0.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/python_buildpack-v1.5.2.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/ruby_buildpack-v1.6.9.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/staticfile_buildpack-v1.2.3.zip",
+                "wget -P /var/micropcf/buildpacks/ https://s3.amazonaws.com/micropcf/buildpacks/java-buildpack-v3.4.zip"
+            ]
+        },
+        {
             "type": "packer-bosh",
             "assets_dir": "assets",
             "remote_manifest_path": "/var/micropcf/manifest.yml"
