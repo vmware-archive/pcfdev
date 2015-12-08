@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 micropcf_domain"
+  exit 1
+fi
+
+domain=$1
+
+export CONFIG=`mktemp -t config`
+cat <<EOF >$CONFIG
+{
+  "api": "api.$domain",
+  "admin_user": "admin",
+  "admin_password": "admin",
+  "apps_domain": "$domain",
+  "system_domain": "$domain",
+  "client_secret": "gorouter-secret",
+  "skip_ssl_validation": true,
+  "default_timeout": 600,
+  "long_curl_timeout": 600,
+  "use_http": true
+}
+EOF
+
+cf_release_dir=$(cd `dirname $0` && cd ../images/releases/cf-release && pwd)
+
+pushd $cf_release_dir/src/github.com/cloudfoundry/cf-acceptance-tests >/dev/null
+  export GOPATH=$PWD/Godeps/_workspace:$cf_release_dir
+  ./bin/test --skip='{NO_DIEGO_SUPPORT}' apps v2 operator internet_dependent
+popd >/dev/null

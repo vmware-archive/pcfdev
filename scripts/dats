@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]] || [[ -z $2 ]]; then
+  echo "Usage:"
+  echo -e "\t$0 micropcf_domain private_ip"
+  exit 1
+fi
+
+domain=$1
+private_ip=$2
+
+export CONFIG=`mktemp -t config`
+cat <<EOF >$CONFIG
+{
+  "api": "api.$domain",
+  "admin_user": "admin",
+  "admin_password": "admin",
+  "apps_domain": "$domain",
+  "secure_address": "${private_ip}:4001",
+  "skip_ssl_validation": true
+}
+EOF
+
+diego_release_dir=$(cd `dirname $0` && cd ../images/release/diego-release && pwd)
+
+pushd $diego_release_dir/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
+  export GOPATH=$diego_release_dir
+  export PATH=$GOPATH/bin:$PATH
+  ./bin/test
+popd >/dev/null
