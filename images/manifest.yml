@@ -552,6 +552,15 @@ properties:
     default_running_security_groups: [public_networks, dns]
     default_staging_security_groups: [public_networks, dns]
     external_protocol: http
+    install_buildpacks:
+    - {name: ruby_buildpack, file: /var/micropcf/buildpacks/ruby_buildpack-v1.6.9.zip}
+    - {name: nodejs_buildpack, file: /var/micropcf/buildpacks/nodejs_buildpack-v1.5.4.zip}
+    - {name: go_buildpack, file: /var/micropcf/buildpacks/go_buildpack-v1.7.0.zip}
+    - {name: python_buildpack, file: /var/micropcf/buildpacks/python_buildpack-v1.5.2.zip}
+    - {name: php_buildpack, file: /var/micropcf/buildpacks/php_buildpack-v4.3.0.zip}
+    - {name: staticfile_buildpack, file: /var/micropcf/buildpacks/staticfile_buildpack-v1.2.3.zip}
+    - {name: binary_buildpack, file: /var/micropcf/buildpacks/binary_buildpack-v1.0.1.zip}
+    - {name: java_buildpack, file: /var/micropcf/buildpacks/java-buildpack-v3.4.zip}
   ccdb:
     address: localhost
     databases:
