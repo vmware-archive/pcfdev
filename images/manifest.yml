@@ -441,12 +441,10 @@ properties:
         secret: doppler-secret
       gorouter:
         secret: gorouter-secret
-      login:
-        secret: login-secret
-      cc-service-dashboards:
-        secret: cc-service-dashboard-secret
       cloud_controller_username_lookup:
         secret: cloud-controller-username-lookup-secret
+        authorized-grant-types: client_credentials
+        authorities: scim.userids
       cc_routing:
         secret: cc-routing-secret
       ssh-proxy:
@@ -456,6 +454,8 @@ properties:
         redirect-uri: "/login"
         scope: openid,cloud_controller.read,cloud_controller.write
         secret: ssh-proxy-secret
+    login:
+      client_secret: login-secret
     admin:
       client_secret: admin-client-secret
     cc:
@@ -465,20 +465,11 @@ properties:
       user:
         override: true
       users:
-      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose
+      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,doppler.firehose,routing.router_groups.read
     issuer: http://localhost/
     no_ssl: true
     jwt:
       verification_key: ""
-    # jwt:
-    #   signing_key: |
-    #     -----BEGIN RSA PRIVATE KEY-----
-    #     XXX
-    #     -----END RSA PRIVATE KEY-----
-    #   verification_key: |
-    #     -----BEGIN PUBLIC KEY-----
-    #     XXX
-    #     -----END PUBLIC KEY-----
   route_registrar:
     routes:
     - name: doppler
