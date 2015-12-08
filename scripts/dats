@@ -23,7 +23,7 @@ cat <<EOF >$CONFIG
 }
 EOF
 
-diego_release_dir=$(cd `dirname $0` && cd ../images/release/diego-release && pwd)
+diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pwd)
 
 pushd $diego_release_dir/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   export GOPATH=$diego_release_dir
