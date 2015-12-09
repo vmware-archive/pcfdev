@@ -2,44 +2,55 @@
 
 set -e
 
-CF_RELEASE_TAG=$1
+cf_release_tag=$1
 
-pushd cf-release
-  git checkout $CF_RELEASE_TAG
-  git submodule update --init --recursive
-  git clean -dffx
-  cf_release_sha=$(git rev-parse --short HEAD~1)
-popd
+dirname=$(dirname $0)
 
-curl -O https://raw.githubusercontent.com/cloudfoundry-incubator/diego-cf-compatibility/master/compatibility-v2.csv
+pushd $dirname/../images/releases
+  pushd cf-release
+    git fetch
+    git checkout $cf_release_tag
+    git submodule update --init --recursive
+    git clean -dffx
+    cf_release_sha=$(git rev-parse --short HEAD~1)
+  popd
 
-while IFS=',' read a b c cf_sha e diego g h garden etcd
-do
-  if [[ "$cf_sha" =~ "$cf_release_sha" ]]; then
-    diego_release_version=$diego
-    garden_linux_release_version=$garden
-    etcd_release_version=$etcd
+  while IFS=',' read a b c cf_sha e diego g h garden etcd; do
+    if [[ "$cf_sha" =~ "$cf_release_sha" ]]; then
+      diego_release_version=$diego
+      garden_linux_release_version=$garden
+      etcd_release_version=$etcd
+    fi
+  done < <(curl https://raw.githubusercontent.com/cloudfoundry-incubator/diego-cf-compatibility/master/compatibility-v2.csv)
+
+  if [[ -z $diego_release_version ]] || [[ -z $garden_linux_release_version ]] || [[ -z $etcd_release_version ]]; then
+    >&2 echo "No CF release version found for SHA: $cf_release_sha"
+    exit 1
   fi
-done <compatibility-v2.csv
 
-pushd diego-release
-  git checkout v$diego_release_version
-  git submodule update --init --recursive
-  git clean -dffx
+  pushd diego-release
+    git fetch
+    git checkout v$diego_release_version
+    git submodule update --init --recursive
+    git clean -dffx
+  popd
+
+  pushd garden-linux-release
+    git fetch
+    git checkout v$garden_linux_release_version
+    git submodule update --init --recursive
+    git clean -dffx
+  popd
+
+  pushd etcd-release
+    git fetch
+    git checkout v$etcd_release_version
+    git submodule update --init --recursive
+    git clean -dffx
+  popd
+
+  echo "cf-release: v$diego_release_version"
+  echo "diego-release: v$diego_release_version"
+  echo "garden-linux-release: v$garden_linux_release_version"
+  echo "etcd-release: v$etcd_release_version"
 popd
-
-pushd garden-linux-release
-  git checkout v$garden_linux_release_version
-  git submodule update --init --recursive
-  git clean -dffx
-popd
-
-pushd etcd-release
-  git checkout v$etcd_release_version
-  git submodule update --init --recursive
-  git clean -dffx
-popd
-
-rm compatibility-v2.csv
-
-exit 0
