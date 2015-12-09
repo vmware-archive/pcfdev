@@ -393,7 +393,6 @@ properties:
       - name: database_z1
         instances: 1
   metron_agent:
-    shared_secret: loggregator-secret
     zone: z1
     deployment: micropcf
   consul:
@@ -430,6 +429,8 @@ properties:
     etcd:
       machines: [etcd.service.cf.internal]
   loggregator_endpoint:
+    shared_secret: loggregator-secret
+  metron_endpoint:
     shared_secret: loggregator-secret
   routing-api:
     auth_disabled: true
