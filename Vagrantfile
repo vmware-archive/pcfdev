@@ -92,7 +92,7 @@ def calculate_resource_allocation
     cpus ||= `nproc`.to_i
     memory ||= `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / 4
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
-    cpus ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
+    cpus ||= `wmic computersystem get numberoflogicalprocessors`.split("\n")[2].to_i
     memory ||= `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024 / 4
   else
     cpus ||= 2
