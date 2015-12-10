@@ -358,10 +358,10 @@ properties:
       -----END RSA PRIVATE KEY-----
     ssl_skip_validation: true
     router_configurer:
-      gorouter_secret: router-secret
+      gorouter_secret: gorouter-secret
       routing_api_auth_disabled: true
     tcp_emitter:
-      gorouter_secret: router-secret
+      gorouter_secret: gorouter-secret
       debug_addr: 0.0.0.0:17019
       routing_api_auth_disabled: true
       bbs:
@@ -442,6 +442,7 @@ properties:
         secret: doppler-secret
       gorouter:
         secret: gorouter-secret
+        authorized-grant-types: client_credentials
       cloud_controller_username_lookup:
         secret: cloud-controller-username-lookup-secret
         authorized-grant-types: client_credentials
