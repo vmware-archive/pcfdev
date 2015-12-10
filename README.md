@@ -25,6 +25,14 @@ This spins up a virtual environment that is accessible at `local.micropcf.io`
 
 > Use an Administrator shell to deploy using VMware Workstation on Windows.
 
+##### Supported environment variables
+
+1. `MICROPCF_IP` - sets the IP address to bring up the VM on
+1. `MICROPCF_DOMAIN` - sets an alternate alias for the system routes to be defined on
+  - defaults to `local.micropcf.io`, then `$MICROPCF_IP.xip.io`
+1. `VM_CORES` - number of CPU cores to allocate on the Guest VM (defaults to host # of logical CPUs)
+1. `VM_MEMORY` - number of MB to allocate on the Guest VM (defaults to 25% of host memory)
+
 ##### Install `cf` - CF CLI
 
 More information is available on the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases](https://github.com/cloudfoundry/cli/releases/latest) page.  Please install the appropriate binary for your architecture.
