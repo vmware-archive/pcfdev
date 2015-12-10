@@ -23,6 +23,8 @@ vagrant up --provider virtualbox
 
 This spins up a virtual environment that is accessible at `local.micropcf.io`
 
+> Use an Administrator shell to deploy using VMware Workstation on Windows.
+
 ##### Install `cf` - CF CLI
 
 More information is available on the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases](https://github.com/cloudfoundry/cli/releases/latest) page.  Please install the appropriate binary for your architecture.
