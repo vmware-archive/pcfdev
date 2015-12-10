@@ -10,7 +10,8 @@ fi
 
 domain=$1
 
-export CONFIG=`mktemp -t config`
+# `mktemp -t` replaces X's on Linux, appends to X's on Darwin
+export CONFIG=`mktemp -t config.XXXXXX`
 cat <<EOF >$CONFIG
 {
   "api": "api.$domain",
