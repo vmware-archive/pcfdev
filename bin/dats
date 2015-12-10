@@ -11,7 +11,7 @@ fi
 domain=$1
 private_ip=$2
 
-export CONFIG=`mktemp -t config`
+export CONFIG=`mktemp -t config.XXXXXXXX`
 cat <<EOF >$CONFIG
 {
   "api": "api.$domain",
