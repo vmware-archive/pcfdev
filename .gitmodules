@@ -15,10 +15,10 @@
 	url = https://github.com/cloudfoundry-incubator/cf-routing-release
 [submodule "images/bosh/src/github.com/sclevine/packer-bosh"]
 	path = images/bosh/src/github.com/sclevine/packer-bosh
-	url = git@github.com:sclevine/packer-bosh
+	url = https://github.com/sclevine/packer-bosh
 [submodule "images/bosh/src/github.com/sclevine/bosh-provisioner"]
 	path = images/bosh/src/github.com/sclevine/bosh-provisioner
-	url = git@github.com:sclevine/bosh-provisioner
+	url = https://github.com/sclevine/bosh-provisioner
 [submodule "images/releases/cf-redis-release"]
 	path = images/releases/cf-redis-release
 	url = https://github.com/pivotal-cf/cf-redis-release
