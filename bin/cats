@@ -20,7 +20,9 @@ cat <<EOF >$CONFIG
   "system_domain": "$domain",
   "client_secret": "gorouter-secret",
   "skip_ssl_validation": true,
-  "default_timeout": 600,
+  "default_timeout": 300,
+  "cf_push_timeout": 300,
+  "long_curl_timeout": 300,
   "use_http": true
 }
 EOF
