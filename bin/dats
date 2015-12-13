@@ -28,5 +28,5 @@ diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pw
 pushd $diego_release_dir/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   export GOPATH=$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
-  ./bin/test
+  ./bin/test --skip='DEA Compatibility'
 popd >/dev/null

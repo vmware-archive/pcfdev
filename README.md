@@ -37,53 +37,9 @@ This spins up a virtual environment that is accessible at `local.micropcf.io`
 
 More information is available on the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases](https://github.com/cloudfoundry/cli/releases/latest) page.  Please install the appropriate binary for your architecture.
 
-## Development
-
-> NOTE: These instructions are for people contributing code to microPCF.  If you only want to deploy microPCF, see above.
-> These instructions cover Vagrant/Virtualbox development.
-> A similar process can be followed for Vagrant/VMWare and Vagrant/AWS development.  More documentation is forthcoming.
-
-To develop microPCF you will need to have the following tools installed:
-
-- Packer
-- Vagrant
-- Virtualbox
-- Direnv _(optional)_
-
-### Clone the microPCF source
-
-```bash
-git clone --recursive https://github.com/pivotal-cf/micropcf.git
-```
-
-### Build microPCF
-
-Setup your shell for building microPCF:
-
-```bash
-cd micropcf
-direnv allow # or: source .envrc
-```
-
-#### Building a microPCF Box
-
-If you change any Diego components, you'll need to build a local Vagrant box with your changes.  If you don't plan to change any Diego components, you can update the `box_version` property in the `Vagrantfile` to point to a [pre-built microPCF box on Atlas](https://atlas.hashicorp.com/micropcf/boxes/base) and skip this step.
-
-```bash
-./images/base/build -only=virtualbox-iso
-vagrant box add --force micropcf-virtualbox-v0.box --name micropcf/base
-```
-
-### Deploy microPCF
-
-```bash
-# in micropcf/vagrant
-vagrant up --provider=virtualbox
-```
-
 ## Contributing
 
-If you are interested in contributing to microPCF, please refer to [CONTRIBUTING](CONTRIBUTING.md).
+If you are interested in contributing to microPCF, please refer to the [contributing guidelines](CONTRIBUTING.md) and [development instructions](DEVELOP.md).
 
 # Copyright
 
