@@ -35,6 +35,12 @@ while [[ $(total_services) = 0 ]] || [[ $(started_services) -lt $(total_services
   sleep 1
 done
 
+response=000
+while [[ "$response" == "000" || "$response" == "502" ]]; do
+  sleep 1
+  response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$DOMAIN/api/v2/info)
+done
+
 echo "MicroPCF is now running."
 echo "To begin using MicroPCF, please run:"
 echo -e "\tcf api api.$DOMAIN --skip-ssl-validation"
