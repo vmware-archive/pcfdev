@@ -41,6 +41,10 @@ while [[ "$response" != "200" ]]; do
   response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$DOMAIN/v2/info)
 done
 
+if [ -f "/var/vcap/jobs/broker-registrar/bin/run" ]; then
+  /var/vcap/jobs/broker-registrar/bin/run
+fi
+
 echo "MicroPCF is now running."
 echo "To begin using MicroPCF, please run:"
 echo -e "\tcf api api.$DOMAIN --skip-ssl-validation"

@@ -18,17 +18,29 @@ jobs:
     release: cf-redis
   - name: cf-redis-broker
     release: cf-redis
+  - name: broker-registrar
+    release: cf-redis
 
 properties:
   <<: (( merge ))
 
   cf:
+    api_url: http://api.local.micropcf.io
+    admin_username: admin
+    admin_password: admin
     apps_domain: (( app_domains.[0] ))
     nats:
       host: (( properties.nats.machines.[0] ))
       port: (( properties.nats.port ))
       username: (( properties.nats.user ))
       password: (( properties.nats.password ))
+
+  broker:
+    name: redis
+    protocol: http
+    host: localhost:10005
+    username: admin
+    password: admin
 
   redis:
     maxmemory: 262144000

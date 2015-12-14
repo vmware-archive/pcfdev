@@ -6,4 +6,4 @@
 /images/bosh/pkg
 
 /images/base/output
-/images/services/output
+/images/micropcf/output
