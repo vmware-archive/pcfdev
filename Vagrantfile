@@ -1,7 +1,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "micropcf/base"
   config.vm.box_version = "0"
-
+  config.vm.define "micropcf" do |micropcf|
+  end
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   provider_is_aws = (!ARGV.nil? && ARGV.join(' ').match(/provider(=|\s+)aws/))
