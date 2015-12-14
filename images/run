@@ -36,9 +36,9 @@ while [[ $(total_services) = 0 ]] || [[ $(started_services) -lt $(total_services
 done
 
 response=000
-while [[ "$response" == "000" || "$response" == "502" ]]; do
+while [[ "$response" != "200" ]]; do
   sleep 1
-  response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$DOMAIN/api/v2/info)
+  response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$DOMAIN/v2/info)
 done
 
 echo "MicroPCF is now running."
