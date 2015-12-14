@@ -11,21 +11,23 @@ A colocated deployment of microPCF can be launched locally with [Vagrant](https:
 * A microPCF Vagrantfile from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
 * [Vagrant](https://vagrantup.com/) 1.7+ installed
 
-> NOTE: Ubuntu 14.04 LTS does not install a compatible version of Vagrant by default. You can upgrade the version that you get out of the box by downloading the `.deb` file from [Vagrant](http://www.vagrantup.com/downloads.html).
-
 ##### Spin up a virtual environment
 
 Download the Vagrantfile into a new local folder, and open a prompt to that folder:
 
 ```bash
+# download https://github.com/pivotal-cf/micropcf/releases/download/<VERSION>/Vagrantfile-<VERSION>.base
+# mv Vagrantfile-<VERSION>.base Vagrantfile
 vagrant up --provider virtualbox
 ```
 
-This spins up a virtual environment that is accessible at `local.micropcf.io`
+By default, the cluster can be targeted at `cf api api.local.micropcf.io --skip-ssl-validation`.
 
-> Use an Administrator shell to deploy using VMware Workstation on Windows.
+> Unless you're attempting to develop microPCF itself, please download the Vagrantfile from [Github Releases](https://github.com/pivotal-cf/micropcf/releases/latest) or [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html).  There's no need to clone the repository in order to use microPCF.
 
 ##### Supported environment variables
+
+These variables must be set during vagrant up.
 
 1. `MICROPCF_IP` - sets the IP address to bring up the VM on
 1. `MICROPCF_DOMAIN` - sets an alternate alias for the system routes to be defined on
@@ -36,6 +38,11 @@ This spins up a virtual environment that is accessible at `local.micropcf.io`
 ##### Install `cf` - CF CLI
 
 More information is available on the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases](https://github.com/cloudfoundry/cli/releases/latest) page.  Please install the appropriate binary for your architecture.
+
+## Troubleshooting
+
+1. Ubuntu 14.04 LTS does not install a compatible version of Vagrant by default.  A compatible version can be found on the [Vagrant Downloads](http://www.vagrantup.com/downloads.html) page.
+1. Use an Administrator shell to deploy using VMware Workstation on Windows.
 
 ## Contributing
 
