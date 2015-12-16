@@ -10,7 +10,7 @@ mkdir -p $output_dir
 $images_dir/bosh/setup $output_dir/packer-bosh
 
 releases='diego garden-linux cf-routing etcd cf'
-if ! $images_dir/bosh/retrieve $output_dir/assets $releases
+if ! $images_dir/bosh/retrieve $output_dir/assets $releases; then
   $images_dir/bosh/build $output_dir/assets $releases
 fi
 
