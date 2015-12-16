@@ -42,8 +42,14 @@ while [[ "$response" != "200" ]]; do
 done
 
 if [ -f "/var/vcap/jobs/broker-registrar/bin/run" ]; then
-  /var/vcap/jobs/broker-registrar/bin/run
+  /var/vcap/jobs/broker-registrar/bin/run > /dev/null
 fi
+
+cf api api.$DOMAIN --skip-ssl-validation >/dev/null
+cf auth admin admin >/dev/null
+cf rename-org $DOMAIN-org micropcf-org >/dev/null
+cf create-space micropcf-space -o micropcf-org >/dev/null
+cf target -o micropcf-org -s micropcf-space >/dev/null
 
 echo "MicroPCF is now running."
 echo "To begin using MicroPCF, please run:"
