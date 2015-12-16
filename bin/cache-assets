@@ -3,19 +3,28 @@
 set -e
 
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
-tmp_dir=$(mktemp -dt micropcf-assets.XXXXXXXX)
 
+if ! $micropcf_dir/bin/asset-status $@; then
+  >&2 echo "Asset submodules are dirty."
+  exit 1
+fi
+
+signature=$($micropcf_dir/bin/asset-signature $@)
+if [[ -z $signature ]]; then
+  >&2 echo "Could not sign assets."
+  exit 1
+fi
+
+if aws s3api head-object --bucket micropcf --key asset-cache/${signature}.tar >/dev/null 2>&1; then
+  exit 0
+fi
+
+tmp_dir=$(mktemp -dt micropcf-assets.XXXXXXXX)
 $micropcf_dir/images/bosh/build $tmp_dir/assets $@
 
 tar -C $tmp_dir/assets -cf $tmp_dir/assets.tar .
 
-signature=$($micropcf_dir/bin/asset-signature $@)
-if [[ ! -z $signature ]]; then
-  >&2 echo "Could not sign submodules. Submodules may be dirty."
-  exit 1
-fi
-
-aws s3api put-object --bucket micropcf --key asset-cache/$signature.tar --body $tmp_dir/assets.tar
+aws s3api put-object --bucket micropcf --key asset-cache/${signature}.tar --body $tmp_dir/assets.tar
 echo "Versions of the following releases have been cached: $@"
 
 rm -rf $tmp_dir

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+if [[ $# -eq 0 ]]; then
+  >&2 echo "Usage:"
+  >&2 echo -e "\t$0 [first-release] [second-release] ..."
+  exit 1
+fi
+
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+
+function check() {
+  [[ $(git -C "$micropcf_dir" submodule status "$1" | cut -b1) != "-" ]] && exit 1
+  return 0
+}
+
+check $micropcf_dir/images/bosh/src/github.com/sclevine/bosh-provisioner
+for release in $@; do
+  check $micropcf_dir/images/releases/${release}-release
+done

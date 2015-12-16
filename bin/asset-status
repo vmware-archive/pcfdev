@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+
+if [[ $# -eq 0 ]]; then
+  >&2 echo "Usage:"
+  >&2 echo -e "\t$0 [first-release] [second-release] ..."
+  exit 1
+fi
+
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+micropcf_sha=$(git -C "$micropcf_dir" rev-parse HEAD)
+
+function check() {
+  sha=$(git -C "$1" rev-parse HEAD)
+  [[ $sha = $micropcf_sha ]] && exit 1
+  [[ -n "$(git -C "$1" status --porcelain)" ]] && exit 1
+  return 0
+}
+
+check $micropcf_dir/images/bosh/src/github.com/sclevine/bosh-provisioner
+for release in $@; do
+  check $micropcf_dir/images/releases/${release}-release
+done

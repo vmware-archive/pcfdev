@@ -11,13 +11,11 @@ fi
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 bosh_provisioner_dir=$micropcf_dir/images/bosh/src/github.com/sclevine/bosh-provisioner
 
-[[ -n "$(git -C $bosh_provisioner_dir status --porcelain)" ]] && exit 1
-versions="bosh-provisioner $(git -C $bosh_provisioner_dir rev-parse HEAD)\n"
-
+versions="bosh-provisioner $(git -C "$bosh_provisioner_dir" rev-parse HEAD)\n"
 for release in $@; do
   release_dir=$micropcf_dir/images/releases/${release}-release
-  [[ -n "$(git -C $release_dir status --porcelain)" ]] && exit 1
-  versions="${versions}${release}-release $(git -C $release_dir rev-parse HEAD)\n"
+  release_sha=$(git -C "$micropcf_dir" submodule status "$release_dir" | cut -b 2-41)
+  versions="${versions}${release}-release ${release_sha}\n"
 done
 
 echo -e $versions | grep -v '^$' | sort | cksum | cut -d' ' -f 1
