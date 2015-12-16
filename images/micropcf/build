@@ -2,17 +2,20 @@
 
 set -e
 
-micropcf_dir=$(cd `dirname $0` && pwd)
-images_dir=$micropcf_dir/..
-output_dir=$micropcf_dir/output
-
+micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
+images_dir=$micropcf_dir/images
+output_dir=$images_dir/micropcf/output
 mkdir -p $output_dir
 
-$images_dir/bosh/setup $output_dir/assets
-$images_dir/bosh/build $output_dir/assets cf-redis
+$images_dir/bosh/setup $output_dir/packer-bosh
+
+releases='diego garden-linux cf-routing etcd cf cf-redis'
+if ! $images_dir/bosh/retrieve $output_dir/assets $releases; then
+  $images_dir/bosh/build $output_dir/assets $releases
+fi
 
 cp -a $images_dir/{run,http} $output_dir/
-spiff merge $micropcf_dir/manifest.yml $images_dir/manifest.yml > $output_dir/manifest.yml
+spiff merge $images_dir/micropcf/manifest.yml $images_dir/manifest.yml > $output_dir/manifest.yml
 
 pushd "$output_dir" >/dev/null
   packer build $@ $images_dir/micropcf.json

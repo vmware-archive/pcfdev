@@ -4,16 +4,16 @@ set -e
 
 cf_release_tag=$1
 
-dirname=$(dirname $0)
+release_dir=$(cd `dirname $0` && cd ../images/releases && pwd)
 
-pushd $dirname/../images/releases
-  pushd cf-release
+pushd $release_dir >/dev/null
+  pushd cf-release >/dev/null
     git fetch
     git checkout $cf_release_tag
     git submodule update --init --recursive
     git clean -dffx
     cf_release_sha=$(git rev-parse --short HEAD~1)
-  popd
+  popd >/dev/null
 
   while IFS=',' read a b c cf_sha e diego g h garden etcd; do
     if [[ "$cf_sha" =~ "$cf_release_sha" ]]; then
@@ -28,26 +28,26 @@ pushd $dirname/../images/releases
     exit 1
   fi
 
-  pushd diego-release
+  pushd diego-release >/dev/null
     git fetch
     git checkout v$diego_release_version
     git submodule update --init --recursive
     git clean -dffx
-  popd
+  popd >/dev/null
 
-  pushd garden-linux-release
+  pushd garden-linux-release >/dev/null
     git fetch
     git checkout v$garden_linux_release_version
     git submodule update --init --recursive
     git clean -dffx
-  popd
+  popd >/dev/null
 
-  pushd etcd-release
+  pushd etcd-release >/dev/null
     git fetch
     git checkout v$etcd_release_version
     git submodule update --init --recursive
     git clean -dffx
-  popd
+  popd >/dev/null
 
   echo "cf-release: v$diego_release_version"
   echo "diego-release: v$diego_release_version"

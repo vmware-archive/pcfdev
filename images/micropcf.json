@@ -19,13 +19,13 @@
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
-              "volume_size": 25,
+              "volume_size": 30,
               "delete_on_termination": true
             }],
             "launch_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
-              "volume_size": 25,
+              "volume_size": 30,
               "delete_on_termination": true
             }],
             "ssh_username": "ubuntu",
@@ -36,7 +36,7 @@
             "headless": true,
             "vm_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "guest_os_type": "ubuntu-64",
-            "disk_size": 25000,
+            "disk_size": 30000,
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.3-server-amd64.iso",
@@ -66,7 +66,7 @@
             "headless": true,
             "vm_name": "micropcf-vagrant-{{isotime \"20060102-1504\"}}",
             "guest_os_type": "Ubuntu_64",
-            "disk_size": 25000,
+            "disk_size": 30000,
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.3-server-amd64.iso",
@@ -162,21 +162,6 @@
                 "mv /tmp/run /var/micropcf/run",
                 "chmod +x /var/micropcf/run",
                 "mkdir -p /var/vcap/store"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "mkdir -p /var/micropcf/buildpacks/",
-                "wget -O /var/micropcf/buildpacks/binary_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/binary_buildpack-v1.0.1.zip",
-                "wget -O /var/micropcf/buildpacks/go_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/go_buildpack-v1.7.0.zip",
-                "wget -O /var/micropcf/buildpacks/nodejs_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/nodejs_buildpack-v1.5.4.zip",
-                "wget -O /var/micropcf/buildpacks/php_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/php_buildpack-v4.3.0.zip",
-                "wget -O /var/micropcf/buildpacks/python_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/python_buildpack-v1.5.2.zip",
-                "wget -O /var/micropcf/buildpacks/ruby_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/ruby_buildpack-v1.6.9.zip",
-                "wget -O /var/micropcf/buildpacks/staticfile_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/staticfile_buildpack-v1.2.3.zip",
-                "wget -O /var/micropcf/buildpacks/java_buildpack.zip https://s3.amazonaws.com/micropcf/buildpacks/java-buildpack-v3.4.zip"
             ]
         },
         {

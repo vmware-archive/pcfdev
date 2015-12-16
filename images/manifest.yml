@@ -11,9 +11,9 @@ releases:
 - name: cf-routing
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-routing-0.tgz
-- name: cf-micropcf
+- name: cf
   version: 0
-  url: file:///opt/bosh-provisioner/assets/releases/cf-micropcf-0.tgz
+  url: file:///opt/bosh-provisioner/assets/releases/cf-0.tgz
 - name: etcd
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/etcd-0.tgz
@@ -77,29 +77,29 @@ jobs:
     release: cf-routing
 
   - name: consul_agent
-    release: cf-micropcf
+    release: cf
   - name: doppler
-    release: cf-micropcf
+    release: cf
   - name: gorouter
-    release: cf-micropcf
+    release: cf
   - name: loggregator_trafficcontroller
-    release: cf-micropcf
+    release: cf
   - name: metron_agent
-    release: cf-micropcf
+    release: cf
   - name: nats
-    release: cf-micropcf
+    release: cf
   - name: uaa
-    release: cf-micropcf
+    release: cf
   - name: postgres
-    release: cf-micropcf
+    release: cf
   - name: cloud_controller_ng
-    release: cf-micropcf
+    release: cf
   - name: cloud_controller_worker
-    release: cf-micropcf
+    release: cf
   - name: cloud_controller_clock
-    release: cf-micropcf
+    release: cf
   - name: route_registrar
-    release: cf-micropcf
+    release: cf
 
   - name: etcd
     release: etcd
@@ -546,14 +546,14 @@ properties:
     default_staging_security_groups: [public_networks, dns]
     external_protocol: http
     install_buildpacks:
-    - {name: ruby_buildpack, file: /var/micropcf/buildpacks/ruby_buildpack.zip}
-    - {name: nodejs_buildpack, file: /var/micropcf/buildpacks/nodejs_buildpack.zip}
-    - {name: go_buildpack, file: /var/micropcf/buildpacks/go_buildpack.zip}
-    - {name: python_buildpack, file: /var/micropcf/buildpacks/python_buildpack.zip}
-    - {name: php_buildpack, file: /var/micropcf/buildpacks/php_buildpack.zip}
-    - {name: staticfile_buildpack, file: /var/micropcf/buildpacks/staticfile_buildpack.zip}
-    - {name: binary_buildpack, file: /var/micropcf/buildpacks/binary_buildpack.zip}
-    - {name: java_buildpack, file: /var/micropcf/buildpacks/java_buildpack.zip}
+    - {name: java_buildpack, package: buildpack_java}
+    - {name: ruby_buildpack, package: buildpack_ruby}
+    - {name: nodejs_buildpack, package: buildpack_nodejs}
+    - {name: go_buildpack, package: buildpack_go}
+    - {name: python_buildpack, package: buildpack_python}
+    - {name: php_buildpack, package: buildpack_php}
+    - {name: staticfile_buildpack, package: buildpack_staticfile}
+    - {name: binary_buildpack, package: buildpack_binary}
   ccdb:
     address: localhost
     databases:
