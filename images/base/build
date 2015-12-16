@@ -2,14 +2,17 @@
 
 set -e
 
-base_dir=$(cd `dirname $0`  && pwd)
-images_dir=$base_dir/..
-output_dir=$base_dir/output
-
+micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
+images_dir=$micropcf_dir/images
+output_dir=$images_dir/base/output
 mkdir -p $output_dir
 
-$images_dir/bosh/setup $output_dir/assets
-$images_dir/bosh/build $output_dir/assets
+$images_dir/bosh/setup $output_dir/packer-bosh
+
+releases='diego garden-linux cf-routing etcd cf'
+if ! $images_dir/bosh/retrieve $output_dir/assets $releases
+  $images_dir/bosh/build $output_dir/assets $releases
+fi
 
 cp -a $images_dir/{run,http,manifest.yml} $output_dir/
 

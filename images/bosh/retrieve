@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
+  >&2 echo "Usage:"
+  >&2 echo -e "\t$0 /path/to/assets [first-release] [second-release] ..."
+  exit 1
+fi
+
+assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
+micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
+signature=$($micropcf_dir/bin/asset-signature ${@:2})
+if [[ ! -z $signature ]]; then
+  >&2 echo "Submodules not available in cache."
+  exit 1
+fi
+
+aws s3api get-object --bucket micropcf --key asset-cache/${signature}.tar >(tar -C "$assets_dir" -x)
