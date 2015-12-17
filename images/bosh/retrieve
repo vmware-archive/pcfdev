@@ -19,7 +19,7 @@ if ! $micropcf_dir/bin/asset-absence $releases && ! $micropcf_dir/bin/asset-stat
 fi
 
 signature=$($micropcf_dir/bin/asset-signature $releases)
-if [[ ! -z $signature ]]; then
+if [[ -z $signature ]]; then
   >&2 echo "Assets not available in cache."
   exit 1
 fi
