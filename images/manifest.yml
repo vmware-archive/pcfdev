@@ -436,6 +436,7 @@ properties:
     auth_disabled: true
   domain: placeholder.system-domain
   uaa:
+    catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
     clients:
       doppler:
@@ -563,5 +564,4 @@ properties:
     roles:
     - {name: ccadmin, password: admin, tag: admin}
   login:
-    catalina_opts: -Xmx768m
     protocol: http
