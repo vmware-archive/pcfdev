@@ -11,7 +11,7 @@ fi
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 bosh_provisioner_dir=$micropcf_dir/images/bosh/src/github.com/sclevine/bosh-provisioner
 
-versions="bosh-provisioner $(git -C "$bosh_provisioner_dir" rev-parse HEAD)\n"
+versions="bosh-provisioner $(git -C "$micropcf_dir" submodule status "$bosh_provisioner_dir" | cut -b 2-41)\n"
 for release in $@; do
   release_dir=$micropcf_dir/images/releases/${release}-release
   release_sha=$(git -C "$micropcf_dir" submodule status "$release_dir" | cut -b 2-41)
