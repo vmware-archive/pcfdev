@@ -179,6 +179,7 @@
             "inline": [
                 "chmod 1777 /tmp",
                 "mv /opt/bosh-provisioner/assets/versions /var/micropcf/",
+                "rm -rf /var/vcap/data/compile /var/vcap/nfs",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "echo manual > /etc/init/runsvdir.override"
             ]
