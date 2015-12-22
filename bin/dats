@@ -18,6 +18,7 @@ cat <<EOF >$CONFIG
   "admin_user": "admin",
   "admin_password": "admin",
   "apps_domain": "$domain",
+  "default_timeout": 600,
   "secure_address": "${private_ip}:4001",
   "skip_ssl_validation": true
 }

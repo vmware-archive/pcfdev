@@ -52,7 +52,6 @@ Vagrant.configure("2") do |config|
     network_config = <<-SCRIPT
       public_ip="$(curl http://169.254.169.254/latest/meta-data/public-ipv4)"
       domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
-      garden_ip="$(ip route get 1 | awk '{print $NF;exit}')"
     SCRIPT
   else
     public_ip = ENV["MICROPCF_IP"] || "192.168.11.11"
@@ -60,7 +59,6 @@ Vagrant.configure("2") do |config|
 
     network_config = <<-SCRIPT
       domain="#{ENV["MICROPCF_DOMAIN"] || default_domain}"
-      garden_ip="#{public_ip}"
     SCRIPT
 
     config.vm.network "private_network", ip: public_ip
@@ -71,7 +69,6 @@ Vagrant.configure("2") do |config|
       set -e
       #{network_config}
 
-      echo "GARDEN_IP=$garden_ip" >> /var/micropcf/setup
       echo "DOMAIN=$domain" >> /var/micropcf/setup
       echo 'HOST_ID=micropcf' >> /var/micropcf/setup
 

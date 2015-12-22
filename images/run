@@ -14,8 +14,6 @@ perl -p -i -e "s/micropcf-0/$HOST_ID/g" $job_files
 
 sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
   /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl
-sed -i "s%/var/vcap/packages/garden-linux/bin/garden-linux%& -externalIP=$GARDEN_IP%" \
-  /var/vcap/jobs/garden/bin/garden_ctl
 sed -i "s%#\!/bin/bash%#\!/bin/bash\n\nmkdir -p /tmp/cctmp\nchown 0:vcap /tmp/cctmp||true\nchmod 1777 /tmp/cctmp||true\nexport TMPDIR=/tmp/cctmp%" \
   /var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
 
@@ -50,6 +48,7 @@ cf auth admin admin >/dev/null
 cf rename-org $DOMAIN-org micropcf-org >/dev/null
 cf create-space micropcf-space -o micropcf-org >/dev/null
 cf target -o micropcf-org -s micropcf-space >/dev/null
+cf enable-feature-flag diego_docker >/dev/null
 
 echo "MicroPCF is now running."
 echo "To begin using MicroPCF, please run:"

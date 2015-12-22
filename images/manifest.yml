@@ -210,12 +210,9 @@ properties:
         client_key: ""
         require_ssl: false
 
-  # For Garden:
-  garden:
-    allow_host_access: true # turn off in favor of TCP routing
-
   # For CF Routing:
   router:
+    debug_addr: 0.0.0.0:17003
     enable_routing_api: true
     enable_ssl: true
     ssl_cert: |
@@ -565,3 +562,6 @@ properties:
     - {name: ccadmin, password: admin, tag: admin}
   login:
     protocol: http
+  garden:
+    deny_networks:
+    - 0.0.0.0/0
