@@ -456,7 +456,6 @@ properties:
       client_secret: admin-client-secret
     cc:
       client_secret: cc-client-secret
-      token_secret: cc-token-secret
     scim:
       user:
         override: true
