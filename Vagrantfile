@@ -68,7 +68,11 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SCRIPT
       set -e
       #{network_config}
-      /var/micropcf/run "$domain"
+
+      echo "DOMAIN=$domain" >> /var/micropcf/setup
+      echo 'HOST_ID=micropcf' >> /var/micropcf/setup
+
+      /var/micropcf/run
     SCRIPT
   end
 end
