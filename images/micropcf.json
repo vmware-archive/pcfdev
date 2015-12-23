@@ -167,10 +167,7 @@
         {
             "type": "packer-bosh",
             "assets_dir": "assets",
-            "remote_manifest_path": "/var/micropcf/manifest.yml",
-            "agent_configuration": {
-              "agent_id": "micropcf"
-            }
+            "remote_manifest_path": "/var/micropcf/manifest.yml"
         },
         {
             "type": "shell",
