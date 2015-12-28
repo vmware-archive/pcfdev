@@ -10,6 +10,7 @@ new_ip=$(ip route get 1 | awk '{print $NF;exit}')
 
 perl -p -i -e "s/\\Q$old_ip\\E/$new_ip/g" $job_files
 perl -p -i -e "s/placeholder\.system-domain/$domain/g" $job_files
+echo $domain > /var/micropcf/domain
 
 sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
   /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl
