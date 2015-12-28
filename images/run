@@ -2,24 +2,19 @@
 
 set -e
 
-export $(cat /var/micropcf/setup)
+domain=$1
 
 job_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)
 old_ip=$(cat /var/micropcf/ip)
 new_ip=$(ip route get 1 | awk '{print $NF;exit}')
 
 perl -p -i -e "s/\\Q$old_ip\\E/$new_ip/g" $job_files
-perl -p -i -e "s/placeholder\.system-domain/$DOMAIN/g" $job_files
-perl -p -i -e "s/micropcf-0/$HOST_ID/g" $job_files
+perl -p -i -e "s/placeholder\.system-domain/$domain/g" $job_files
 
 sed -i 's%/var/vcap/packages/loggregator_trafficcontroller/trafficcontroller%& --disableAccessControl%' \
   /var/vcap/jobs/loggregator_trafficcontroller/bin/loggregator_trafficcontroller_ctl
 sed -i "s%#\!/bin/bash%#\!/bin/bash\n\nmkdir -p /tmp/cctmp\nchown 0:vcap /tmp/cctmp||true\nchmod 1777 /tmp/cctmp||true\nexport TMPDIR=/tmp/cctmp%" \
   /var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
-
-bosh_config=/var/vcap/bosh/warden-cpi-agent-env.json
-bosh_config_json=$(cat "$bosh_config")
-echo $bosh_config_json | jq '. + {"agent_id": "'$HOST_ID'"}' > "$bosh_config"
 
 rm -rf /var/vcap/store/*
 rm -f /etc/init/runsvdir.override
@@ -36,23 +31,23 @@ done
 response=000
 while [[ "$response" != "200" ]]; do
   sleep 1
-  response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$DOMAIN/v2/info)
+  response=$(curl -s -o /dev/null -I -w %{http_code} http://api.$domain/v2/info)
 done
 
 if [ -f "/var/vcap/jobs/broker-registrar/bin/run" ]; then
   /var/vcap/jobs/broker-registrar/bin/run > /dev/null
 fi
 
-cf api api.$DOMAIN --skip-ssl-validation >/dev/null
+cf api api.$domain --skip-ssl-validation >/dev/null
 cf auth admin admin >/dev/null
-cf rename-org $DOMAIN-org micropcf-org >/dev/null
+cf rename-org $domain-org micropcf-org >/dev/null
 cf create-space micropcf-space -o micropcf-org >/dev/null
 cf target -o micropcf-org -s micropcf-space >/dev/null
 cf enable-feature-flag diego_docker >/dev/null
 
 echo "MicroPCF is now running."
 echo "To begin using MicroPCF, please run:"
-echo -e "\tcf api api.$DOMAIN --skip-ssl-validation"
+echo -e "\tcf api api.$domain --skip-ssl-validation"
 echo -e "\tcf login"
 echo "Email: admin"
 echo "Password: admin"
