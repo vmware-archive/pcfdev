@@ -139,6 +139,11 @@
             "destination": "/tmp/run"
         },
         {
+            "type": "file",
+            "source": "cleanup",
+            "destination": "/tmp/cleanup"
+        },
+        {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -159,8 +164,8 @@
                 "mkdir -p /var/micropcf",
                 "ip route get 1 | awk '{print $NF;exit}' > /var/micropcf/ip",
                 "sed \"s/placeholder-ip/$(cat /var/micropcf/ip)/\" /tmp/manifest.yml > /var/micropcf/manifest.yml",
-                "mv /tmp/run /var/micropcf/run",
-                "chmod +x /var/micropcf/run",
+                "mv /tmp/run /tmp/cleanup /var/micropcf/",
+                "chmod +x /var/micropcf/run /var/micropcf/cleanup",
                 "mkdir -p /var/vcap/store"
             ]
         },
@@ -196,6 +201,13 @@
                 "wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
                 "mv authorized_keys /home/vagrant/.ssh/",
                 "chown -R vagrant /home/vagrant/.ssh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "/var/micropcf/cleanup"
             ]
         },
         {

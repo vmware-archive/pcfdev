@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+monit="/var/vcap/bosh/bin/monit"
+
+echo "Waiting for services to stop..."
+$monit stop all
+
+total_services() { $monit summary 2>/dev/null | grep -E '^(Process|File|System)' | wc -l; }
+stopped_services() { $monit summary 2>/dev/null | grep 'not monitored' | grep -v 'pending' | wc -l; }
+
+while [[ $(total_services) = 0 ]] || [[ $(stopped_services) -lt $(total_services) ]]; do
+  sleep 1
+done
+
+echo "Services stopped. Removing contents of /var/vcap/store..."
+rm -rf /var/vcap/store/*
