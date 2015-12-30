@@ -10,9 +10,6 @@
 [submodule "images/releases/garden-linux-release"]
 	path = images/releases/garden-linux-release
 	url = https://github.com/cloudfoundry-incubator/garden-linux-release
-[submodule "images/releases/cf-routing-release"]
-	path = images/releases/cf-routing-release
-	url = https://github.com/cloudfoundry-incubator/cf-routing-release
 [submodule "images/bosh/src/github.com/sclevine/packer-bosh"]
 	path = images/bosh/src/github.com/sclevine/packer-bosh
 	url = git@github.com:sclevine/packer-bosh
