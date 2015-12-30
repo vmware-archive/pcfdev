@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: public_ip
   end
 
-  config.vm.provision "shell" do |s|
+  config.vm.provision "shell", run: "always" do |s|
     s.inline = <<-SCRIPT
       set -e
       #{network_config}

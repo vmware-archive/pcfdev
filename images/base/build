@@ -14,7 +14,7 @@ if ! $images_dir/bosh/retrieve $output_dir/assets $releases; then
   $images_dir/bosh/build $output_dir/assets $releases
 fi
 
-cp -a $images_dir/{run,http,manifest.yml,cleanup} $output_dir/
+cp -a $images_dir/{http,manifest.yml,scripts} $output_dir/
 
 pushd "$output_dir" >/dev/null
   packer build $@ $images_dir/micropcf.json

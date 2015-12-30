@@ -135,13 +135,8 @@
         },
         {
             "type": "file",
-            "source": "run",
-            "destination": "/tmp/run"
-        },
-        {
-            "type": "file",
-            "source": "cleanup",
-            "destination": "/tmp/cleanup"
+            "source": "scripts",
+            "destination": "/tmp"
         },
         {
             "type": "shell",
@@ -161,33 +156,34 @@
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
                 "mkdir -p /var/micropcf",
                 "ip route get 1 | awk '{print $NF;exit}' > /var/micropcf/ip",
+                "echo local.micropcf.io > /var/micropcf/domain",
                 "sed \"s/placeholder-ip/$(cat /var/micropcf/ip)/\" /tmp/manifest.yml > /var/micropcf/manifest.yml",
-                "mv /tmp/run /tmp/cleanup /var/micropcf/",
-                "chmod +x /var/micropcf/run /var/micropcf/cleanup",
+                "chmod +x /tmp/scripts/*",
+                "mv /tmp/scripts/* /var/micropcf/",
                 "mkdir -p /var/vcap/store"
             ]
         },
         {
             "type": "packer-bosh",
             "assets_dir": "assets",
-            "remote_manifest_path": "/var/micropcf/manifest.yml",
-            "agent_configuration": {
-              "agent_id": "micropcf"
-            }
+            "remote_manifest_path": "/var/micropcf/manifest.yml"
         },
         {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "remote_path": "/home/vagrant/bosh-cleanup.sh",
+            "remote_path": "/home/vagrant/cleanup.sh",
             "override": {
-                "amazon-ebs": { "remote_path": "/home/ubuntu/bosh-cleanup.sh" }
+                "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
                 "chmod 1777 /tmp",
                 "mv /opt/bosh-provisioner/assets/versions /var/micropcf/",
-                "rm -rf /var/vcap/data/compile /var/vcap/nfs",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
-                "echo manual > /etc/init/runsvdir.override"
+                "rm -rf /var/vcap/data/compile /var/vcap/nfs",
+                "echo manual > /etc/init/runsvdir.override",
+                "apt-get -y autoremove",
+                "apt-get -y clean",
+                "/var/micropcf/reset"
             ]
         },
         {
@@ -199,21 +195,6 @@
                 "wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
                 "mv authorized_keys /home/vagrant/.ssh/",
                 "chown -R vagrant /home/vagrant/.ssh"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "/var/micropcf/cleanup"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "apt-get -y autoremove",
-                "apt-get -y clean"
             ]
         },
         {

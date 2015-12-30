@@ -95,9 +95,9 @@ jobs:
 
 properties:
   support_address: email@example.com
-  system_domain: placeholder.system-domain
-  system_domain_organization: placeholder.system-domain-org
-  app_domains: [placeholder.system-domain]
+  system_domain: local.micropcf.io
+  system_domain_organization: micropcf-org
+  app_domains: [local.micropcf.io]
 
   # For Diego:
   diego:
@@ -188,7 +188,7 @@ properties:
         require_ssl: false
       host_key: "$(openssl genrsa 2048 2> /dev/null)"
       enable_cf_auth: true
-      uaa_token_url: "http://login.placeholder.system-domain/oauth/token"
+      uaa_token_url: "http://login.local.micropcf.io/oauth/token"
       uaa_secret: ssh-proxy-secret
     rep:
       zone: z1
@@ -245,7 +245,7 @@ properties:
     shared_secret: loggregator-secret
   metron_endpoint:
     shared_secret: loggregator-secret
-  domain: placeholder.system-domain
+  domain: local.micropcf.io
   uaa:
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
@@ -256,7 +256,7 @@ properties:
         authorities: oauth.login,scim.write,clients.read,scim.userids,password.write
         secret: login-secret
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        redirect-uri: "https://login.placeholder.system-domain"
+        redirect-uri: "https://login.local.micropcf.io"
       doppler:
         override: true
         authorities: uaa.resource
@@ -321,22 +321,22 @@ properties:
     - name: doppler
       port: 8081
       uris:
-      - doppler.placeholder.system-domain
+      - doppler.local.micropcf.io
     - name: loggregator
       port: 8084
       uris:
-      - loggregator.placeholder.system-domain
+      - loggregator.local.micropcf.io
     - name: api
       port: 9022
       uris:
-      - api.placeholder.system-domain
+      - api.local.micropcf.io
     - name: uaa
       port: 8085
       uris:
-      - "uaa.placeholder.system-domain"
-      - "*.uaa.placeholder.system-domain"
-      - "login.placeholder.system-domain"
-      - "*.login.placeholder.system-domain"
+      - "uaa.local.micropcf.io"
+      - "*.uaa.local.micropcf.io"
+      - "login.local.micropcf.io"
+      - "*.login.local.micropcf.io"
   uaadb:
     address: localhost
     databases:
@@ -357,7 +357,7 @@ properties:
     default_to_diego_backend: true
     diego:
       stager_url: http://stager.service.cf.internal:8890
-    srv_api_uri: http://api.placeholder.system-domain
+    srv_api_uri: http://api.local.micropcf.io
     info:
       name: micropcf-cc
       build: ""
@@ -464,6 +464,8 @@ properties:
       BzSu7f3Z320nKnJMGeoBTyWW9mPdpzNnovztPlcQo25PcnNxf2V57Q==
       -----END RSA PRIVATE KEY-----
     ssl_skip_validation: true
+  routing-api:
+    debug_address: 0.0.0.0:17022
 
   # For Garden:
   garden:

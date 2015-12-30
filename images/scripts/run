@@ -1,0 +1,66 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+    >&2 echo "Usage:"
+    >&2 echo -e "\t$0 <domain>"
+    exit 1
+fi
+
+exec 3>&1 4>&2 >>/var/micropcf/run.log 2>&1
+
+domain=$1
+
+config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/micropcf/manifest.yml -type f)
+
+ip=$(ip route get 1 | awk '{print $NF;exit}')
+old_ip=$(cat /var/micropcf/ip)
+perl -p -i -e "s/\\Q$old_ip\\E/$ip/g" $config_files
+echo $ip > /var/micropcf/ip
+
+old_domain=$(cat /var/micropcf/domain)
+perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
+echo $domain > /var/micropcf/domain
+
+mkdir -p /tmp/cc_tmp
+chgrp vcap /tmp/cc_tmp
+chmod 1777 /tmp/cc_tmp
+
+cc_worker_ctl=/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
+grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDIR=/tmp/cc_tmp' "$cc_worker_ctl"
+
+monit="/var/vcap/bosh/bin/monit"
+
+start runsvdir || true
+$monit start all
+
+>&3 echo "Waiting for services to start..."
+started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
+total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
+while [[ $(total_services) = 0 ]] || [[ $(started_services) -lt $(total_services) ]]; do
+  sleep 1
+done
+
+while [[ $response != 200 ]]; do
+  sleep 1
+  response=$(curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info)
+done
+
+cf api api.$domain --skip-ssl-validation
+cf auth admin admin
+cf create-org micropcf-org
+cf create-space micropcf-space -o micropcf-org
+cf target -o micropcf-org -s micropcf-space
+cf enable-feature-flag diego_docker
+
+[[ -x /var/micropcf/post-run ]] && /var/micropcf/post-run
+
+exec 1>&3 2>&4
+
+echo "MicroPCF is now running."
+echo "To begin using MicroPCF, please run:"
+echo -e "\tcf api api.$domain --skip-ssl-validation"
+echo -e "\tcf login"
+echo "Email: admin"
+echo "Password: admin"
