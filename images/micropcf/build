@@ -14,7 +14,8 @@ if ! $images_dir/bosh/retrieve $output_dir/assets $releases; then
   $images_dir/bosh/build $output_dir/assets $releases
 fi
 
-cp -a $images_dir/{run,http,cleanup} $output_dir/
+cp -a $images_dir/{http,scripts} $output_dir/
+cp -a $images_dir/micropcf/post-run $output_dir/scripts/
 spiff merge $images_dir/micropcf/manifest.yml $images_dir/manifest.yml > $output_dir/manifest.yml
 
 pushd "$output_dir" >/dev/null

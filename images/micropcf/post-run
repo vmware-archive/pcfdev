@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -e
+
+/var/vcap/jobs/broker-registrar/bin/run
