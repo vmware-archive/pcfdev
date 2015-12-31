@@ -2,14 +2,13 @@
 
 set -e
 
-if [[ -z $1 ]] || [[ -z $2 ]]; then
-  echo "Usage:"
-  echo -e "\t$0 micropcf_domain private_ip"
-  exit 1
+if [[ -z $1 ]]; then
+	echo "Usage:"
+	echo -e "\t$0 micropcf_domain"
+	exit 1
 fi
 
 domain=$1
-private_ip=$2
 
 export CONFIG=`mktemp -t config.XXXXXXXX`
 cat <<EOF >$CONFIG
@@ -20,7 +19,7 @@ cat <<EOF >$CONFIG
   "apps_domain": "$domain",
   "cf_push_timeout": 600,
   "long_curl_timeout": 600,
-  "secure_address": "${private_ip}:4001",
+  "secure_address": "$(dig +short pivotal.io | head -1):80",
   "skip_ssl_validation": true
 }
 EOF
@@ -29,6 +28,12 @@ diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pw
 micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 
 pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
+	cf unbind-running-security-group public_networks
+	function bind_public_networks {
+		cf bind-running-security-group public_networks
+	}
+	trap bind_public_networks EXIT
+
   export GOPATH=$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
   ./bin/test --skip='DEA Compatibility'
