@@ -33,7 +33,6 @@ grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDI
 monit="/var/vcap/bosh/bin/monit"
 
 start runsvdir || true
-$monit start all
 
 >&3 echo "Waiting for services to start..."
 started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
