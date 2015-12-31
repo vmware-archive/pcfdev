@@ -18,15 +18,17 @@ cat <<EOF >$CONFIG
   "admin_user": "admin",
   "admin_password": "admin",
   "apps_domain": "$domain",
-  "default_timeout": 600,
+  "cf_push_timeout": 600,
+  "long_curl_timeout": 600,
   "secure_address": "${private_ip}:4001",
   "skip_ssl_validation": true
 }
 EOF
 
 diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pwd)
+micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 
-pushd $diego_release_dir/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
+pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
   export GOPATH=$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
   ./bin/test --skip='DEA Compatibility'

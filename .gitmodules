@@ -19,3 +19,9 @@
 [submodule "images/releases/cf-redis-release"]
 	path = images/releases/cf-redis-release
 	url = https://github.com/sclevine/cf-redis-release
+[submodule "test/cf-acceptance-tests"]
+	path = test/cf-acceptance-tests
+	url = git@github.com:mdelillo/cf-acceptance-tests.git
+[submodule "test/diego-acceptance-tests"]
+	path = test/diego-acceptance-tests
+	url = git@github.com:mdelillo/diego-acceptance-tests.git
