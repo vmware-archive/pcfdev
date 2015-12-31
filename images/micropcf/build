@@ -19,5 +19,5 @@ cp -a $images_dir/micropcf/post-run $output_dir/scripts/
 spiff merge $images_dir/micropcf/manifest.yml $images_dir/manifest.yml > $output_dir/manifest.yml
 
 pushd "$output_dir" >/dev/null
-  packer build $@ $images_dir/micropcf.json
+  packer build $@ $images_dir/micropcf.json -var 'distro=micropcf'
 popd >/dev/null
