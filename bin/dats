@@ -3,9 +3,9 @@
 set -e
 
 if [[ -z $1 ]]; then
-	echo "Usage:"
-	echo -e "\t$0 micropcf_domain"
-	exit 1
+  echo "Usage:"
+  echo -e "\t$0 micropcf_domain"
+  exit 1
 fi
 
 domain=$1
@@ -28,11 +28,11 @@ diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pw
 micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 
 pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
-	cf unbind-running-security-group public_networks
-	function bind_public_networks {
-		cf bind-running-security-group public_networks
-	}
-	trap bind_public_networks EXIT
+  cf unbind-running-security-group public_networks
+  function bind_public_networks {
+    cf bind-running-security-group public_networks
+  }
+  trap bind_public_networks EXIT
 
   export GOPATH=$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
