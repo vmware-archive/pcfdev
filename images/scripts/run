@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -x
 
 if [[ -z $1 ]]; then
     >&2 echo "Usage:"
@@ -36,15 +36,15 @@ start runsvdir || true
 $monit start all
 
 >&3 echo "Waiting for services to start..."
-started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
+started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l || echo 0; }
+total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l || echo 0; }
 while [[ $(total_services) = 0 ]] || [[ $(started_services) -lt $(total_services) ]]; do
   sleep 1
 done
 
 while [[ $response != 200 ]]; do
   sleep 1
-  response=$(curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info)
+  response=$(curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info || echo 0)
 done
 
 cf api api.$domain --skip-ssl-validation
