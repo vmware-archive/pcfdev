@@ -27,7 +27,7 @@ EOF
 diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pwd)
 micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 
-pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
+pushd $micropcf_dir/test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   cf api api.$domain --skip-ssl-validation
   cf auth admin admin
   cf unbind-running-security-group public_networks
@@ -36,7 +36,7 @@ pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
   }
   trap bind_public_networks EXIT
 
-  export GOPATH=$diego_release_dir
+  export GOPATH=$micropcf_dir/test:$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
   ./bin/test --skip='DEA Compatibility'
 popd >/dev/null
