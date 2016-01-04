@@ -19,10 +19,13 @@ cat <<EOF >$CONFIG
   "apps_domain": "$domain",
   "cf_push_timeout": 600,
   "long_curl_timeout": 600,
-  "secure_address": "$(dig +short pivotal.io | head -1):80",
+  "secure_address": "52.70.205.165:25555",
   "skip_ssl_validation": true
 }
 EOF
+
+public_networks_without_bosh='[ { "destination": "0.0.0.0-9.255.255.255", "protocol": "all" }, { "destination": "11.0.0.0-52.70.205.164", "protocol": "all" }, { "destination": "52.70.205.166-169.253.255.255", "protocol": "all" }, { "destination": "169.255.0.0-172.15.255.255", "protocol": "all" }, { "destination": "172.32.0.0-192.167.255.255", "protocol": "all" }, { "destination": "192.169.0.0-255.255.255.255", "protocol": "all" } ]'
+public_networks='[ { "destination": "0.0.0.0-9.255.255.255", "protocol": "all" }, { "destination": "11.0.0.0-169.253.255.255", "protocol": "all" }, { "destination": "169.255.0.0-172.15.255.255", "protocol": "all" }, { "destination": "172.32.0.0-192.167.255.255", "protocol": "all" }, { "destination": "192.169.0.0-255.255.255.255", "protocol": "all" } ]'
 
 diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pwd)
 micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
@@ -30,11 +33,11 @@ micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 pushd $micropcf_dir/test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests >/dev/null
   cf api api.$domain --skip-ssl-validation
   cf auth admin admin
-  cf unbind-running-security-group public_networks
-  function bind_public_networks {
-    cf bind-running-security-group public_networks
+  cf update-security-group public_networks <(echo $public_networks_without_bosh)
+  function restore_public_networks {
+    cf update-security-group public_networks <(echo $public_networks)
   }
-  trap bind_public_networks EXIT
+  trap restore_public_networks EXIT
 
   export GOPATH=$micropcf_dir/test:$diego_release_dir
   export PATH=$GOPATH/bin:$PATH
