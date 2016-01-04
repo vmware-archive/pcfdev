@@ -28,6 +28,8 @@ diego_release_dir=$(cd `dirname $0` && cd ../images/releases/diego-release && pw
 micropcf_dir=$(cd `dirname $0` && cd ../ && pwd)
 
 pushd $micropcf_dir/test/diego-acceptance-tests >/dev/null
+  cf api api.$domain --skip-ssl-validation
+  cf auth admin admin
   cf unbind-running-security-group public_networks
   function bind_public_networks {
     cf bind-running-security-group public_networks
