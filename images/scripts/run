@@ -35,9 +35,9 @@ monit="/var/vcap/bosh/bin/monit"
 start runsvdir || true
 
 >&3 echo "Waiting for services to start..."
-started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l || echo 0; }
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l || echo 0; }
-curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info || echo 0; }
+started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
+total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
+curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
 
 while [[ $(total_services) = 0 ]]; do
   sleep 1
