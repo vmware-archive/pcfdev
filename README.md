@@ -1,15 +1,24 @@
 # microPCF (Pivotal Cloud Foundry)
 
-MicroPCF is an open source project for running a local version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), and [Amazon Web Services](http://aws.amazon.com/).
+microPCF is an open-source project that allows developers to easily run a single VM version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), or [Amazon Web Services](http://aws.amazon.com/).
 
 [ [Website](http://micropcf.io) | [Latest Release](https://github.com/pivotal-cf/micropcf/releases/latest) | [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html) ]
 
-## Deploy microPCF with Vagrant
+## Deploy microPCF
 
-A colocated deployment of microPCF can be launched locally with [Vagrant](https://vagrantup.com/). You will need:
+microPCF can be deployed with [Vagrant](https://vagrantup.com/). You will need:
 
 * A microPCF Vagrantfile from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
 * [Vagrant](https://vagrantup.com/) 1.7+ installed
+
+To deploy locally, you will need one of the following virtualizers
+* Virtualbox 5.0+
+* Vmware Fusion 8+ (for OSX)
+* VMware Desktop 11+ (for Windows)
+
+To deploy to AWS, you will need the vagrant-aws plugin (`vagrant plugin install vagrant-aws`) and credentials for an AWS account in your environment.
+
+> Cloning this repo is not required to use microPCF.
 
 ##### Spin up a virtual environment
 
@@ -18,31 +27,40 @@ Download the Vagrantfile into a new local folder, and open a prompt to that fold
 ```bash
 # download https://github.com/pivotal-cf/micropcf/releases/download/<VERSION>/Vagrantfile-<VERSION>.base
 # mv Vagrantfile-<VERSION>.base Vagrantfile
-vagrant up --provider virtualbox
+vagrant up --provider <PROVIDER>
 ```
-
-By default, the cluster can be targeted at `cf api api.local.micropcf.io --skip-ssl-validation`.
-
-> Unless you're attempting to develop microPCF itself, please download the Vagrantfile from [Github Releases](https://github.com/pivotal-cf/micropcf/releases/latest) or [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html).  There's no need to clone the repository in order to use microPCF.
+`<PROVIDER>` should be set to one of `virtualbox`, `vmware_fusion`, `vmware_desktop`, or `aws`.
 
 ##### Supported environment variables
-
-These variables must be set during vagrant up.
+You may set the following environment variables to customize your environment:
 
 1. `MICROPCF_IP` - sets the IP address to bring up the VM on
+  - defaults to 192.168.11.11 locally
+  - defaults to AWS-assigned public IP on AWS
 1. `MICROPCF_DOMAIN` - sets an alternate alias for the system routes to be defined on
-  - defaults to `local.micropcf.io`, then `$MICROPCF_IP.xip.io`
-1. `VM_CORES` - number of CPU cores to allocate on the Guest VM (defaults to host # of logical CPUs)
-1. `VM_MEMORY` - number of MB to allocate on the Guest VM (defaults to 25% of host memory)
+  - defaults to `local.micropcf.io` when deploying locally
+  - defaults to <MICROPCF_IP>.xip.io on AWS
+1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
+  - defaults to host # of logical CPUs
+1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
+  - defaults to 25% of host memory
 
 ##### Install `cf` - CF CLI
 
-More information is available on the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases](https://github.com/cloudfoundry/cli/releases/latest) page.  Please install the appropriate binary for your architecture.
+Please install the appropriate binary for your architecture from the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases page](https://github.com/cloudfoundry/cli/releases/latest).
+
+
+##### Use CF CLI to interact with your microPCF
+
+By default, you can point your CLI to your microPCF deployment by running `cf api api.<MICROPCF_DOMAIN> --skip-ssl-validation`. If you're deploying microPCF locally, the default value for `<MICROPCF_DOMAIN>` is `local.micropcf.io`.
+
+To stage a simple app on microPCF, `cd` into the app directory and run `cf push <APP_NAME>`.
+
+See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
 
 ## Troubleshooting
 
-1. Ubuntu 14.04 LTS does not install a compatible version of Vagrant by default.  A compatible version can be found on the [Vagrant Downloads](http://www.vagrantup.com/downloads.html) page.
-1. Use an Administrator shell to deploy using VMware Workstation on Windows.
+See our [troubleshooting](TROUBLESHOOTING.md) page.
 
 ## Contributing
 
