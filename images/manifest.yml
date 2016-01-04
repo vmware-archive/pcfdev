@@ -137,6 +137,7 @@ properties:
         debug_addr: 0.0.0.0:17020
       listener:
         debug_addr: 0.0.0.0:17021
+      traffic_controller_url: wss://doppler.local.micropcf.io:443
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
