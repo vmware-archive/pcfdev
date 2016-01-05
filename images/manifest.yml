@@ -233,13 +233,14 @@ properties:
     require_ssl: false
   doppler:
     zone: z1
+    outgoing_port: 8083
   doppler_endpoint:
     shared_secret: loggregator-secret
   traffic_controller:
     zone: z1
     outgoing_port: 8084
   loggregator:
-    outgoing_dropsonde_port: 8083
+    doppler_port: 8083
     etcd:
       machines: [etcd.service.cf.internal]
   loggregator_endpoint:
