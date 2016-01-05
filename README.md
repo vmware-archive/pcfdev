@@ -22,14 +22,18 @@ To deploy to AWS, you will need the vagrant-aws plugin (`vagrant plugin install 
 
 ##### Spin up a virtual environment
 
-Download the Vagrantfile into a new local folder, and open a prompt to that folder:
+Download Vagrantfile of your interested release version into a new local folder and spin up a virtual environment.
+You can find a link to Vagrantfile for each release version at https://github.com/pivotal-cf/micropcf/releases.
+
+The following example assumes v0.3.0:
 
 ```bash
-# download https://github.com/pivotal-cf/micropcf/releases/download/<VERSION>/Vagrantfile-<VERSION>.base
-# mv Vagrantfile-<VERSION>.base Vagrantfile
+mkdir WORKSPACE && cd WORKSPACE
+curl -L https://github.com/pivotal-cf/micropcf/releases/download/v0.3.0/Vagrantfile-v0.3.0.base -o Vagrantfile
 vagrant up --provider <PROVIDER>
 ```
 `<PROVIDER>` should be set to one of `virtualbox`, `vmware_fusion`, `vmware_desktop`, or `aws`.
+
 
 ##### Supported environment variables
 You may set the following environment variables to customize your environment:
