@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
 
   if provider_is_aws
     network_config = <<-SCRIPT
-      public_ip="$(curl http://169.254.169.254/latest/meta-data/public-ipv4)"
+      public_ip="$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
       domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
     SCRIPT
   else
