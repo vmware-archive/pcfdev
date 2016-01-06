@@ -2,6 +2,8 @@
 *.box
 .vagrant
 
+/test/bin
+/test/pkg
 /images/bosh/bin
 /images/bosh/pkg
 

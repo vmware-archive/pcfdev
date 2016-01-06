@@ -17,8 +17,8 @@ cat <<EOF >$CONFIG
   "admin_user": "admin",
   "admin_password": "admin",
   "apps_domain": "$domain",
-  "cf_push_timeout": 600,
-  "long_curl_timeout": 600,
+  "cf_push_timeout": 1200,
+  "long_curl_timeout": 1200,
   "secure_address": "52.70.205.165:25555",
   "skip_ssl_validation": true
 }
