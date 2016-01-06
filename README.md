@@ -22,8 +22,8 @@ To deploy to AWS, you will need the vagrant-aws plugin (`vagrant plugin install 
 
 ##### Spin up a virtual environment
 
-Download Vagrantfile of your interested release version into a new local folder and spin up a virtual environment.
-You can find a link to Vagrantfile for each release version at https://github.com/pivotal-cf/micropcf/releases.
+Download the Vagrantfile for your intended release version into a new local folder and spin up a virtual environment.
+Vagrantfiles for each release version are available at https://github.com/pivotal-cf/micropcf/releases.
 
 The following example assumes v0.3.0:
 
@@ -36,7 +36,7 @@ vagrant up --provider <PROVIDER>
 
 
 ##### Supported environment variables
-You may set the following environment variables to customize your environment:
+You may set the following environment variables when you `vagrant up` to customize microPCF:
 
 1. `MICROPCF_IP` - sets the IP address to bring up the VM on
   - defaults to 192.168.11.11 locally
