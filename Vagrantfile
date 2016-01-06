@@ -4,9 +4,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  provider_is_aws = (!ARGV.nil? && ARGV.join(' ').match(/provider(=|\s+)aws/))
+  up_and_provider_is_aws = (!ARGV.nil? && !ARGV.empty? && ARGV.first == 'up' && ARGV.join(' ').match(/provider(=|\s+)aws/))
 
-  if Vagrant.has_plugin?("vagrant-proxyconf") && !provider_is_aws
+  if Vagrant.has_plugin?("vagrant-proxyconf") && !up_and_provider_is_aws
     config.proxy.http = ENV["http_proxy"] || ENV["HTTP_PROXY"]
     config.proxy.https = ENV["https_proxy"] || ENV["HTTPS_PROXY"]
     config.proxy.no_proxy = [
@@ -48,26 +48,20 @@ Vagrant.configure("2") do |config|
     override.ssh.private_key_path = ENV["AWS_SSH_PRIVATE_KEY_PATH"]
   end
 
-  if provider_is_aws
-    network_config = <<-SCRIPT
-      public_ip="$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
-      domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
-    SCRIPT
-  else
-    public_ip = ENV["MICROPCF_IP"] || "192.168.11.11"
-    default_domain = (public_ip == "192.168.11.11") ? "local.micropcf.io" : "#{public_ip}.xip.io"
-
-    network_config = <<-SCRIPT
-      domain="#{ENV["MICROPCF_DOMAIN"] || default_domain}"
-    SCRIPT
-
-    config.vm.network "private_network", ip: public_ip
+  local_public_ip = ENV["MICROPCF_IP"] || "192.168.11.11"
+  local_default_domain = (local_public_ip == "192.168.11.11") ? "local.micropcf.io" : "#{local_public_ip}.xip.io"
+  if !up_and_provider_is_aws
+    config.vm.network "private_network", ip: local_public_ip
   end
 
   config.vm.provision "shell", run: "always" do |s|
     s.inline = <<-SCRIPT
       set -e
-      #{network_config}
+      if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)"; then
+        domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
+      else
+        domain="#{ENV["MICROPCF_DOMAIN"] || local_default_domain}"
+      fi
       /var/micropcf/run "$domain"
     SCRIPT
   end
