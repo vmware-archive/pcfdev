@@ -17,6 +17,9 @@ Vagrant.configure("2") do |config|
   end
 
   resources = calculate_resource_allocation
+  if resources[:memory] == 2048
+    puts "WARNING: microPCF is using 2 GBs of your system's #{resources[:max_memory] / 1024} GBs total memory. This may affect microPCF's performance."
+  end
 
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--memory", resources[:memory]]
@@ -74,17 +77,19 @@ def calculate_resource_allocation
   case RUBY_PLATFORM
   when /darwin/i
     cpus ||= `sysctl -n hw.ncpu`.to_i
-    memory ||= `sysctl -n hw.memsize`.to_i / 1024 / 1024 / 4
+    max_memory ||= `sysctl -n hw.memsize`.to_i / 1024 / 1024
   when /linux/i
     cpus ||= `nproc`.to_i
-    memory ||= `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024 / 4
+    max_memory ||= `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
     cpus ||= `wmic computersystem get numberoflogicalprocessors`.split("\n")[2].to_i
-    memory ||= `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024 / 4
+    max_memory ||= `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024
   else
     cpus ||= 2
-    memory ||= 4096
+    max_memory ||= 4096
   end
 
-  {memory: memory / 4 * 4, cpus: cpus}
+  memory = [[2048, max_memory / 2].max, 4096].min
+
+  {memory: memory / 4 * 4, cpus: cpus, max_memory: max_memory}
 end
