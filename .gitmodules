@@ -10,18 +10,18 @@
 [submodule "images/releases/garden-linux-release"]
 	path = images/releases/garden-linux-release
 	url = https://github.com/cloudfoundry-incubator/garden-linux-release
-[submodule "images/bosh/src/github.com/sclevine/packer-bosh"]
-	path = images/bosh/src/github.com/sclevine/packer-bosh
-	url = git@github.com:sclevine/packer-bosh
-[submodule "images/bosh/src/github.com/sclevine/bosh-provisioner"]
-	path = images/bosh/src/github.com/sclevine/bosh-provisioner
-	url = git@github.com:sclevine/bosh-provisioner
+[submodule "images/bosh/src/github.com/cppforlife/packer-bosh"]
+	path = images/bosh/src/github.com/cppforlife/packer-bosh
+	url = https://github.com/cppforlife/packer-bosh
+[submodule "images/bosh/src/github.com/cppforlife/bosh-provisioner"]
+	path = images/bosh/src/github.com/cppforlife/bosh-provisioner
+	url = https://github.com/cppforlife/bosh-provisioner
 [submodule "images/releases/cf-redis-release"]
 	path = images/releases/cf-redis-release
 	url = https://github.com/sclevine/cf-redis-release
 [submodule "test/src/github.com/cloudfoundry/cf-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry/cf-acceptance-tests
-	url = git@github.com:mdelillo/cf-acceptance-tests.git
+	url = https://github.com/mdelillo/cf-acceptance-tests
 [submodule "test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests
-	url = git@github.com:mdelillo/diego-acceptance-tests.git
+	url = https://github.com/mdelillo/diego-acceptance-tests
