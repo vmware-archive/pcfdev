@@ -12,10 +12,10 @@ packer_bosh=$(cd `dirname $1` && pwd)/$(basename $1)
 
 micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
 bosh_gopath=$micropcf_dir/images/bosh
-packer_bosh_dir=$bosh_gopath/src/github.com/sclevine/packer-bosh
+packer_bosh_dir=$bosh_gopath/src/github.com/cppforlife/packer-bosh
 
 GOPATH=$packer_bosh_dir/Godeps/_workspace:$bosh_gopath \
-  eval "go build -a -o $packer_bosh github.com/sclevine/packer-bosh/main"
+  eval "go build -a -o $packer_bosh github.com/cppforlife/packer-bosh/main"
 
 chmod +x $packer_bosh
 
