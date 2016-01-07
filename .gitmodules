@@ -25,6 +25,3 @@
 [submodule "test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests
 	url = git@github.com:mdelillo/diego-acceptance-tests.git
-[submodule "images/releases/uaa-release"]
-	path = images/releases/uaa-release
-	url = https://github.com/cloudfoundry/uaa-release.git
