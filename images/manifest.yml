@@ -14,6 +14,9 @@ releases:
 - name: etcd
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/etcd-0.tgz
+- name: uaa
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/uaa-0.tgz
 
 networks:
 - name: default
@@ -85,7 +88,7 @@ jobs:
   - name: routing-api
     release: cf
   - name: uaa
-    release: cf
+    release: uaa
 
   - name: garden
     release: garden-linux
