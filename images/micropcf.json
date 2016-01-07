@@ -2,7 +2,9 @@
     "variables": {
         "version": "0",
         "distro": "base",
-        "dev": "false"
+        "dev": "false",
+        "disk_size": "30000",
+        "aws_disk_size": "30"
     },
     "builders": [
         {
@@ -19,13 +21,13 @@
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
-              "volume_size": 30,
+              "volume_size": "{{user `aws_disk_size`}}",
               "delete_on_termination": true
             }],
             "launch_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
-              "volume_size": 30,
+              "volume_size": "{{user `aws_disk_size`}}",
               "delete_on_termination": true
             }],
             "ssh_username": "ubuntu",
@@ -36,7 +38,7 @@
             "headless": true,
             "vm_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "guest_os_type": "ubuntu-64",
-            "disk_size": 30000,
+            "disk_size": "{{user `disk_size`}}",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.3-server-amd64.iso",
@@ -67,7 +69,7 @@
             "headless": true,
             "vm_name": "micropcf-vagrant-{{isotime \"20060102-1504\"}}",
             "guest_os_type": "Ubuntu_64",
-            "disk_size": 30000,
+            "disk_size": "{{user `disk_size`}}",
             "ssh_username": "vagrant",
             "ssh_password": "vagrant",
             "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.3-server-amd64.iso",
