@@ -22,8 +22,6 @@ GOOS=linux GOARCH=amd64 GOPATH=$bosh_provisioner_dir/Godeps/_workspace:$bosh_gop
 rm -rf $assets_dir/{releases,versions}
 mkdir $assets_dir/{releases,versions}
 
-git -C "$micropcf_dir" rev-parse HEAD > $assets_dir/versions/MICROPCF
-
 for release in ${@:2}; do
   pushd $micropcf_dir/images/releases/$release-release >/dev/null
     yes yes | bosh -n reset release
