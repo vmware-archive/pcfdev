@@ -471,6 +471,7 @@ properties:
 
   # For Garden:
   garden:
+    allow_host_access: true
     deny_networks:
     - 0.0.0.0/0
 
