@@ -1,4 +1,4 @@
-# Troubleshooting microPCF
+# Troubleshooting MicroPCF
 
 ####"The box you're attempting to add has no available version..."
 
@@ -17,7 +17,7 @@ Available versions: 0.0.1, 0.1.0, 0.2.0, .... etc
 
 Please make sure that you downloaded your Vagrantfile from the [MicroPCF releases page](https://github.com/pivotal-cf/micropcf/releases) or from our [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html). It will have a name like Vagrantfile-v0.3.0.base.
 
-There's no need to clone the repository in order to use microPCF unless you're attempting to develop microPCF itself.
+There's no need to clone the repository in order to use MicroPCF unless you're attempting to develop MicroPCF itself.
 
 ####"Invalid SSL Cert for api.local.micropcf.io"
 
@@ -47,7 +47,7 @@ If you've successfully run `vagrant up` and can `vagrant ssh` into the machine a
 
 ####What external ports are unavailable to bind as TCP routes?
 
-The following ports are reserved for use by microPCF:
+The following ports are reserved for use by MicroPCF:
 
 |     |     |     |     |     |
 |-----|-----|-----|-----|-----|

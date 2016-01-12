@@ -1,14 +1,14 @@
-# microPCF (Pivotal Cloud Foundry)
+# MicroPCF (Pivotal Cloud Foundry)
 
-microPCF is an open-source project that allows developers to easily run a single VM version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), or [Amazon Web Services](http://aws.amazon.com/).
+MicroPCF is an open-source project that allows developers to easily run a single VM version of Pivotal Cloud Foundry.  It supports the [CF CLI](https://github.com/cloudfoundry/cli) and runs using [Vagrant](https://www.vagrantup.com/) on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion for Mac](https://www.vmware.com/products/fusion), [VMware Workstation for Windows](https://www.vmware.com/products/workstation), or [Amazon Web Services](http://aws.amazon.com/).
 
 [ [Website](http://micropcf.io) | [Latest Release](https://github.com/pivotal-cf/micropcf/releases/latest) | [Nightly Builds](https://micropcf.s3.amazonaws.com/nightly/index.html) ]
 
-## Deploy microPCF
+## Deploy MicroPCF
 
-microPCF can be deployed with [Vagrant](https://vagrantup.com/). You will need:
+MicroPCF can be deployed with [Vagrant](https://vagrantup.com/). You will need:
 
-* A microPCF Vagrantfile from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
+* A MicroPCF Vagrantfile from the [latest release](https://github.com/pivotal-cf/micropcf/releases/latest) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html)
 * [Vagrant](https://vagrantup.com/) 1.7+ installed
 
 To deploy locally, you will need one of the following virtualizers
@@ -18,7 +18,7 @@ To deploy locally, you will need one of the following virtualizers
 
 To deploy to AWS, you will need the vagrant-aws plugin (`vagrant plugin install vagrant-aws`) and credentials for an AWS account in your environment.
 
-> Cloning this repo is not required to use microPCF.
+> Cloning this repo is not required to use MicroPCF.
 
 ##### Spin up a virtual environment
 
@@ -36,7 +36,7 @@ vagrant up --provider <PROVIDER>
 
 
 ##### Supported environment variables
-You may set the following environment variables when you `vagrant up` to customize microPCF:
+You may set the following environment variables when you `vagrant up` to customize MicroPCF:
 
 1. `MICROPCF_IP` - sets the IP address to bring up the VM on
   - defaults to 192.168.11.11 locally
@@ -54,11 +54,11 @@ You may set the following environment variables when you `vagrant up` to customi
 Please install the appropriate binary for your architecture from the [Cloud Foundry CLI README](https://github.com/cloudfoundry/cli#downloads) or the [Cloud Foundry CLI Releases page](https://github.com/cloudfoundry/cli/releases/latest).
 
 
-##### Use CF CLI to interact with your microPCF
+##### Use CF CLI to interact with your MicroPCF
 
-By default, you can point your CLI to your microPCF deployment by running `cf api api.<MICROPCF_DOMAIN> --skip-ssl-validation`. If you're deploying microPCF locally, the default value for `<MICROPCF_DOMAIN>` is `local.micropcf.io`.
+By default, you can point your CLI to your MicroPCF deployment by running `cf api api.<MICROPCF_DOMAIN> --skip-ssl-validation`. If you're deploying MicroPCF locally, the default value for `<MICROPCF_DOMAIN>` is `local.micropcf.io`.
 
-To stage a simple app on microPCF, `cd` into the app directory and run `cf push <APP_NAME>`.
+To stage a simple app on MicroPCF, `cd` into the app directory and run `cf push <APP_NAME>`.
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
 
@@ -68,7 +68,7 @@ See our [troubleshooting](TROUBLESHOOTING.md) page.
 
 ## Contributing
 
-If you are interested in contributing to microPCF, please refer to the [contributing guidelines](CONTRIBUTING.md) and [development instructions](DEVELOP.md).
+If you are interested in contributing to MicroPCF, please refer to the [contributing guidelines](CONTRIBUTING.md) and [development instructions](DEVELOP.md).
 
 # Copyright
 

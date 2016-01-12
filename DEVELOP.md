@@ -1,6 +1,6 @@
-# microPCF Development
+# MicroPCF Development
 
-To develop microPCF you will need to have the following tools installed:
+To develop MicroPCF you will need to have the following tools installed:
 
 - [Packer](https://www.packer.io) v0.8.6+
 - [Vagrant](https://www.vagrantup.com/) v1.7.4+
@@ -9,24 +9,24 @@ To develop microPCF you will need to have the following tools installed:
 - [VMWare Fusion](https://www.vmware.com/products/fusion) 8+ or [VMWare Workstation](https://www.vmware.com/products/workstation) 11+ (to build VMWare boxes)
 - [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to build AWS boxes)
 
-## Clone the microPCF source
+## Clone the MicroPCF source
 
 ```bash
 git clone --recursive https://github.com/pivotal-cf/micropcf.git
 ```
 
-## Build microPCF
+## Build MicroPCF
 
-Setup your shell for building microPCF:
+Setup your shell for building MicroPCF:
 
 ```bash
 cd micropcf
 direnv allow
 ```
 
-### Building a microPCF Box
+### Building a MicroPCF Box
 
-To build microPCF Vagrant boxes, run:
+To build MicroPCF Vagrant boxes, run:
 
 ```bash
 cd images/base
@@ -41,9 +41,9 @@ Build options:
 * `-var `dev=true` to leave the `bosh-provisioner` binary and BOSH releases inside of the box for re-deployment
 * `-debug` to build all boxes in debug mode, pausing between each step with SSH login available
 
-### Deploying a locally-built microPCF box
+### Deploying a locally-built MicroPCF box
 
-The Vagrantfile at the root of the repo is configured to run locally-built microPCF boxes.
+The Vagrantfile at the root of the repo is configured to run locally-built MicroPCF boxes.
 
 ```bash
 cd ../..
@@ -52,7 +52,7 @@ vagrant up --provider=(virtualbox|vmware_fusion|vmware_workstation|aws)
 
 ## Contributing
 
-If you are interested in contributing to microPCF, please refer to [CONTRIBUTING](CONTRIBUTING.md).
+If you are interested in contributing to MicroPCF, please refer to [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Copyright
 

@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 
   resources = calculate_resource_allocation
   if resources[:memory] == 2048
-    puts "WARNING: microPCF is using 2 GBs of your system's #{resources[:max_memory] / 1024} GBs total memory. This may affect microPCF's performance."
+    puts "WARNING: MicroPCF is using 2 GBs of your system's #{resources[:max_memory] / 1024} GBs total memory. This may affect MicroPCF's performance."
   end
 
   config.vm.provider "virtualbox" do |v|
