@@ -45,20 +45,6 @@ HTTP server doesn't seem to support byte ranges. Cannot resume.
 
 If you've successfully run `vagrant up` and can `vagrant ssh` into the machine and see that monit services are running properly, it may be a problem with your DNS settings. Try changing your network settings to use the Google DNS at 8.8.8.8 and run `cf api api.local.micropcf.io --skip-ssl-validation` again.
 
-####What external ports are unavailable to bind as TCP routes?
-
-The following ports are reserved for use by MicroPCF:
-
-|     |     |     |     |     |
-|-----|-----|-----|-----|-----|
-|22   |53   |80   |1169 |1234 |
-|1700 |2222 |2380 |4001 |4222 |
-|4223 |7001 |7777 |8070 |8080 |
-|8081 |8082 |8090 |8300 |8301 |
-|8302 |8400 |8444 |8500 |8888 |
-|8889 |9016 |9999 |17009|17014|
-|17110|17111|17222|44445|     |
-
 #### Running VirtualBox and VMware
 
 If you're using both VirtualBox and VMware on the same machine, you may see this error:
