@@ -1,68 +1,25 @@
-# MicroPCF (Pivotal Cloud Foundry)
+# MicroPCF
 
-MicroPCF gives developers an easy way to download and install Cloud Foundry as a [Vagrant](https://www.vagrantup.com/) box.  It currently runs on [VirtualBox](https://www.virtualbox.org/), [VMware Fusion](https://www.vmware.com/products/fusion) (Mac), [VMware Workstation](https://www.vmware.com/products/workstation) (Windows/Linux), or [Amazon Web Services](http://aws.amazon.com/).
+MicroPCF is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  MicroPCF gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  MicroPCF is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  MicroPCF is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
 
-## Deploy MicroPCF
+## Install
 
-MicroPCF is distributed by versioned `Vagrantfile` downloads from either [Github releases](https://github.com/pivotal-cf/micropcf/releases) or the [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html) page.
-
-1. Download a versioned `Vagrantfile-<VERSION>` into a new folder
+1. Download the `Vagrantfile-<VERSION>.base` from [Github releases](https://github.com/pivotal-cf/micropcf/releases) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html) in to a new folder
 1. Rename the downloaded file to `Vagrantfile`
-1. `vagrant up`
+1. Run `vagrant up` at a command prompt
 
-#### On Mac or Linux
-
-```bash
-$ mkdir <WORKSPACE> && cd <WORKSPACE>
-$ curl -L https://github.com/pivotal-cf/micropcf/releases/download/v0.4.0/Vagrantfile-v0.4.0.base -o Vagrantfile
-$ vagrant up --provider <PROVIDER>
-```
-
-- `<WORKSPACE>` should be an empty local folder
-- `<PROVIDER>` should be set to one of `virtualbox`, `vmware_fusion`, `vmware_workstation`, or `aws`.
-
-#### On Windows
-
-1. Download a versioned `Vagrantfile-<VERSION>`
-1. Move it to a new folder
-1. Rename the file to `Vagrantfile`
-1. Open a command shell and `cd` to the newly-created folder
-1. `vagrant up`
+> Check out the [troubleshooting guide](FAQ.md) for more information.
 
 ### Prerequisites
 
-#### Local deployments 
-
 * [Vagrant](https://vagrantup.com/) 1.7+
 * [CF CLI](https://github.com/cloudfoundry/cli)
-* One of the following virtualization platforms:
+* One of the following:
   - [VirtualBox](https://www.virtualbox.org/): 5.0+
   - [VMware Fusion](https://www.vmware.com/products/fusion): 8+ (for OSX)
-  - [VMware Workstation](https://www.vmware.com/products/workstation): 11+ (for Windows)
+  - [VMware Workstation](https://www.vmware.com/products/workstation): 11+ (for Windows/Linux)
 
 > VMware requires the [Vagrant VMware](https://www.vagrantup.com/vmware#buy-now) plugin that is sold by [Hashicorp](https://hashicorp.com/).
-
-#### Remote deployments (Amazon Web Services)
-
-* [Vagrant](https://vagrantup.com/) 1.7+
-* [CF CLI](https://github.com/cloudfoundry/cli)
-* [Vagrant AWS](https://github.com/mitchellh/vagrant-aws) plugin: `vagrant plugin install vagrant-aws`
-* Credentials for an AWS account
-* Default Security Group configured to allow ingress traffic to MicroPCF:
-  - HTTP (tcp/80) from 0.0.0.0/0
-  - SSH (tcp/22) from 0.0.0.0/0
-  - HTTPS (tcp/443) from 0.0.0.0/0
-  - Custom (tcp/2222) from 0.0.0.0/0  (for `cf ssh` support)
-* Environment Variables set as follows:
-
-```bash
-export AWS_ACCESS_KEY_ID=<...>
-export AWS_SECRET_ACCESS_KEY=<...>
-export AWS_SSH_PRIVATE_KEY_NAME=<...> # name of the remote SSH key in AWS
-export AWS_SSH_PRIVATE_KEY_PATH=<...> # path to the local SSH key
-export AWS_INSTANCE_NAME=<...> # optional
-export AWS_REGION=<...> # optional, defaults to us-east-1
-```
 
 ### Configuration
 
@@ -79,24 +36,24 @@ The following environment variables can be set during `vagrant up` to customize 
 1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
   - defaults to 25% of host memory
 
-##### Use CF CLI to interact with MicroPCF
+### Using the Cloud Foundry CLI
 
-By default, you can connect the `cf` utility with the following:
+Follow the instructions provided at the end of `vagrant up` to connect to MicroPCF:
 
-```bash
-$ cf api api.local.micropcf.io --skip-ssl-validation
-$ cf login -u admin -p admin -o micropcf-org -s micropcf-space
+```
+==> default: MicroPCF is now running.
+==> default: To begin using MicroPCF, please run:
+==> default: 	cf api api.local.micropcf.io --skip-ssl-validation
+==> default: 	cf login
+==> default: Email: admin
+==> default: Password: admin
 ```
 
-> Replace `local.micropcf.io` above with the output from the `vagrant up` command giving the target
+> `local.micropcf.io` above will show the domain configured for your MicroPCF instance.
 
 To stage a simple app on MicroPCF, `cd` into the app directory and run `cf push <APP_NAME>`.
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
-
-## FAQ
-
-See our [FAQ](FAQ.md).
 
 ## Contributing
 
