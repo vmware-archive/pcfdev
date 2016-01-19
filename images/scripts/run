@@ -12,6 +12,25 @@ exec 3>&1 4>&2 >>/var/micropcf/run.log 2>&1
 
 domain=$1
 
+monit="/var/vcap/bosh/bin/monit"
+
+total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
+started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
+stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
+curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
+
+$monit -I stop all || true
+
+while [[ $(total_services) != 0 ]] && [[ $(stopped_services) -lt $(total_services) ]]; do
+  sleep 1
+done
+
+stop runsvdir || true
+
+while [[ $(total_services) != 0 ]]; do
+  sleep 1
+done
+
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/micropcf/manifest.yml -type f)
 
 ip=$(ip route get 1 | awk '{print $NF;exit}')
@@ -30,21 +49,15 @@ chmod 1777 /tmp/cc_tmp
 cc_worker_ctl=/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
 grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDIR=/tmp/cc_tmp' "$cc_worker_ctl"
 
-monit="/var/vcap/bosh/bin/monit"
-
 start runsvdir || true
-
->&3 echo "Waiting for services to start..."
-started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
-curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
 
 while [[ $(total_services) = 0 ]]; do
   sleep 1
 done
 
-$monit start all
+$monit -I start all
 
+>&3 echo "Waiting for services to start..."
 while [[ $(started_services) -lt $(total_services) ]]; do
   sleep 1
 done
@@ -59,6 +72,7 @@ cf create-org micropcf-org
 cf create-space micropcf-space -o micropcf-org
 cf target -o micropcf-org -s micropcf-space
 cf enable-feature-flag diego_docker
+cf delete-shared-domain $old_domain -f
 
 [[ -x /var/micropcf/post-run ]] && /var/micropcf/post-run
 
