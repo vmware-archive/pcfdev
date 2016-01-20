@@ -66,13 +66,12 @@ while [[ $(curl_response) != 200 ]]; do
   sleep 1
 done
 
-cf api api.$domain --skip-ssl-validation
+cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
 cf create-org micropcf-org
 cf create-space micropcf-space -o micropcf-org
 cf target -o micropcf-org -s micropcf-space
 cf enable-feature-flag diego_docker
-cf delete-shared-domain $old_domain -f
 
 [[ -x /var/micropcf/post-run ]] && /var/micropcf/post-run
 
