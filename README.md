@@ -94,9 +94,9 @@ To stage a simple app on MicroPCF, `cd` into the app directory and run `cf push 
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
 
-## Troubleshooting
+## FAQ
 
-See our [troubleshooting](TROUBLESHOOTING.md) page.
+See our [FAQ](FAQ.md).
 
 ## Contributing
 
