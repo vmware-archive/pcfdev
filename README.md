@@ -2,13 +2,15 @@
 
 MicroPCF is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  MicroPCF gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  MicroPCF is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  MicroPCF is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
 
+> More information about the project can be found on the [FAQ](FAQ.md#general-questions).
+
 ## Install
 
 1. Download the `Vagrantfile-<VERSION>.base` from [Github releases](https://github.com/pivotal-cf/micropcf/releases) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html) in to a new folder
 1. Rename the downloaded file to `Vagrantfile`
 1. Run `vagrant up` at a command prompt
 
-> Check out the [troubleshooting guide](FAQ.md) for more information.
+> Check out the [troubleshooting guide](FAQ.md#troubleshooting) for more information.
 
 ### Prerequisites
 

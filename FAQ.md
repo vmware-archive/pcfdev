@@ -1,8 +1,29 @@
-# Troubleshooting MicroPCF
+# Frequently Asked Questions
 
-####"The box you're attempting to add has no available version..."
+## General Questions
 
-If you're getting the following error on `vagrant up`, chances are you've used the wrong Vagrantfile.
+### What is MicroPCF?
+
+MicroPCF is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  MicroPCF gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.
+
+### Who should use MicroPCF?
+
+MicroPCF is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  MicroPCF is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
+
+### If my application runs on MicroPCF, will it run on PCF?
+
+Yes.  MicroPCF is designed to mirror PCF exactly.  If your application runs on MicroPCF, it will run on PCF with no modification in almost all cases.
+
+### Why do I need Vagrant?
+
+Vagrant is a product from Hashicorp that "provides easy to configure, reproducible, and portable work environments", allowing us to perform the task of provisioning a Cloud Foundry environment for you.  In conjunction with Atlas (formerly Vagrant Cloud), we can distribute the Linux VM required to run Cloud Foundry and then provision and configure the server using the virtualization platform of your choosing.  More information about Vagrant can be found [here](https://docs.vagrantup.com/v2/why-vagrant/index.html).
+
+## Troubleshooting
+
+### Why does `vagrant up` say it has "no available version" ?
+
+Cloning the repository and running `vagrant up` from the root will result in the error below.  Please follow the [install instructions](README.md#install) and use one of the published `Vagrantfile`s.
+
 ```
 The box you're attempting to add has no available version that
 matches the constraints you requested. Please double-check your
@@ -15,82 +36,70 @@ Constraints: 0
 Available versions: 0.0.1, 0.1.0, 0.2.0, .... etc
 ```
 
-Please make sure that you downloaded your Vagrantfile from the [MicroPCF releases page](https://github.com/pivotal-cf/micropcf/releases) or from our [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html). It will have a name like Vagrantfile-v0.3.0.base.
+### Why does `cf api` fail with "Invalid SSL Cert" error ?
 
-There's no need to clone the repository in order to use MicroPCF unless you're attempting to develop MicroPCF itself.
-
-####"Invalid SSL Cert for api.local.micropcf.io"
-
-This occurs when you have forgotten to append `--skip-ssl-validation` to your `cf api` command. Instead enter:
-
-`cf api api.local.micropcf.io --skip-ssl-validation`
-
-####"Error opening SSH connection: ssh: handshake failed: Unable to verify identity of host."
-
-This occurs when you attempt to `cf ssh` without passing `-k` to skip host key validation. Instead try:
-
-`cf ssh -k <YOUR-APP-NAME>`
-
-####"HTTP server doesn't seem to support byte ranges"
-
-If you get the following error on `vagrant up` after a previously aborted `vagrant up`, you need to initiate a new download by going to ~/.vagrant.d/tmp and deleting the partial download file.
+MicroPCF comes with a self-signed SSL certificate for its API and requires the `--skip-ssl-validation` option.  This also applies to the Spring Boot Dashboard, which requires the checkbox "Self-signed" in order to connect.
 
 ```
+○ → cf api api.local.micropcf.io
+Setting api endpoint to api.local.micropcf.io...
+FAILED
+Invalid SSL Cert for api.local.micropcf.io
+TIP: Use 'cf api --skip-ssl-validation' to continue with an insecure API endpoint
+```
+
+### Why does the `cf ssh` handshake fail?
+
+`cf ssh` requires using the `-k` option to skip host key validation since it uses self-signed certifcates.
+
+```
+○ → cf ssh app
+FAILED
+Error opening SSH connection: ssh: handshake failed: Unable to verify identity of host.
+
+The fingerprint of the received key was "4d:2b:ff:a4:97:8e:25:36:a0:cc:04:bc:9d:71:c7:6c".
+```
+
+### My box download failed and I can't resume the download.  What do I do?
+
+Prior to Vagrant 1.8.0, it is necessary to manually delete temporary files in `~/.vagrant.d/tmp` prior to running `vagrant up` again.  Newer versions of Vagrant support resuming box downloads properly.
+
+```
+==> default: Adding box 'micropcf/base' (v0.20.0) for provider: virtualbox
+    default: Downloading: https://atlas.hashicorp.com/micropcf/boxes/base/versions/0.20.0/providers/virtualbox.box
 ==> default: Box download is resuming from prior download progress
-....
+An error occurred while downloading the remote file. The error
+message, if any, is reproduced below. Please fix this error and try
+again.
+
 HTTP server doesn't seem to support byte ranges. Cannot resume.
 ```
 
-####Getting a 502 on `cf api`
+### Why does `vagrant up` say my network collides with another device?
 
-If you've successfully run `vagrant up` and can `vagrant ssh` into the machine and see that monit services are running properly, it may be a problem with your DNS settings. Try changing your network settings to use the Google DNS at 8.8.8.8 and run `cf api api.local.micropcf.io --skip-ssl-validation` again.
+By default, MicroPCF will attempt to reserve `192.168.11.11` as its address.  If this network is already in use (for example, if you try using VMware after VirtualBox), you'll see one of the below errors.  Please see the [configuration](README.md#configuration) section to set `MICROPCF_IP` to a valid address.
 
-#### Running VirtualBox and VMware
-
-If you're using both VirtualBox and VMware on the same machine, you may see this error:
+We recommend trying one of the following first:
 
 ```bash
+MICROPCF_IP=192.168.22.22 MICROPCF_DOMAIN=2.micropcf.io vagrant up --provider=<provider>
+MICROPCF_IP=192.168.33.33 MICROPCF_DOMAIN=3.micropcf.io vagrant up --provider=<provider>
+MICROPCF_IP=192.168.44.44 MICROPCF_DOMAIN=4.micropcf.io vagrant up --provider=<provider>
+```
+
+```
 The specified host network collides with a non-hostonly network!
 This will cause your specified IP to be inaccessible. Please change
 the IP or name of your host only network so that it no longer matches that of
 a bridged or non-hostonly network.
 ```
 
-In this case, one of your hypervisors has grabbed the 192.168.11.\* IP range and is preventing the other from accessing them. Use `ifconfig` to figure out which owns the network:
-
-```bash
-$ ifconfig
-...
-vboxnet1: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-	ether 0a:00:27:00:00:01
-	inet 192.168.11.1 netmask 0xffffff00 broadcast 192.168.11.255
-...
 ```
-
-In this case the VirtualBox interface `vboxnet1` has the network, so you can bring it down to free up the network:
-
-```bash
-sudo ifconfig vboxnet1 down
+The host only network with the IP '192.168.11.11' would collide with
+another device 'vboxnet'. This means that VMware cannot create
+a proper networking device to route to your VM. Please choose
+another IP or shut down the existing device.
 ```
-
-If VMware owns the network you'll see something like this:
-
-```bash
-$ ifconfig
-...
-vmnet9: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-	ether 00:50:56:c0:00:09
-	inet 192.168.11.1 netmask 0xffffff00 broadcast 192.168.11.255
-...
-```
-
-> You can configure MicroPCF to run on an alternate IP address by setting, for example, `MICROPCF_IP=192.168.22.22` during `vagrant up`.
-
-
-####Other tips:
-
-* Ubuntu 14.04 LTS does not install a compatible version of Vagrant by default.  A compatible version can be found on the [Vagrant Downloads](http://www.vagrantup.com/downloads.html) page.
-* Use an Administrator shell to deploy using VMware Workstation on Windows.
 
 # Copyright
 
