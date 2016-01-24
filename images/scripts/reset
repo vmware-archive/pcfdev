@@ -13,7 +13,7 @@ while [[ $(total_services) = 0 ]]; do
   sleep 1
 done
 
-$monit -I stop all
+$monit stop all
 
 >&3 echo "Waiting for services to stop..."
 while [[ $(stopped_services) -lt $(total_services) ]]; do
@@ -22,7 +22,7 @@ done
 
 stop runsvdir || true
 
->&3 echo "Services stopped. Removing contents of /var/vcap/store..."
-rm -rf /var/vcap/store/*
+>&3 echo "Services stopped. Resetting data..."
+rm -rf /var/vcap/{store/*,nfs} /var/vcap/data/{compile,tmp}
 
 exec 1>&3 2>&4

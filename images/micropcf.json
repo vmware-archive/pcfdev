@@ -182,7 +182,6 @@
                 "chmod 1777 /tmp",
                 "mv /opt/bosh-provisioner/assets/versions /var/micropcf/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
-                "rm -rf /var/vcap/data/compile /var/vcap/data/tmp /var/vcap/nfs",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",

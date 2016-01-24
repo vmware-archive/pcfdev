@@ -19,7 +19,7 @@ started_services() { $monit summary | grep -E '(running|accessible|Timestamp cha
 stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
 curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
 
-$monit -I stop all || true
+$monit stop all || true
 
 while [[ $(total_services) != 0 ]] && [[ $(stopped_services) -lt $(total_services) ]]; do
   sleep 1
@@ -55,7 +55,7 @@ while [[ $(total_services) = 0 ]]; do
   sleep 1
 done
 
-$monit -I start all
+$monit start all
 
 >&3 echo "Waiting for services to start..."
 while [[ $(started_services) -lt $(total_services) ]]; do
