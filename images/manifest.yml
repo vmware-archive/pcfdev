@@ -219,7 +219,6 @@ properties:
         file_server: {}
         ssh_proxy: {}
         gorouter: {}
-        receptor: {}
         router_configurer: {}
         routing-api: {}
         uaa: {}
@@ -252,13 +251,37 @@ properties:
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
     clients:
+      ssh-proxy:
+        authorized-grant-types: authorization_code
+        autoapprove: true
+        override: true
+        redirect-uri: /login
+        scope: openid,cloud_controller.read,cloud_controller.write
+        secret: ssh-proxy-secret
+      cc-service-dashboards:
+        secret: cc-broker-secret
+        scope: openid,cloud_controller_service_permissions.read
+        authorities: clients.read,clients.write,clients.admin
+        authorized-grant-types: client_credentials
       login:
         override: true
         scope: openid,oauth.approvals
-        authorities: oauth.login,scim.write,clients.read,scim.userids,password.write
+        authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         secret: login-secret
         authorized-grant-types: authorization_code,client_credentials,refresh_token
         redirect-uri: "https://login.local.micropcf.io"
+      cf:
+        id: cf
+        override: true
+        authorized-grant-types: implicit,password,refresh_token
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
+        authorities: uaa.none
+        access-token-validity: 600
+        refresh-token-validity: "2592000"
+      notifications:
+        secret: notifications-secret
+        authorities: cloud_controller.admin,scim.read
+        authorized-grant-types: client_credentials
       doppler:
         override: true
         authorities: uaa.resource
@@ -272,17 +295,17 @@ properties:
         secret: cc-routing-secret
         authorized-grant-types: client_credentials
       gorouter:
-        authorities: clients.read,clients.write,clients.admin,routing.routes.write,routing.routes.read
+        authorities: routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
-        scope: openid,cloud_controller_service_permissions.read
         secret: gorouter-secret
-      ssh-proxy:
-        authorized-grant-types: authorization_code
-        autoapprove: true
-        override: true
-        redirect-uri: /login
-        scope: openid,cloud_controller.read,cloud_controller.write
-        secret: ssh-proxy-secret
+      tcp_emitter:
+        authorities: routing.routes.write,routing.routes.read
+        authorized-grant-types: client_credentials,refresh_token
+        secret: tcp-emitter-secret
+      tcp_router:
+        authorities: routing.routes.read
+        authorized-grant-types: client_credentials,refresh_token
+        secret: tcp-router-secret
     admin:
       client_secret: admin-client-secret
     cc:
@@ -292,8 +315,9 @@ properties:
         override: true
       users:
       - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read
-    issuer: http://localhost/
-    no_ssl: true
+    require_https: false
+    ssl:
+      port: -1
     jwt:
       signing_key: |
         -----BEGIN RSA PRIVATE KEY-----
@@ -318,6 +342,10 @@ properties:
         qHxf+ZH9BL1gk9Y6kCnbM5R60gfwjyW1/dQPjOzn9N394zd2FJoFHwdq9Qs0wBug
         spULZVNRxq7veq/fzwIDAQAB
         -----END PUBLIC KEY-----
+    zones:
+      internal:
+        hostnames:
+        - uaa.service.cf.internal
   route_registrar:
     routes:
     - name: doppler
@@ -411,6 +439,7 @@ properties:
   login:
     protocol: http
   router:
+    enable_routing_api: true
     debug_addr: 0.0.0.0:17003
     enable_ssl: true
     ssl_cert: |
@@ -466,6 +495,7 @@ properties:
       BzSu7f3Z320nKnJMGeoBTyWW9mPdpzNnovztPlcQo25PcnNxf2V57Q==
       -----END RSA PRIVATE KEY-----
     ssl_skip_validation: true
+    route_services_secret: route-services-secret
   routing-api:
     debug_address: 0.0.0.0:17022
 
