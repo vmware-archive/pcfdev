@@ -17,7 +17,8 @@ monit="/var/vcap/bosh/bin/monit"
 total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
 started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
 stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
-curl_response() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
+cc_status_code() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
+available_buildpacks() { cf curl /v2/buildpacks | jq '.resources | map(select(.entity.filename | length > 0)) | length'; }
 
 $monit stop all || true
 
@@ -62,7 +63,7 @@ while [[ $(started_services) -lt $(total_services) ]]; do
   sleep 1
 done
 
-while [[ $(curl_response) != 200 ]]; do
+while [[ $(cc_status_code) != 200 ]]; do
   sleep 1
 done
 
@@ -73,7 +74,13 @@ cf create-space micropcf-space -o micropcf-org
 cf target -o micropcf-org -s micropcf-space
 cf enable-feature-flag diego_docker
 
-[[ -x /var/micropcf/post-run ]] && /var/micropcf/post-run
+while [[ $(available_buildpacks) -lt 8 ]]; do
+  sleep 1
+done
+
+if [[ -x /var/micropcf/post-run ]]; then
+ /var/micropcf/post-run
+fi
 
 exec 1>&3 2>&4
 
