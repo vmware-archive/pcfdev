@@ -19,6 +19,6 @@
 [submodule "images/releases/cf-redis-release"]
 	path = images/releases/cf-redis-release
 	url = https://github.com/sclevine/cf-redis-release
-[submodule "test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests"]
-	path = test/src/github.com/cloudfoundry-incubator/diego-acceptance-tests
-	url = https://github.com/mdelillo/diego-acceptance-tests
+[submodule "test/src/github.com/cloudfoundry/cf-acceptance-tests"]
+	path = test/src/github.com/cloudfoundry/cf-acceptance-tests
+	url = https://github.com/cloudfoundry/cf-acceptance-tests
