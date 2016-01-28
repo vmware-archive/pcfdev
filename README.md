@@ -8,7 +8,9 @@ MicroPCF is a new distribution of Cloud Foundry designed to run on a developerâ€
 
 1. Download the `Vagrantfile-<VERSION>.base` from [Github releases](https://github.com/pivotal-cf/micropcf/releases) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html) in to a new folder
 1. Rename the downloaded file to `Vagrantfile`
-1. Run `vagrant up` at a command prompt
+1. Run `vagrant up --provider=<provider>` at a command prompt
+  - Where `<provider>` is `virtualbox`, `vmware_fusion` or `vmware_workstation`
+  - See [Configuration](#configuration) for additional options for `vagrant up`
 
 > Check out the [troubleshooting guide](FAQ.md#troubleshooting) for more information.
 
@@ -16,6 +18,7 @@ MicroPCF is a new distribution of Cloud Foundry designed to run on a developerâ€
 
 * [Vagrant](https://vagrantup.com/) 1.7+
 * [CF CLI](https://github.com/cloudfoundry/cli)
+* Internet connection required (for DNS)
 * One of the following:
   - [VirtualBox](https://www.virtualbox.org/): 5.0+
   - [VMware Fusion](https://www.vmware.com/products/fusion): 8+ (for OSX)
