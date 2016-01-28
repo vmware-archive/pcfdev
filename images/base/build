@@ -5,17 +5,17 @@ set -e
 micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
 images_dir=$micropcf_dir/images
 output_dir=$images_dir/base/output
-mkdir -p $output_dir
+mkdir -p "$output_dir"
 
-$images_dir/bosh/setup $output_dir/packer-bosh
+"$micropcf_dir/bosh/setup-packer" "$output_dir/packer-bosh"
 
 releases='diego cf garden-linux etcd'
-if ! $images_dir/bosh/retrieve $output_dir/assets $releases; then
-  $images_dir/bosh/build $output_dir/assets $releases
+if ! "$micropcf_dir/bosh/retrieve" "$output_dir/assets" $releases; then
+  "$micropcf_dir/bosh/build" "$output_dir/assets" $releases
 fi
 
-cp -a $images_dir/{http,manifest.yml,scripts} $output_dir/
+cp -a "$images_dir"/{http,manifest.yml,scripts} "$output_dir/"
 
 pushd "$output_dir" >/dev/null
-  packer build $@ $images_dir/micropcf.json
+  packer build $@ "$images_dir/micropcf.json"
 popd >/dev/null

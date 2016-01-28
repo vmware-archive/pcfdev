@@ -4,8 +4,8 @@
 
 /test/bin
 /test/pkg
-/images/bosh/bin
-/images/bosh/pkg
+/bosh/bin
+/bosh/pkg
 
 /images/base/output
 /images/micropcf/output

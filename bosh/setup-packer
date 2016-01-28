@@ -10,8 +10,8 @@ fi
 
 packer_bosh=$(cd `dirname $1` && pwd)/$(basename $1)
 
-micropcf_dir=$(cd `dirname $0` && cd ../.. && pwd)
-bosh_gopath=$micropcf_dir/images/bosh
+micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
+bosh_gopath=$micropcf_dir/bosh
 packer_bosh_dir=$bosh_gopath/src/github.com/cppforlife/packer-bosh
 
 GOPATH=$packer_bosh_dir/Godeps/_workspace:$bosh_gopath \
