@@ -79,7 +79,7 @@ while [[ $(available_buildpacks) -lt 8 ]]; do
 done
 
 if [[ -x /var/micropcf/post-run ]]; then
- /var/micropcf/post-run
+ /var/micropcf/post-run $domain
 fi
 
 exec 1>&3 2>&4

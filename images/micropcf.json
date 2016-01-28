@@ -3,7 +3,7 @@
         "version": "0",
         "distro": "base",
         "dev": "false",
-        "disk_size": "30"
+        "disk_size": "60"
     },
     "builders": [
         {
@@ -155,6 +155,7 @@
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
+                "apt-get -y install libgcrypt20 libgcrypt20-dev",
                 "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.15.0&source=github-rel' | tar -C /usr/local/bin -xz",
                 "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.3.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
