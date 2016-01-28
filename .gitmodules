@@ -1,24 +1,24 @@
-[submodule "images/releases/cf-release"]
-	path = images/releases/cf-release
+[submodule "releases/cf-release"]
+	path = releases/cf-release
 	url = https://github.com/cloudfoundry/cf-release
-[submodule "images/releases/diego-release"]
-	path = images/releases/diego-release
+[submodule "releases/diego-release"]
+	path = releases/diego-release
 	url = https://github.com/cloudfoundry-incubator/diego-release
-[submodule "images/releases/etcd-release"]
-	path = images/releases/etcd-release
+[submodule "releases/etcd-release"]
+	path = releases/etcd-release
 	url = https://github.com/cloudfoundry-incubator/etcd-release
-[submodule "images/releases/garden-linux-release"]
-	path = images/releases/garden-linux-release
+[submodule "releases/garden-linux-release"]
+	path = releases/garden-linux-release
 	url = https://github.com/cloudfoundry-incubator/garden-linux-release
-[submodule "images/bosh/src/github.com/cppforlife/packer-bosh"]
-	path = images/bosh/src/github.com/cppforlife/packer-bosh
-	url = https://github.com/cppforlife/packer-bosh
-[submodule "images/bosh/src/github.com/cppforlife/bosh-provisioner"]
-	path = images/bosh/src/github.com/cppforlife/bosh-provisioner
-	url = https://github.com/cppforlife/bosh-provisioner
-[submodule "images/releases/cf-redis-release"]
-	path = images/releases/cf-redis-release
+[submodule "releases/cf-redis-release"]
+	path = releases/cf-redis-release
 	url = https://github.com/sclevine/cf-redis-release
+[submodule "bosh/src/github.com/cppforlife/packer-bosh"]
+	path = bosh/src/github.com/cppforlife/packer-bosh
+	url = https://github.com/cppforlife/packer-bosh
+[submodule "bosh/src/github.com/cppforlife/bosh-provisioner"]
+	path = bosh/src/github.com/cppforlife/bosh-provisioner
+	url = https://github.com/cppforlife/bosh-provisioner
 [submodule "test/src/github.com/cloudfoundry/cf-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry/cf-acceptance-tests
 	url = https://github.com/cloudfoundry/cf-acceptance-tests
