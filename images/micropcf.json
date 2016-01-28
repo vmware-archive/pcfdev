@@ -128,6 +128,7 @@
             "only": ["amazon-ebs"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
                 "apt-get -y install linux-image-extra-`uname -r`"
             ]
         },
