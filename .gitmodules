@@ -28,3 +28,6 @@
 [submodule "releases/cf-mysql-release"]
 	path = releases/cf-mysql-release
 	url = https://github.com/ekcasey/cf-mysql-release
+[submodule "test/src/github.com/mdelillo/cf-mysql-acceptance-tests"]
+	path = test/src/github.com/mdelillo/cf-mysql-acceptance-tests
+	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
