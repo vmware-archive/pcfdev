@@ -94,7 +94,7 @@ jobs:
     release: etcd
 
 properties:
-  support_address: email@example.com
+  support_address: micropcf@pivotal.io
   system_domain: local.micropcf.io
   system_domain_organization: micropcf-org
   app_domains: [local.micropcf.io]
