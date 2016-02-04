@@ -11,23 +11,23 @@ fi
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
 micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
 bosh_gopath=$micropcf_dir/bosh
-bosh_provisioner_dir=$bosh_gopath/src/github.com/cppforlife/bosh-provisioner
 
-rm -rf $assets_dir/{monit,agent}
-cp -r $bosh_provisioner_dir/assets/{monit,agent} $assets_dir/
+rm -rf "$assets_dir"/{monit,agent}
+cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
 
-GOOS=linux GOARCH=amd64 GOPATH=$bosh_provisioner_dir/Godeps/_workspace:$bosh_gopath \
-  go build -a -o $assets_dir/bosh-provisioner github.com/cppforlife/bosh-provisioner/main
+GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
+  go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
 
-rm -rf $assets_dir/{releases,versions}
-mkdir $assets_dir/{releases,versions}
+rm -rf "$assets_dir"/{releases,versions}
+mkdir "$assets_dir"/{releases,versions}
 
 for release in ${@:2}; do
-  pushd $micropcf_dir/releases/$release-release >/dev/null
+  pushd "$micropcf_dir/releases/${release}-release" >/dev/null
+    [[ -f Gemfile ]] && gem install bundler && bundle install || true
     yes yes | bosh -n reset release
-    bosh -n create release --name $release --version 0 --with-tarball --force
-    mv dev_releases/$release/$release-0.tgz $assets_dir/releases/
+    bosh -n create release --name "$release" --version 0 --with-tarball --force
+    mv "dev_releases/$release/${release}-0.tgz" "$assets_dir/releases/"
     version_file="$(echo ${release//-/_} | tr [:lower:] [:upper:])_RELEASE"
-    git describe --tags --always > $assets_dir/versions/$version_file
+    git describe --tags --always > "$assets_dir/versions/$version_file"
   popd >/dev/null
 done
