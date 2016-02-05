@@ -101,6 +101,41 @@ a proper networking device to route to your VM. Please choose
 another IP or shut down the existing device.
 ```
 
+## Networking
+
+### Container-to-router
+
+This is traffic from the app container to the gorouter. It is enabled by default. This allows apps to communicate with each other by using the routes published by gorouter.
+
+### Container-to-guest
+
+This is traffic from the app container to the virtual machine in which MicroPCF is running. It is enabled by default. This may be useful if you want to run other services inside of the guest virtual machine for your applications to use, but doing so is not encouraged. Instead, services should be run on the host (see below). The IP address of the guest is `192.168.11.11` unless overridden.
+
+### Container-to-host
+
+This is traffic from the app container to the host on which the virtual machine is running. It is enabled by default. This can be used to run services on your host that are available to your apps in MicroPCF.  The IP address of the host accessible to the app is `192.168.11.1` unless overridden. For example, in order to connect your app to a MongoDB instance running on the host on port `27017`, run the following commands:
+
+```bash
+cf create-user-provided-service my-mongo-db -p '{ "uri": "mongodb://<username>:<password>@192.168.11.1:27017/<database>" }'
+cf bind-service <app> my-mongo-db
+cf restage <app>
+```
+
+### Container-to-external
+
+This is traffic from the app container to a destination external to the host. It allows your application to reach the internet. Traffic to public IP addresses is enabled by default, but traffic to private IP addresses must be enabled by using [security groups](http://docs.pivotal.io/pivotalcf/adminguide/app-sec-groups.html). For example, in order to allow your application to access machines in your LAN with an address range of `192.168.1.0/24`, run the following commands:
+
+```bash
+echo '[{"protocol":"all","destination":"192.168.1.0-192.168.1.255"}]' > lan-security-group.json
+cf create-security-group lan lan-security-group.json
+cf bind-running-security-group lan
+cf restart <app>
+```
+
+### Container-to-container
+
+This is traffic directly between two containers in the same MicroPCF deployment. It is useful for running applications that must communicate with each other but do not need or want a publicly-accessible route. It is not enabled and will not be available until it is supported in Pivotal Cloud Foundry.
+
 # Copyright
 
 See [LICENSE](LICENSE) for details.
