@@ -213,7 +213,8 @@
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
-                "rm -f /EMPTY"
+                "dd if=/dev/zero of=/var/vcap/data/EMPTY bs=1M 2>/dev/null || true",
+                "rm -f /EMPTY /var/vcap/data/EMPTY"
             ]
         }
     ],
