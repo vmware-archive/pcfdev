@@ -60,6 +60,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", run: "always" do |s|
+    cf_cli_present = system("which cf > /dev/null")
     s.inline = <<-SCRIPT
       set -e
       if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)"; then
@@ -68,9 +69,12 @@ Vagrant.configure("2") do |config|
         domain="#{ENV["MICROPCF_DOMAIN"] || local_default_domain}"
       fi
       /var/micropcf/run "$domain"
+      #{cf_cli_present} || echo "Don't have the cf command line utility? Download it from https://github.com/cloudfoundry/cli/releases"
     SCRIPT
   end
+
 end
+
 
 def calculate_resource_allocation
   cpus = ENV['VM_CORES'] ? ENV['VM_CORES'].to_i : nil
