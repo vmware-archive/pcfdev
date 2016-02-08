@@ -175,12 +175,6 @@
         },
         {
             "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [ "printf '/dev/sda3\\t/var/vcap/data\\tauto\\trw\\t0\\t0\\n' >> /etc/fstab" ]
-        },
-        {
-            "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "remote_path": "/home/vagrant/cleanup.sh",
             "override": {
