@@ -169,12 +169,6 @@
             ]
         },
         {
-            "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [ "parted /dev/sda rm 2" ]
-        },
-        {
             "type": "packer-bosh",
             "assets_dir": "assets",
             "remote_manifest_path": "/var/micropcf/manifest.yml"

@@ -31,3 +31,9 @@
 [submodule "test/src/github.com/mdelillo/cf-mysql-acceptance-tests"]
 	path = test/src/github.com/mdelillo/cf-mysql-acceptance-tests
 	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
+[submodule "releases/cf-rabbitmq-release"]
+	path = releases/cf-rabbitmq-release
+	url = https://github.com/mdelillo/cf-rabbitmq-release.git
+[submodule "bosh/src/github.com/cloudfoundry/bosh-agent"]
+	path = bosh/src/github.com/cloudfoundry/bosh-agent
+	url = https://github.com/mdelillo/bosh-agent.git
