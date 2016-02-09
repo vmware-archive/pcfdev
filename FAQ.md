@@ -60,6 +60,8 @@ Error opening SSH connection: ssh: handshake failed: Unable to verify identity o
 The fingerprint of the received key was "4d:2b:ff:a4:97:8e:25:36:a0:cc:04:bc:9d:71:c7:6c".
 ```
 
+> The `-k` option is no longer needed as of version [**v0.6.0**](https://github.com/pivotal-cf/micropcf/releases/tag/v0.6.0).
+
 ### My box download failed and I can't resume the download.  What do I do?
 
 Prior to Vagrant 1.8.0, it is necessary to manually delete temporary files in `~/.vagrant.d/tmp` prior to running `vagrant up` again.  Newer versions of Vagrant support resuming box downloads properly.
@@ -82,9 +84,9 @@ By default, MicroPCF will attempt to reserve `192.168.11.11` as its address.  If
 We recommend trying one of the following first:
 
 ```bash
-MICROPCF_IP=192.168.22.22 MICROPCF_DOMAIN=2.micropcf.io vagrant up --provider=<provider>
-MICROPCF_IP=192.168.33.33 MICROPCF_DOMAIN=3.micropcf.io vagrant up --provider=<provider>
-MICROPCF_IP=192.168.44.44 MICROPCF_DOMAIN=4.micropcf.io vagrant up --provider=<provider>
+MICROPCF_IP=192.168.22.11 MICROPCF_DOMAIN=local2.micropcf.io vagrant up --provider=<provider>
+MICROPCF_IP=192.168.33.11 MICROPCF_DOMAIN=local3.micropcf.io vagrant up --provider=<provider>
+MICROPCF_IP=192.168.44.11 MICROPCF_DOMAIN=local4.micropcf.io vagrant up --provider=<provider>
 ```
 
 ```
