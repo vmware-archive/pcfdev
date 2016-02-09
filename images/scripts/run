@@ -34,6 +34,8 @@ done
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/micropcf/manifest.yml -type f)
 
+host_ip=$(ip route show dev eth1 | awk '{print $NF;exit}' | awk -F'.' '{print $1 "." $2 "." $3 ".1" }')
+
 ip=$(ip route get 1 | awk '{print $NF;exit}')
 old_ip=$(cat /var/micropcf/ip)
 perl -p -i -e "s/\\Q$old_ip\\E/$ip/g" $config_files
@@ -67,12 +69,24 @@ while [[ $(cc_status_code) != 200 ]]; do
   sleep 1
 done
 
+cat > /var/micropcf/host-security-group.json <<EOF
+[
+ {
+   "protocol": "tcp",
+   "destination": "${host_ip}",
+   "ports": "1-65535"
+ }
+]
+EOF
+
 cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
 cf create-org micropcf-org
 cf create-space micropcf-space -o micropcf-org
 cf target -o micropcf-org -s micropcf-space
 cf enable-feature-flag diego_docker
+cf create-security-group host /var/micropcf/host-security-group.json
+cf bind-running-security-group host
 
 while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
