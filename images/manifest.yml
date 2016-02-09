@@ -247,7 +247,6 @@ properties:
         file_server: {}
         ssh_proxy: {}
         gorouter: {}
-        router_configurer: {}
         routing-api: {}
         uaa: {}
         cc_uploader: {}
