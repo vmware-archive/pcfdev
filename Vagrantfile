@@ -60,7 +60,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", run: "always" do |s|
-    cf_cli_present = system("which cf > /dev/null")
     s.inline = <<-SCRIPT
       set -e
       if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)"; then
@@ -98,4 +97,15 @@ def calculate_resource_allocation
   memory ||= [[2048, max_memory / 2].max, 4096].min
 
   {memory: memory / 4 * 4, cpus: cpus, max_memory: max_memory}
+end
+
+def cf_cli_present
+  case RUBY_PLATFORM
+  when /darwin|linux/i
+    system("which cf > /dev/null")
+  when /cygwin|mswin|mingw|bccwin|wince|emx/i
+    system("where /q cf.exe")
+  else
+    false
+  end
 end
