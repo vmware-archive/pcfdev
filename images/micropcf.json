@@ -9,13 +9,13 @@
         {
             "type": "amazon-ebs",
             "region": "us-east-1",
-            "source_ami": "ami-5c207736",
-            "instance_type": "m4.large",
+            "source_ami": "ami-0a6d4760",
+            "instance_type": "c4.2xlarge",
             "ami_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "ami_groups": ["all"],
             "ami_regions": [
-                "ap-northeast-1", "ap-southeast-1", "ap-southeast-2", "sa-east-1",
-                "eu-central-1", "eu-west-1", "us-west-1", "us-west-2"
+                "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
+                "sa-east-1", "eu-central-1", "eu-west-1", "us-west-1", "us-west-2"
             ],
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
@@ -187,7 +187,10 @@
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
-                "/var/micropcf/reset"
+                "/var/micropcf/reset",
+                "rm -f /var/vcap/packages/stager/bin/stager",
+                "curl -L 'https://micropcf.s3.amazonaws.com/artifacts/stager-0.1450.0.gz' | gunzip > /var/vcap/packages/stager/bin/stager",
+                "chmod +x /var/vcap/packages/stager/bin/stager"
             ]
         },
         {
@@ -198,14 +201,7 @@
                 "mkdir -p /home/vagrant/.ssh",
                 "wget --no-check-certificate -O authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
                 "mv authorized_keys /home/vagrant/.ssh/",
-                "chown -R vagrant /home/vagrant/.ssh"
-            ]
-        },
-        {
-            "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
+                "chown -R vagrant /home/vagrant/.ssh",
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
                 "rm -f /EMPTY"
             ]
