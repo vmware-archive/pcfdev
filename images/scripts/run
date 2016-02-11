@@ -35,8 +35,6 @@ done
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/micropcf/manifest.yml -type f)
 
-host_ip=$(ip route show dev eth1 | awk '{print $NF;exit}' | awk -F'.' '{print $1 "." $2 "." $3 ".1" }')
-
 ip=$(ip route get 1 | awk '{print $NF;exit}')
 old_ip=$(cat /var/micropcf/ip)
 ip_with_commas=$(echo $ip | tr '.' ',')
@@ -55,7 +53,7 @@ resolvconf --disable-updates
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
 echo "listen-address=$ip" > /etc/dnsmasq.d/interface
 
-host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver')"
+host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver' || true)"
 cat <<EOF >/etc/resolv.conf
 nameserver 127.0.0.1
 nameserver $ip
@@ -87,6 +85,8 @@ done
 while [[ $(cc_status_code) != 200 ]]; do
   sleep 1
 done
+
+host_ip=$(ip route show dev eth1 | awk '{print $NF;exit}' | awk -F'.' '{print $1 "." $2 "." $3 ".1" }')
 
 host_security_group=$(cat <<EOF
 [
