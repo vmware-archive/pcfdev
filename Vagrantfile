@@ -66,8 +66,9 @@ Vagrant.configure("2") do |config|
         domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
       else
         domain="#{ENV["MICROPCF_DOMAIN"] || local_default_domain}"
+        public_ip="#{local_public_ip}"
       fi
-      /var/micropcf/run "$domain"
+      /var/micropcf/run "$domain" "$public_ip"
       #{cf_cli_present} || echo "Don't have the cf command line utility? Download it from https://github.com/cloudfoundry/cli/releases"
     SCRIPT
   end

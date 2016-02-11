@@ -2,15 +2,16 @@
 
 set -e
 
-if [[ -z $1 ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]]; then
     >&2 echo "Usage:"
-    >&2 echo -e "\t$0 <domain>"
+    >&2 echo -e "\t$0 <domain> <public-ip>"
     exit 1
 fi
 
 exec 3>&1 4>&2 >>/var/micropcf/run.log 2>&1
 
 domain=$1
+public_ip=$2
 
 monit="/var/vcap/bosh/bin/monit"
 
@@ -48,6 +49,20 @@ echo $ip > /var/micropcf/ip
 old_domain=$(cat /var/micropcf/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo $domain > /var/micropcf/domain
+
+resolvconf --disable-updates
+
+echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
+echo "listen-address=$ip" > /etc/dnsmasq.d/interface
+
+host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver')"
+cat <<EOF >/etc/resolv.conf
+nameserver 127.0.0.1
+nameserver $ip
+$host_ns
+EOF
+
+service dnsmasq restart
 
 mkdir -p /tmp/cc_tmp
 chgrp vcap /tmp/cc_tmp
