@@ -53,6 +53,8 @@ resolvconf --disable-updates
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
 echo "listen-address=$ip" > /etc/dnsmasq.d/interface
 
+service dnsmasq stop
+
 host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver' || true)"
 cat <<EOF >/etc/resolv.conf
 nameserver 127.0.0.1
@@ -60,7 +62,7 @@ nameserver $ip
 $host_ns
 EOF
 
-service dnsmasq restart
+service dnsmasq start
 
 mkdir -p /tmp/cc_tmp
 chgrp vcap /tmp/cc_tmp
