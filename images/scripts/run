@@ -88,13 +88,11 @@ while [[ $(cc_status_code) != 200 ]]; do
   sleep 1
 done
 
-host_ip=$(ip route show dev eth1 | awk '{print $NF;exit}' | awk -F'.' '{print $1 "." $2 "." $3 ".1" }')
-
 host_security_group=$(cat <<EOF
 [
  {
    "protocol": "tcp",
-   "destination": "${host_ip}",
+   "destination": "${public_ip}",
    "ports": "1-65535"
  }
 ]
@@ -106,7 +104,7 @@ cf create-org micropcf-org
 cf create-space micropcf-space -o micropcf-org
 cf target -o micropcf-org -s micropcf-space
 cf enable-feature-flag diego_docker
-cf create-security-group host <(echo $host_security_group)
+cf update-security-group host <(echo $host_security_group) || cf create-security-group host <(echo $host_security_group)
 cf bind-running-security-group host
 
 while [[ $(available_buildpacks) -lt 8 ]]; do
