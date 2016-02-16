@@ -37,3 +37,6 @@
 [submodule "bosh/src/github.com/cloudfoundry/bosh-agent"]
 	path = bosh/src/github.com/cloudfoundry/bosh-agent
 	url = https://github.com/mdelillo/bosh-agent.git
+[submodule "test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests"]
+	path = test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests
+	url = https://github.com/ekcasey/cf-rabbitmq-smoke-tests
