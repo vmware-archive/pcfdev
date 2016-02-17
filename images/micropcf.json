@@ -3,7 +3,7 @@
         "version": "0",
         "distro": "base",
         "dev": "false",
-        "disk_size": "60"
+        "disk_size": "100"
     },
     "builders": [
         {
@@ -25,7 +25,8 @@
             }],
             "launch_block_device_mappings": [{
               "device_name": "/dev/sda1",
-              "volume_type": "gp2",
+              "volume_type": "io1",
+              "iops": "3000",
               "volume_size": "{{user `disk_size`}}",
               "delete_on_termination": true
             }],

@@ -45,6 +45,7 @@ Vagrant.configure("2") do |config|
     aws.keypair_name = ENV["AWS_SSH_PRIVATE_KEY_NAME"]
     aws.region = ENV["AWS_REGION"] || 'us-east-1'
     aws.instance_type = "m4.xlarge"
+    aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => ENV["AWS_EBS_DISK_SIZE"] || 100 }] 
     aws.ebs_optimized = true
     aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "micropcf") }
     aws.ami = ""
