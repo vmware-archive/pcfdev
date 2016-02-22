@@ -2,6 +2,7 @@
 
 set -e
 
+
 exec 3>&1 4>&2 >>/var/micropcf/reset.log 2>&1
 
 monit="/var/vcap/bosh/bin/monit"
