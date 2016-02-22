@@ -1,7 +1,7 @@
 {
     "variables": {
         "version": "0",
-        "distro": "base",
+        "distro": "pcfdev",
         "dev": "false",
         "disk_size": "60"
     },
@@ -11,7 +11,7 @@
             "region": "us-east-1",
             "source_ami": "ami-0a6d4760",
             "instance_type": "c4.2xlarge",
-            "ami_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
+            "ami_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "ami_groups": ["all"],
             "ami_regions": [
                 "ap-northeast-1", "ap-southeast-1", "ap-southeast-2",
@@ -36,7 +36,7 @@
         {
             "type": "vmware-iso",
             "headless": true,
-            "vm_name": "micropcf-{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
+            "vm_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "guest_os_type": "ubuntu-64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vagrant",
@@ -53,7 +53,7 @@
                 "/install/vmlinuz noapic ",
                 "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
                 "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-                "hostname=micropcf ",
+                "hostname=pcfdev ",
                 "fb=false debconf/frontend=noninteractive ",
                 "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
                 "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -67,7 +67,7 @@
         {
             "type": "virtualbox-iso",
             "headless": true,
-            "vm_name": "micropcf-vagrant-{{isotime \"20060102-1504\"}}",
+            "vm_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "guest_os_type": "Ubuntu_64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vagrant",
@@ -83,7 +83,7 @@
                 "/install/vmlinuz noapic ",
                 "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
                 "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-                "hostname=micropcf ",
+                "hostname=pcfdev ",
                 "fb=false debconf/frontend=noninteractive ",
                 "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
                 "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
@@ -165,25 +165,25 @@
 
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
 
-                "mkdir -p /var/micropcf",
-                "ip route get 1 | awk '{print $NF;exit}' > /var/micropcf/ip",
-                "echo local.micropcf.io > /var/micropcf/domain",
-                "sed \"s/placeholder-ip/$(cat /var/micropcf/ip)/\" /tmp/manifest.yml > /var/micropcf/manifest.yml",
+                "mkdir -p /var/pcfdev",
+                "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
+                "echo local.micropcf.io > /var/pcfdev/domain",
+                "sed \"s/placeholder-ip/$(cat /var/pcfdev/ip)/\" /tmp/manifest.yml > /var/pcfdev/manifest.yml",
                 "chmod +x /tmp/scripts/*",
-                "mv /tmp/scripts/* /var/micropcf/",
+                "mv /tmp/scripts/* /var/pcfdev/",
                 "mkdir -p /var/vcap/store",
 
                 "apt-get -y install dnsmasq",
                 "service dnsmasq stop",
                 "update-rc.d -f dnsmasq remove",
                 "echo IGNORE_RESOLVCONF=yes >> /etc/default/dnsmasq",
-                "echo bind-interfaces > /etc/dnsmasq.d/micropcf"
+                "echo bind-interfaces > /etc/dnsmasq.d/pcfdev"
             ]
         },
         {
             "type": "packer-bosh",
             "assets_dir": "assets",
-            "remote_manifest_path": "/var/micropcf/manifest.yml"
+            "remote_manifest_path": "/var/pcfdev/manifest.yml"
         },
         {
             "type": "shell",
@@ -194,14 +194,14 @@
             },
             "inline": [
                 "chmod 1777 /tmp",
-                "mv /opt/bosh-provisioner/assets/versions /var/micropcf/",
+                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
-                "/var/micropcf/reset",
+                "/var/pcfdev/reset",
                 "rm -f /var/vcap/packages/stager/bin/stager",
-                "curl -L 'https://micropcf.s3.amazonaws.com/artifacts/stager-0.1450.0.gz' | gunzip > /var/vcap/packages/stager/bin/stager",
+                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/stager-0.1450.0.gz' | gunzip > /var/vcap/packages/stager/bin/stager",
                 "chmod +x /var/vcap/packages/stager/bin/stager"
             ]
         },
@@ -222,7 +222,7 @@
     "post-processors": [
         {
             "type": "vagrant",
-            "output": "micropcf-{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box"
+            "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box"
         }
     ]
 }

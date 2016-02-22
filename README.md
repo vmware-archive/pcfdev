@@ -6,9 +6,9 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 
 ## Install
 
-1. Download the `micropcf-<VERSION>.zip` from [Github releases](https://github.com/pivotal-cf/micropcf/releases) or [nightly builds](https://micropcf.s3.amazonaws.com/nightly/index.html).
-1. Unzip the `micropcf-<VERSION>.zip`.
-1. Open a terminal or command prompt and navigate to the `micropcf-<VERSION>` folder.
+1. Download the `pcfdev-<VERSION>.zip` from [Github releases](https://github.com/pivotal-cf/pcfdev/releases) or [nightly builds](https://pcfdev.s3.amazonaws.com/nightly/index.html).
+1. Unzip the `pcfdev-<VERSION>.zip`.
+1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
 1. Run `vagrant up --provider=<provider>` at a command prompt
   - Where `<provider>` is `virtualbox`, `vmware_fusion` or `vmware_workstation`
   - See [Configuration](#configuration) for additional options for `vagrant up`
@@ -31,12 +31,12 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 
 The following environment variables can be set during `vagrant up` to customize the PCF Dev deployment:
 
-1. `MICROPCF_IP` - sets the IP address to bring up the VM on
+1. `PCFDEV_IP` - sets the IP address to bring up the VM on
   - defaults to 192.168.11.11 locally
   - defaults to AWS-assigned public IP on AWS
-1. `MICROPCF_DOMAIN` - sets an alternate alias for the system routes to be defined on
+1. `PCFDEV_DOMAIN` - sets an alternate alias for the system routes to be defined on
   - defaults to `local.micropcf.io` when deploying locally
-  - defaults to <MICROPCF_IP>.xip.io on AWS or when `MICROPCF_IP` is set
+  - defaults to <PCFDEV_IP>.xip.io on AWS or when `PCFDEV_IP` is set
 1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
   - defaults to host # of logical CPUs
 1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
@@ -47,8 +47,8 @@ The following environment variables can be set during `vagrant up` to customize 
 Follow the instructions provided at the end of `vagrant up` to connect to PCF Dev:
 
 ```
-==> default: MicroPCF is now running.
-==> default: To begin using MicroPCF, please run:
+==> default: PCF Dev is now running.
+==> default: To begin using PCF Dev, please run:
 ==> default: 	cf api api.local.micropcf.io --skip-ssl-validation
 ==> default: 	cf login
 ==> default: Email: admin

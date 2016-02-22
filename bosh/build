@@ -9,8 +9,8 @@ if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
 fi
 
 assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-micropcf_dir=$(cd `dirname $0` && cd .. && pwd)
-bosh_gopath=$micropcf_dir/bosh
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+bosh_gopath=$pcfdev_dir/bosh
 
 rm -rf "$assets_dir"/{monit,agent}
 cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
@@ -22,7 +22,7 @@ rm -rf "$assets_dir"/{releases,versions}
 mkdir "$assets_dir"/{releases,versions}
 
 for release in ${@:2}; do
-  pushd "$micropcf_dir/releases/${release}-release" >/dev/null
+  pushd "$pcfdev_dir/releases/${release}-release" >/dev/null
     [[ -f Gemfile ]] && gem install bundler && bundle install || true
     yes yes | bosh -n reset release
     bosh -n create release --name "$release" --version 0 --with-tarball --force

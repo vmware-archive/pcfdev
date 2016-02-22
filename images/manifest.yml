@@ -1,5 +1,5 @@
 ---
-name: micropcf
+name: pcfdev
 
 releases:
 - name: diego
@@ -26,7 +26,7 @@ compilation:
   network: default
 
 jobs:
-- name: micropcf
+- name: pcfdev
   instances: 1
   persistent_disk: 1024
 
@@ -94,11 +94,11 @@ jobs:
     release: etcd
 
 properties:
-  support_address: micropcf@pivotal.io
+  support_address: pcfdev@pivotal.io
   system_domain: local.micropcf.io
-  system_domain_organization: micropcf-org
+  system_domain_organization: pcfdev-org
   app_domains: [local.micropcf.io]
-  name: micropcf-cc
+  name: pcfdev-cc
 
   # For Diego:
   diego:
@@ -236,7 +236,7 @@ properties:
     port: 4222
   metron_agent:
     zone: z1
-    deployment: micropcf
+    deployment: pcfdev
   consul:
     agent:
       mode: server

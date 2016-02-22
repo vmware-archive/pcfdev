@@ -1,6 +1,6 @@
-# MicroPCF Development
+# PCF Dev Development
 
-To develop MicroPCF you will need to have the following tools installed:
+To develop PCF Dev you will need to have the following tools installed:
 
 - [Packer](https://www.packer.io) v0.8.6+
 - [Vagrant](https://www.vagrantup.com/) v1.7.4+
@@ -9,31 +9,31 @@ To develop MicroPCF you will need to have the following tools installed:
 - [VMWare Fusion](https://www.vmware.com/products/fusion) 8+ or [VMWare Workstation](https://www.vmware.com/products/workstation) 11+ (to build VMWare boxes)
 - [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to build AWS boxes)
 
-## Clone the MicroPCF source
+## Clone the PCF Dev source
 
 ```bash
-git clone --recursive https://github.com/pivotal-cf/micropcf.git
+git clone --recursive https://github.com/pivotal-cf/pcfdev.git
 ```
 
-## Build MicroPCF
+## Build PCF Dev
 
-Setup your shell for building MicroPCF:
+Setup your shell for building PCF Dev:
 
 ```bash
-cd micropcf
+cd pcfdev
 direnv allow
 ```
 
-### Building a MicroPCF Box
+### Building a PCF Dev Box
 
-To build MicroPCF Vagrant boxes, run:
+To build PCF Dev Vagrant boxes, run:
 
 ```bash
-cd images/base
+cd images/pcfdev
 ./build <build options> (see below)
-vagrant box add --force output/micropcf-virtualbox-v0.box --name micropcf/base
-vagrant box add --force output/micropcf-vmware-v0.box --name micropcf/base
-vagrant box add --force output/micropcf-aws-v0.box --name micropcf/base
+vagrant box add --force output/pcfdev-virtualbox-v0.box --name pcfdev/pcfdev
+vagrant box add --force output/pcfdev-vmware-v0.box --name pcfdev/pcfdev
+vagrant box add --force output/pcfdev-aws-v0.box --name pcfdev/pcfdev
 ```
 
 Build options:
@@ -41,9 +41,9 @@ Build options:
 * `-var `dev=true` to leave the `bosh-provisioner` binary and BOSH releases inside of the box for re-deployment
 * `-debug` to build all boxes in debug mode, pausing between each step with SSH login available
 
-### Deploying a locally-built MicroPCF box
+### Deploying a locally-built PCF Dev box
 
-The Vagrantfile at the root of the repo is configured to run locally-built MicroPCF boxes.
+The Vagrantfile at the root of the repo is configured to run locally-built PCF Dev boxes.
 
 ```bash
 cd ../..
@@ -52,7 +52,7 @@ vagrant up --provider=(virtualbox|vmware_fusion|vmware_workstation|aws)
 
 ## Contributing
 
-If you are interested in contributing to MicroPCF, please refer to [CONTRIBUTING](CONTRIBUTING.md).
+If you are interested in contributing to PCF Dev, please refer to [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Copyright
 

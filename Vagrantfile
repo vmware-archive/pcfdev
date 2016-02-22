@@ -1,5 +1,5 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "micropcf/base"
+  config.vm.box = "pcfdev/pcfdev"
   config.vm.box_version = "0"
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -12,14 +12,14 @@ Vagrant.configure("2") do |config|
     config.proxy.https = ENV["https_proxy"] || ENV["HTTPS_PROXY"]
     config.proxy.no_proxy = [
       "localhost", "127.0.0.1",
-      (ENV["MICROPCF_IP"] || "192.168.11.11"),
-      (ENV["MICROPCF_DOMAIN"] || "local.micropcf.io")
+      (ENV["PCFDEV_IP"] || "192.168.11.11"),
+      (ENV["PCFDEV_DOMAIN"] || "local.micropcf.io")
     ].join(',')
   end
 
   resources = calculate_resource_allocation
   if resources[:memory] == 2048 && vagrant_up && !vagrant_up_aws
-    puts "WARNING: MicroPCF has reserved 2 GBs out of #{resources[:max_memory] / 1024} GBs total system memory."
+    puts "WARNING: PCF Dev has reserved 2 GBs out of #{resources[:max_memory] / 1024} GBs total system memory."
     puts "Performance may be impacted."
   end
 
@@ -47,14 +47,14 @@ Vagrant.configure("2") do |config|
     aws.instance_type = "m4.xlarge"
     aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => ENV["AWS_EBS_DISK_SIZE"] || 100 }] 
     aws.ebs_optimized = true
-    aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "micropcf") }
+    aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "pcfdev") }
     aws.ami = ""
 
     override.ssh.username = "ubuntu"
     override.ssh.private_key_path = ENV["AWS_SSH_PRIVATE_KEY_PATH"]
   end
 
-  local_public_ip = ENV["MICROPCF_IP"] || "192.168.11.11"
+  local_public_ip = ENV["PCFDEV_IP"] || "192.168.11.11"
   local_default_domain = (local_public_ip == "192.168.11.11") ? "local.micropcf.io" : "#{local_public_ip}.xip.io"
   if !vagrant_up_aws
     config.vm.network "private_network", ip: local_public_ip
@@ -64,12 +64,12 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SCRIPT
       set -e
       if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)"; then
-        domain="#{ENV["MICROPCF_DOMAIN"] || "${public_ip}.xip.io"}"
+        domain="#{ENV["PCFDEV_DOMAIN"] || "${public_ip}.xip.io"}"
       else
-        domain="#{ENV["MICROPCF_DOMAIN"] || local_default_domain}"
+        domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
         public_ip="#{local_public_ip}"
       fi
-      /var/micropcf/run "$domain" "$public_ip"
+      /var/pcfdev/run "$domain" "$public_ip"
       #{cf_cli_present} || echo "Don't have the cf command line utility? Download it from https://github.com/cloudfoundry/cli/releases"
     SCRIPT
   end

@@ -2,17 +2,17 @@
 
 ## General Questions
 
-### What is MicroPCF?
+### What is PCF Dev?
 
-MicroPCF is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  MicroPCF gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.
+PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  PCF Dev gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.
 
-### Who should use MicroPCF?
+### Who should use PCF Dev?
 
-MicroPCF is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  MicroPCF is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
+PCF Dev is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  PCF Dev is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
 
-### If my application runs on MicroPCF, will it run on PCF?
+### If my application runs on PCF Dev, will it run on PCF?
 
-Yes.  MicroPCF is designed to mirror PCF exactly.  If your application runs on MicroPCF, it will run on PCF with no modification in almost all cases.
+Yes.  PCF Dev is designed to mirror PCF exactly.  If your application runs on PCF Dev, it will run on PCF with no modification in almost all cases.
 
 ### Why do I need Vagrant?
 
@@ -30,15 +30,15 @@ matches the constraints you requested. Please double-check your
 settings. Also verify that if you specified version constraints,
 that the provider you wish to use is available for these constriants.
 
-Box: micropcf/base
-Address: https://atlas.hashicorp.com/micropcf/base
+Box: pcfdev/pcfdev
+Address: https://atlas.hashicorp.com/pcfdev/pcfdev
 Constraints: 0
 Available versions: 0.0.1, 0.1.0, 0.2.0, .... etc
 ```
 
 ### Why does `cf api` fail with "Invalid SSL Cert" error ?
 
-MicroPCF comes with a self-signed SSL certificate for its API and requires the `--skip-ssl-validation` option.  This also applies to the Spring Boot Dashboard, which requires the checkbox "Self-signed" in order to connect.
+PCF Dev comes with a self-signed SSL certificate for its API and requires the `--skip-ssl-validation` option.  This also applies to the Spring Boot Dashboard, which requires the checkbox "Self-signed" in order to connect.
 
 ```
 ○ → cf api api.local.micropcf.io
@@ -48,27 +48,13 @@ Invalid SSL Cert for api.local.micropcf.io
 TIP: Use 'cf api --skip-ssl-validation' to continue with an insecure API endpoint
 ```
 
-### Why does the `cf ssh` handshake fail?
-
-`cf ssh` requires using the `-k` option to skip host key validation since it uses self-signed certifcates.
-
-```
-○ → cf ssh app
-FAILED
-Error opening SSH connection: ssh: handshake failed: Unable to verify identity of host.
-
-The fingerprint of the received key was "4d:2b:ff:a4:97:8e:25:36:a0:cc:04:bc:9d:71:c7:6c".
-```
-
-> The `-k` option is no longer needed as of version [**v0.6.0**](https://github.com/pivotal-cf/micropcf/releases/tag/v0.6.0).
-
 ### My box download failed and I can't resume the download.  What do I do?
 
 Prior to Vagrant 1.8.0, it is necessary to manually delete temporary files in `~/.vagrant.d/tmp` prior to running `vagrant up` again.  Newer versions of Vagrant support resuming box downloads properly.
 
 ```
-==> default: Adding box 'micropcf/base' (v0.20.0) for provider: virtualbox
-    default: Downloading: https://atlas.hashicorp.com/micropcf/boxes/base/versions/0.20.0/providers/virtualbox.box
+==> default: Adding box 'pcfdev/pcfdev' (v0.48.0) for provider: virtualbox
+    default: Downloading: https://atlas.hashicorp.com/pcfdev/boxes/pcfdev/versions/0.48.0/providers/virtualbox.box
 ==> default: Box download is resuming from prior download progress
 An error occurred while downloading the remote file. The error
 message, if any, is reproduced below. Please fix this error and try
@@ -79,14 +65,14 @@ HTTP server doesn't seem to support byte ranges. Cannot resume.
 
 ### Why does `vagrant up` say my network collides with another device?
 
-By default, MicroPCF will attempt to reserve `192.168.11.11` as its address.  If this network is already in use (for example, if you try using VMware after VirtualBox), you'll see one of the below errors.  Please see the [configuration](README.md#configuration) section to set `MICROPCF_IP` to a valid address.
+By default, PCF Dev will attempt to reserve `192.168.11.11` as its address.  If this network is already in use (for example, if you try using VMware after VirtualBox), you'll see one of the below errors.  Please see the [configuration](README.md#configuration) section to set `PCFDEV_IP` to a valid address.
 
 We recommend trying one of the following first:
 
 ```bash
-MICROPCF_IP=192.168.22.11 MICROPCF_DOMAIN=local2.micropcf.io vagrant up --provider=<provider>
-MICROPCF_IP=192.168.33.11 MICROPCF_DOMAIN=local3.micropcf.io vagrant up --provider=<provider>
-MICROPCF_IP=192.168.44.11 MICROPCF_DOMAIN=local4.micropcf.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.22.11 PCFDEV_DOMAIN=local2.micropcf.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.33.11 PCFDEV_DOMAIN=local3.micropcf.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.44.11 PCFDEV_DOMAIN=local4.micropcf.io vagrant up --provider=<provider>
 ```
 
 ```
@@ -111,11 +97,11 @@ This is traffic from the app container to the gorouter. It is enabled by default
 
 ### Container-to-guest
 
-This is traffic from the app container to the virtual machine in which MicroPCF is running. It is enabled by default. This may be useful if you want to run other services inside of the guest virtual machine for your applications to use, but doing so is not encouraged. Instead, services should be run on the host (see below). The IP address of the guest is `192.168.11.11` unless overridden.
+This is traffic from the app container to the virtual machine in which PCF Dev is running. It is enabled by default. This may be useful if you want to run other services inside of the guest virtual machine for your applications to use, but doing so is not encouraged. Instead, services should be run on the host (see below). The IP address of the guest is `192.168.11.11` unless overridden.
 
 ### Container-to-host
 
-This is traffic from the app container to the host on which the virtual machine is running. It is enabled by default. This can be used to run services on your host that are available to your apps in MicroPCF.  The IP address of the host accessible to the app is `192.168.11.1` unless overridden. For example, in order to connect your app to a MongoDB instance running on the host on port `27017`, run the following commands:
+This is traffic from the app container to the host on which the virtual machine is running. It is enabled by default. This can be used to run services on your host that are available to your apps in PCF Dev.  The IP address of the host accessible to the app is `192.168.11.1` unless overridden. For example, in order to connect your app to a MongoDB instance running on the host on port `27017`, run the following commands:
 
 ```bash
 cf create-user-provided-service my-mongo-db -p '{ "uri": "mongodb://<username>:<password>@192.168.11.1:27017/<database>" }'
@@ -136,7 +122,7 @@ cf restart <app>
 
 ### Container-to-container
 
-This is traffic directly between two containers in the same MicroPCF deployment. It is useful for running applications that must communicate with each other but do not need or want a publicly-accessible route. It is not enabled and will not be available until it is supported in Pivotal Cloud Foundry.
+This is traffic directly between two containers in the same PCF Dev deployment. It is useful for running applications that must communicate with each other but do not need or want a publicly-accessible route. It is not enabled and will not be available until it is supported in Pivotal Cloud Foundry.
 
 # Copyright
 
