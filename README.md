@@ -1,6 +1,6 @@
-# MicroPCF
+# PCF Dev
 
-MicroPCF is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  MicroPCF gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  MicroPCF is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  MicroPCF is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
+PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  PCF Dev gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  PCF Dev is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  PCF Dev is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
 
 > More information about the project can be found on the [FAQ](FAQ.md#general-questions).
 
@@ -29,7 +29,7 @@ MicroPCF is a new distribution of Cloud Foundry designed to run on a developer�
 
 ### Configuration
 
-The following environment variables can be set during `vagrant up` to customize the MicroPCF deployment:
+The following environment variables can be set during `vagrant up` to customize the PCF Dev deployment:
 
 1. `MICROPCF_IP` - sets the IP address to bring up the VM on
   - defaults to 192.168.11.11 locally
@@ -44,7 +44,7 @@ The following environment variables can be set during `vagrant up` to customize 
 
 ### Using the Cloud Foundry CLI
 
-Follow the instructions provided at the end of `vagrant up` to connect to MicroPCF:
+Follow the instructions provided at the end of `vagrant up` to connect to PCF Dev:
 
 ```
 ==> default: MicroPCF is now running.
@@ -55,15 +55,15 @@ Follow the instructions provided at the end of `vagrant up` to connect to MicroP
 ==> default: Password: admin
 ```
 
-> `local.micropcf.io` above will show the domain configured for your MicroPCF instance.
+> `local.micropcf.io` above will show the domain configured for your PCF Dev instance.
 
-To stage a simple app on MicroPCF, `cd` into the app directory and run `cf push <APP_NAME>`.
+To stage a simple app on PCF Dev, `cd` into the app directory and run `cf push <APP_NAME>`.
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
 
 ## Contributing
 
-If you are interested in contributing to MicroPCF, please refer to the [contributing guidelines](CONTRIBUTING.md) and [development instructions](DEVELOP.md).
+If you are interested in contributing to PCF Dev, please refer to the [contributing guidelines](CONTRIBUTING.md) and [development instructions](DEVELOP.md).
 
 # Copyright
 
