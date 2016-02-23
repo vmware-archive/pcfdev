@@ -9,9 +9,8 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 1. Download the `pcfdev-<VERSION>.zip` from [Github releases](https://github.com/pivotal-cf/pcfdev/releases) or [nightly builds](https://pcfdev.s3.amazonaws.com/nightly/index.html).
 1. Unzip the `pcfdev-<VERSION>.zip`.
 1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
-1. Run `vagrant up --provider=<provider>` at a command prompt
-  - Where `<provider>` is `virtualbox`, `vmware_fusion` or `vmware_workstation`
-  - See [Configuration](#configuration) for additional options for `vagrant up`
+1. Run `./start-osx` at a command prompt
+  - See [Configuration](#configuration) for additional options
 
 > Check out the [troubleshooting guide](FAQ.md#troubleshooting) for more information.
 
@@ -20,16 +19,11 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 * [Vagrant](https://vagrantup.com/) 1.7+
 * [CF CLI](https://github.com/cloudfoundry/cli)
 * Internet connection required (for DNS)
-* One of the following:
-  - [VirtualBox](https://www.virtualbox.org/): 5.0+
-  - [VMware Fusion](https://www.vmware.com/products/fusion): 8+ (for OSX)
-  - [VMware Workstation](https://www.vmware.com/products/workstation): 11+ (for Windows/Linux)
-
-> VMware requires the [Vagrant VMware](https://www.vagrantup.com/vmware#buy-now) plugin that is sold by [Hashicorp](https://hashicorp.com/).
+* [VirtualBox](https://www.virtualbox.org/): 5.0+
 
 ### Configuration
 
-The following environment variables can be set during `vagrant up` to customize the PCF Dev deployment:
+The following environment variables can be set during `start-osx` to customize the PCF Dev deployment:
 
 1. `PCFDEV_IP` - sets the IP address to bring up the VM on
   - defaults to 192.168.11.11 locally
@@ -44,7 +38,7 @@ The following environment variables can be set during `vagrant up` to customize 
 
 ### Using the Cloud Foundry CLI
 
-Follow the instructions provided at the end of `vagrant up` to connect to PCF Dev:
+Follow the instructions provided at the end of `start-osx` to connect to PCF Dev:
 
 ```
 ==> default: PCF Dev is now running.
@@ -60,6 +54,19 @@ Follow the instructions provided at the end of `vagrant up` to connect to PCF De
 To stage a simple app on PCF Dev, `cd` into the app directory and run `cf push <APP_NAME>`.
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
+
+## Uninstall
+
+To temporarily stop PCF Dev:
+
+1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
+1. Run `./stop-osx` at a command prompt
+  - You can use the `start-osx` script to resume the stopped PCF Dev instance
+
+To permanently destroy PCF Dev:
+
+1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
+1. Run `./destroy-osx` at a command prompt
 
 ## Contributing
 
