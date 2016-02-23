@@ -149,6 +149,8 @@
             "inline": [
                 "apt-get -y install software-properties-common",
                 "add-apt-repository -y ppa:brightbox/ruby-ng",
+                "echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list",
+                "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
                 "apt-get -y update",
                 "apt-get -y --force-yes dist-upgrade",
                 "apt-get -y update",
@@ -157,6 +159,7 @@
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
                 "apt-get -y install libgcrypt20 libgcrypt20-dev",
+                "apt-get -y install postgresql-client-9.4",
 
                 "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.15.0&source=github-rel' | tar -C /usr/local/bin -xz",
                 "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.3.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
@@ -193,13 +196,14 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
-                "chmod 1777 /tmp",
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
+                "pg_dump -h 127.0.0.1 -p 5524 -U vcap ccdb > /var/micropcf/ccdb",
                 "/var/pcfdev/reset",
+                "chmod 1777 /tmp",
                 "rm -f /var/vcap/packages/stager/bin/stager",
                 "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/stager-0.1450.0.gz' | gunzip > /var/vcap/packages/stager/bin/stager",
                 "chmod +x /var/vcap/packages/stager/bin/stager"
