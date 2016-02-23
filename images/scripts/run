@@ -99,8 +99,8 @@ EOF)
 cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
 cf create-org pcfdev-org
-cf create-space pcfdev-space -o mipcfdev-org
-cf target -o pcfdev-org -s mipcfdev-space
+cf create-space pcfdev-space -o pcfdev-org
+cf target -o pcfdev-org -s pcfdev-space
 cf enable-feature-flag diego_docker
 cf update-security-group host <(echo $host_security_group) || cf create-security-group host <(echo $host_security_group)
 cf bind-running-security-group host
