@@ -129,8 +129,7 @@
             "only": ["amazon-ebs"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
-                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
-                "apt-get -y install linux-image-extra-`uname -r`"
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done"
             ]
         },
         {
@@ -160,6 +159,8 @@
                 "apt-get -y install aufs-tools",
                 "apt-get -y install libgcrypt20 libgcrypt20-dev",
                 "apt-get -y install postgresql-client-9.4",
+
+                "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
 
                 "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.15.0&source=github-rel' | tar -C /usr/local/bin -xz",
                 "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.3.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
