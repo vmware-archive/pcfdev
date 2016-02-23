@@ -82,7 +82,7 @@ while [[ $(started_services) -lt $(total_services) ]]; do
 done
 >&3 echo "$(total_services) out of $(total_services) running"
 
-while [[ $(cc_status_code) != 200 ]]; do
+while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
 done
 
