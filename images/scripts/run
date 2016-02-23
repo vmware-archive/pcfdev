@@ -10,28 +10,23 @@ fi
 
 exec 3>&1 4>&2 >>/var/pcfdev/run.log 2>&1
 
+source /var/pcfdev/common
+
 domain=$1
 public_ip=$2
 
-monit="/var/vcap/bosh/bin/monit"
+if status runsvdir | grep -q 'start/running'; then
+  wait_for_monit_to_start
 
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
-started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
-stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
-cc_status_code() { curl -s -I -o /dev/null -w %{http_code} http://api.$domain/v2/info; }
-available_buildpacks() { cf curl /v2/buildpacks | jq '.resources | map(select(.entity.filename | length > 0)) | length'; }
+  $monit stop all
 
-$monit stop all || true
+  >&3 echo "Waiting for services to stop..."
+  wait_for_services_to_stop
 
-while [[ $(total_services) != 0 ]] && [[ $(stopped_services) -lt $(total_services) ]]; do
-  sleep 1
-done
+  stop runsvdir
 
-stop runsvdir || true
-
-while [[ $(total_services) != 0 ]]; do
-  sleep 1
-done
+  wait_for_monit_to_stop
+fi
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/pcfdev/manifest.yml -type f)
 
@@ -40,7 +35,6 @@ old_ip=$(cat /var/pcfdev/ip)
 ip_with_commas=$(echo $ip | tr '.' ',')
 old_ip_with_commas=$(echo $old_ip | tr '.' ',')
 perl -p -i -e "s/\\Q$old_ip\\E/$ip/g" $config_files
-# ip with comma replacement needed for rabbitmq config
 perl -p -i -e "s/\\Q$old_ip_with_commas\\E/$ip_with_commas/g" $config_files
 echo $ip > /var/pcfdev/ip
 
@@ -71,11 +65,9 @@ chmod 1777 /tmp/cc_tmp
 cc_worker_ctl=/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
 grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDIR=/tmp/cc_tmp' "$cc_worker_ctl"
 
-start runsvdir || true
+start runsvdir
 
-while [[ $(total_services) = 0 ]]; do
-  sleep 1
-done
+wait_for_monit_to_start
 
 $monit start all
 
@@ -83,11 +75,12 @@ $monit start all
 counter=0
 while [[ $(started_services) -lt $(total_services) ]]; do
   counter=$(($counter + 1))
-  if [[ $(($counter % 60)) == 0 ]]; then
+  if [[ $(($counter % 60)) = 0 ]]; then
     >&3 echo "$(started_services) out of $(total_services) running"
   fi
   sleep 1
 done
+>&3 echo "$(total_services) out of $(total_services) running"
 
 while [[ $(cc_status_code) != 200 ]]; do
   sleep 1

@@ -201,7 +201,7 @@
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
-                "pg_dump -h 127.0.0.1 -p 5524 -U vcap ccdb > /var/micropcf/ccdb",
+                "/var/pcfdev/snapshot local.micropcf.io",
                 "/var/pcfdev/reset",
                 "chmod 1777 /tmp",
                 "rm -f /var/vcap/packages/stager/bin/stager",

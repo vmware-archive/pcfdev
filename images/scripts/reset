@@ -5,52 +5,37 @@ set -e
 
 exec 3>&1 4>&2 >>/var/pcfdev/reset.log 2>&1
 
-monit="/var/vcap/bosh/bin/monit"
-
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
-stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
-start_monit() {
-  start runsvdir
-  while [[ $(total_services) = 0 ]]; do
-    sleep 1
-  done
-}
-stop_monit() {
-  stop runsvdir || true
-  while [[ $(total_services) != 0 ]]; do
-    sleep 1
-  done
-}
+source /var/pcfdev/common
 
 if status runsvdir | grep -q 'start/running'; then
-  while [[ $(total_services) = 0 ]]; do
-    sleep 1
-  done
+  wait_for_monit_to_start
 
   $monit stop all
 
   >&3 echo "Waiting for services to stop..."
-  while [[ $(stopped_services) -lt $(total_services) ]]; do
-    sleep 1
-  done
+  wait_for_services_to_stop
 
-  stop_monit
+  stop runsvdir
+
+  wait_for_monit_to_stop
 fi
 
 >&3 echo "Services stopped. Resetting data..."
 rm -rf /var/vcap/{store/*,nfs} /var/vcap/data/{compile,tmp}
 
-start_monit
+start runsvdir
+
+wait_for_monit_to_start
 
 $monit start postgres
 while ! $monit summary | grep "'postgres'" | grep -q running; do
   sleep 1
 done
 
-psql -h 127.0.0.1 -p 5524 -U vcap -f /var/micropcf/ccdb ccdb
+psql -h 127.0.0.1 -p 5524 -U vcap -f /var/pcfdev/ccdb ccdb
 
 $monit stop postgres
 
-stop_monit
+stop runsvdir
 
 exec 1>&3 2>&4
