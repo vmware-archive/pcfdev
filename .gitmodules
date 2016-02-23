@@ -22,15 +22,9 @@
 [submodule "test/src/github.com/cloudfoundry/cf-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry/cf-acceptance-tests
 	url = https://github.com/cloudfoundry/cf-acceptance-tests
-[submodule "test/src/github.com/mdelillo/cf-redis-smoke-tests"]
-	path = test/src/github.com/mdelillo/cf-redis-smoke-tests
-	url = https://github.com/mdelillo/cf-redis-smoke-tests
 [submodule "releases/cf-mysql-release"]
 	path = releases/cf-mysql-release
 	url = https://github.com/ekcasey/cf-mysql-release
-[submodule "test/src/github.com/mdelillo/cf-mysql-acceptance-tests"]
-	path = test/src/github.com/mdelillo/cf-mysql-acceptance-tests
-	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
 [submodule "releases/cf-rabbitmq-release"]
 	path = releases/cf-rabbitmq-release
 	url = https://github.com/mdelillo/cf-rabbitmq-release.git
@@ -40,3 +34,9 @@
 [submodule "test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests"]
 	path = test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests
 	url = https://github.com/ekcasey/cf-rabbitmq-smoke-tests
+[submodule "test/src/github.com/pivotal-cf/cf-mysql-acceptance-tests"]
+	path = test/src/github.com/pivotal-cf/cf-mysql-acceptance-tests
+	url = https://github.com/mdelillo/cf-mysql-acceptance-tests
+[submodule "test/src/github.com/pivotal-cf/cf-redis-smoke-tests"]
+	path = test/src/github.com/pivotal-cf/cf-redis-smoke-tests
+	url = https://github.com/mdelillo/cf-redis-smoke-tests
