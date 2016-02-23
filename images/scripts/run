@@ -80,7 +80,12 @@ done
 $monit start all
 
 >&3 echo "Waiting for services to start..."
+counter=0
 while [[ $(started_services) -lt $(total_services) ]]; do
+  counter=$(($counter + 1))
+  if [[ $(($counter % 60)) == 0 ]]; then
+    >&3 echo "$(started_services) out of $(total_services) running"
+  fi
   sleep 1
 done
 
