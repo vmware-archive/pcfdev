@@ -95,9 +95,10 @@ jobs:
 
 properties:
   support_address: pcfdev@pivotal.io
+  domain: local.micropcf.io
   system_domain: local.micropcf.io
-  system_domain_organization: pcfdev-org
   app_domains: [local.micropcf.io]
+  system_domain_organization: pcfdev-org
   name: pcfdev-cc
 
   # For Diego:
@@ -273,7 +274,6 @@ properties:
     shared_secret: loggregator-secret
   metron_endpoint:
     shared_secret: loggregator-secret
-  domain: local.micropcf.io
   uaa:
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085

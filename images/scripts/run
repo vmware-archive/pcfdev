@@ -90,7 +90,7 @@ host_security_group=$(cat <<EOF
 [
  {
    "protocol": "tcp",
-   "destination": "${public_ip}",
+   "destination": "$public_ip",
    "ports": "1-65535"
  }
 ]
@@ -98,11 +98,15 @@ EOF)
 
 cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
+
+[[ $domain != $old_domain ]] && cf delete-shared-domain "$old_domain" -f
+
 cf create-org pcfdev-org
 cf create-space pcfdev-space -o pcfdev-org
 cf target -o pcfdev-org -s pcfdev-space
+
 cf enable-feature-flag diego_docker
-cf update-security-group host <(echo $host_security_group) || cf create-security-group host <(echo $host_security_group)
+cf update-security-group host <(echo "$host_security_group") || cf create-security-group host <(echo "$host_security_group")
 cf bind-running-security-group host
 
 while [[ $(available_buildpacks) -lt 8 ]]; do
