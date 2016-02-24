@@ -17,14 +17,12 @@ public_ip=$2
 
 if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_start
-
   $monit stop all
 
   >&3 echo "Waiting for services to stop..."
+
   wait_for_services_to_stop
-
   stop runsvdir
-
   wait_for_monit_to_stop
 fi
 
@@ -64,6 +62,18 @@ chmod 1777 /tmp/cc_tmp
 
 cc_worker_ctl=/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
 grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDIR=/tmp/cc_tmp' "$cc_worker_ctl"
+
+if [[ $CF_ONLY = true ]]; then
+  pushd /var/vcap/monit/job
+    rm -f *_rabbitmq-server.monitrc
+    rm -f *_rabbitmq-broker.monitrc
+    rm -f *_mysql.monitrc
+    rm -f *_cf-mysql-broker.monitrc
+    rm -f 0004_cf-redis-broker.monitrc
+    rm -f 0005_syslog-configurator.monitrc
+    rm -f /var/pcfdev/post-run
+  popd
+fi
 
 start runsvdir
 

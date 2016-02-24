@@ -74,7 +74,7 @@ Vagrant.configure("2") do |config|
         domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
         public_ip="#{local_public_ip}"
       fi
-      /var/pcfdev/run "$domain" "$public_ip"
+      CF_ONLY=#{ENV["CF_ONLY"]} /var/pcfdev/run "$domain" "$public_ip"
       #{cf_cli_present} || echo "Don't have the cf command line utility? Download it from https://github.com/cloudfoundry/cli/releases"
     SCRIPT
   end
