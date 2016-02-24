@@ -65,14 +65,15 @@ grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDI
 
 if [[ $CF_ONLY = true ]]; then
   pushd /var/vcap/monit/job
-    rm -f *_rabbitmq-server.monitrc
-    rm -f *_rabbitmq-broker.monitrc
-    rm -f *_mysql.monitrc
-    rm -f *_cf-mysql-broker.monitrc
-    rm -f 0004_cf-redis-broker.monitrc
-    rm -f 0005_syslog-configurator.monitrc
-    rm -f /var/pcfdev/post-run
+    rm -f \
+      *_rabbitmq-server.monitrc \
+      *_rabbitmq-broker.monitrc \
+      *_mysql.monitrc \
+      *_cf-mysql-broker.monitrc \
+      *_cf-redis-broker.monitrc \
+      *_syslog-configurator.monitrc
   popd
+  rm -f /var/pcfdev/post-run
 fi
 
 start runsvdir
@@ -82,15 +83,16 @@ wait_for_monit_to_start
 $monit start all
 
 >&3 echo "Waiting for services to start..."
-counter=0
-while [[ $(started_services) -lt $(total_services) ]]; do
-  counter=$(($counter + 1))
-  if [[ $(($counter % 60)) = 0 ]]; then
-    >&3 echo "$(started_services) out of $(total_services) running"
-  fi
+while total=$(total_services) && [[ $total -eq 0 ]]; do
   sleep 1
 done
->&3 echo "$(total_services) out of $(total_services) running"
+
+while started=$(started_services) && [[ $started -lt $total ]]; do
+  counter=$(($counter + 1))
+  [[ $(($counter % 60)) = 0 ]] && >&3 echo "$started out of $total running"
+  sleep 1
+done
+>&3 echo "$total out of $total running"
 
 while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
