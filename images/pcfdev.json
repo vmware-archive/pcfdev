@@ -9,7 +9,7 @@
         {
             "type": "amazon-ebs",
             "region": "us-east-1",
-            "source_ami": "ami-0a6d4760",
+            "source_ami": "ami-01b4876b",
             "instance_type": "c4.2xlarge",
             "ami_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
             "ami_groups": ["all"],
