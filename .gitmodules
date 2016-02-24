@@ -34,9 +34,9 @@
 [submodule "test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests"]
 	path = test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests
 	url = https://github.com/ekcasey/cf-rabbitmq-smoke-tests
-[submodule "test/src/github.com/pivotal-cf/cf-mysql-acceptance-tests"]
-	path = test/src/github.com/pivotal-cf/cf-mysql-acceptance-tests
-	url = https://github.com/mdelillo/cf-mysql-acceptance-tests
 [submodule "test/src/github.com/pivotal-cf/cf-redis-smoke-tests"]
 	path = test/src/github.com/pivotal-cf/cf-redis-smoke-tests
 	url = https://github.com/mdelillo/cf-redis-smoke-tests
+[submodule "test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests"]
+	path = test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests
+	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
