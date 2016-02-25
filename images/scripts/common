@@ -1,5 +1,3 @@
-#!/bin/bash
-
 monit="/var/vcap/bosh/bin/monit"
 
 total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
