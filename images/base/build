@@ -14,7 +14,11 @@ if ! "$pcfdev_dir/bosh/retrieve" "$output_dir/assets" $releases; then
   "$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
 fi
 
-cp -a "$images_dir"/{http,manifest.yml,scripts} "$output_dir/"
+cp -a "$images_dir"/{http,scripts} "$output_dir/"
+spiff merge \
+  "$images_dir/manifest.yml" \
+  <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
+  > "$output_dir/manifest.yml"
 
 pushd "$output_dir" >/dev/null
   packer build $@ -var 'distro=base' "$images_dir/pcfdev.json"

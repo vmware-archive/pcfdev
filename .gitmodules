@@ -40,3 +40,9 @@
 [submodule "test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests"]
 	path = test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests
 	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
+[submodule "src/github.com/onsi/ginkgo"]
+	path = src/github.com/onsi/ginkgo
+	url = https://github.com/onsi/ginkgo
+[submodule "src/github.com/onsi/gomega"]
+	path = src/github.com/onsi/gomega
+	url = https://github.com/onsi/gomega

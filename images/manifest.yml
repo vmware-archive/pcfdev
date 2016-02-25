@@ -94,12 +94,13 @@ jobs:
     release: etcd
 
 properties:
+  <<: (( merge ))
   support_address: pcfdev@pivotal.io
   domain: local.micropcf.io
   system_domain: local.micropcf.io
   app_domains: [local.micropcf.io]
   system_domain_organization: pcfdev-org
-  name: pcfdev-cc
+  name: pcfdev
 
   # For Diego:
   diego:
