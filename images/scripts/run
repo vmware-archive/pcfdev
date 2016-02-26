@@ -84,9 +84,7 @@ wait_for_monit_to_start
 $monit start all
 
 >&3 echo "Waiting for services to start..."
-while total=$(total_services) && [[ $total -eq 0 ]]; do
-  sleep 1
-done
+total=$(total_services)
 
 while started=$(started_services) && [[ $started -lt $total ]]; do
   counter=$(($counter + 1))

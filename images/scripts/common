@@ -1,8 +1,9 @@
 monit="/var/vcap/bosh/bin/monit"
 
-total_services() { $monit summary | grep -E '^(Process|File|System)' | wc -l; }
-started_services() { $monit summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
-stopped_services() { $monit summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
+monit_summary() { while output=$($monit summary 2>&1); [[ $output == *"error connecting to the monit daemon"* ]]; do sleep 1; done; echo "$output"; }
+total_services() { monit_summary | grep -E '^(Process|File|System)' | wc -l; }
+started_services() { monit_summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
+stopped_services() { monit_summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
 cc_status_code() { curl -s -I -o /dev/null -w %{http_code} -H "Host: api.$1" http://localhost/v2/info; }
 available_buildpacks() { psql -U vcap -h 127.0.0.1 -p 5524 -c 'select count(filename) from buildpacks where length(filename) > 0;' -At ccdb; }
 wait_for_monit_to_start() { while [[ $(total_services) = 0 ]]; do sleep 1; done; }
