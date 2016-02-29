@@ -29,7 +29,7 @@ The following environment variables can be set during `start-osx` to customize t
   - defaults to 192.168.11.11 locally
   - defaults to AWS-assigned public IP on AWS
 1. `PCFDEV_DOMAIN` - sets an alternate alias for the system routes to be defined on
-  - defaults to `local.micropcf.io` when deploying locally
+  - defaults to `local.pcfdev.io` when deploying locally
   - defaults to <PCFDEV_IP>.xip.io on AWS or when `PCFDEV_IP` is set
 1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
   - defaults to host # of logical CPUs
@@ -43,13 +43,13 @@ Follow the instructions provided at the end of `start-osx` to connect to PCF Dev
 ```
 ==> default: PCF Dev is now running.
 ==> default: To begin using PCF Dev, please run:
-==> default: 	cf api api.local.micropcf.io --skip-ssl-validation
+==> default: 	cf api api.local.pcfdev.io --skip-ssl-validation
 ==> default: 	cf login
 ==> default: Email: admin
 ==> default: Password: admin
 ```
 
-> `local.micropcf.io` above will show the domain configured for your PCF Dev instance.
+> `local.pcfdev.io` above will show the domain configured for your PCF Dev instance.
 
 To stage a simple app on PCF Dev, `cd` into the app directory and run `cf push <APP_NAME>`.
 

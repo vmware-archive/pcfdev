@@ -171,7 +171,7 @@
 
                 "mkdir -p /var/pcfdev",
                 "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
-                "echo local.micropcf.io > /var/pcfdev/domain",
+                "echo local.pcfdev.io > /var/pcfdev/domain",
                 "sed \"s/placeholder-ip/$(cat /var/pcfdev/ip)/\" /tmp/manifest.yml > /var/pcfdev/manifest.yml",
                 "chmod +x /tmp/scripts/*",
                 "mv /tmp/scripts/* /var/pcfdev/",
@@ -202,7 +202,7 @@
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
-                "/var/pcfdev/snapshot local.micropcf.io",
+                "/var/pcfdev/snapshot local.pcfdev.io",
                 "/var/pcfdev/reset",
                 "chmod 1777 /tmp",
                 "rm -f /var/vcap/packages/stager/bin/stager",

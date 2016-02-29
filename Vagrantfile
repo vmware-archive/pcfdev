@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
     config.proxy.no_proxy = [
       "localhost", "127.0.0.1",
       (ENV["PCFDEV_IP"] || "192.168.11.11"),
-      (ENV["PCFDEV_DOMAIN"] || "local.micropcf.io")
+      (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io")
     ].join(',')
   end
 
@@ -60,7 +60,7 @@ Vagrant.configure("2") do |config|
   end
 
   local_public_ip = ENV["PCFDEV_IP"] || "192.168.11.11"
-  local_default_domain = (local_public_ip == "192.168.11.11") ? "local.micropcf.io" : "#{local_public_ip}.xip.io"
+  local_default_domain = (local_public_ip == "192.168.11.11") ? "local.pcfdev.io" : "#{local_public_ip}.xip.io"
   if !vagrant_up_aws
     config.vm.network "private_network", ip: local_public_ip
   end

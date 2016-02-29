@@ -41,10 +41,10 @@ Available versions: 0.0.1, 0.1.0, 0.2.0, .... etc
 PCF Dev comes with a self-signed SSL certificate for its API and requires the `--skip-ssl-validation` option.  This also applies to the Spring Boot Dashboard, which requires the checkbox "Self-signed" in order to connect.
 
 ```
-○ → cf api api.local.micropcf.io
-Setting api endpoint to api.local.micropcf.io...
+○ → cf api api.local.pcfdev.io
+Setting api endpoint to api.local.pcfdev.io...
 FAILED
-Invalid SSL Cert for api.local.micropcf.io
+Invalid SSL Cert for api.local.pcfdev.io
 TIP: Use 'cf api --skip-ssl-validation' to continue with an insecure API endpoint
 ```
 
@@ -70,9 +70,9 @@ By default, PCF Dev will attempt to reserve `192.168.11.11` as its address.  If 
 We recommend trying one of the following first:
 
 ```bash
-PCFDEV_IP=192.168.22.11 PCFDEV_DOMAIN=local2.micropcf.io vagrant up --provider=<provider>
-PCFDEV_IP=192.168.33.11 PCFDEV_DOMAIN=local3.micropcf.io vagrant up --provider=<provider>
-PCFDEV_IP=192.168.44.11 PCFDEV_DOMAIN=local4.micropcf.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.22.11 PCFDEV_DOMAIN=local2.pcfdev.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.33.11 PCFDEV_DOMAIN=local3.pcfdev.io vagrant up --provider=<provider>
+PCFDEV_IP=192.168.44.11 PCFDEV_DOMAIN=local4.pcfdev.io vagrant up --provider=<provider>
 ```
 
 ```

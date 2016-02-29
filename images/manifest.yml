@@ -96,9 +96,9 @@ jobs:
 properties:
   <<: (( merge ))
   support_address: pcfdev@pivotal.io
-  domain: local.micropcf.io
-  system_domain: local.micropcf.io
-  app_domains: [local.micropcf.io]
+  domain: local.pcfdev.io
+  system_domain: local.pcfdev.io
+  app_domains: [local.pcfdev.io]
   system_domain_organization: pcfdev-org
   name: pcfdev
 
@@ -140,7 +140,7 @@ properties:
         debug_addr: 0.0.0.0:17020
       listener:
         debug_addr: 0.0.0.0:17021
-      traffic_controller_url: wss://doppler.local.micropcf.io:443
+      traffic_controller_url: wss://doppler.local.pcfdev.io:443
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -219,7 +219,7 @@ properties:
         1rHeshh0P/QfCQ==
         -----END RSA PRIVATE KEY-----
       enable_cf_auth: true
-      uaa_token_url: "http://login.local.micropcf.io/oauth/token"
+      uaa_token_url: "http://login.local.pcfdev.io/oauth/token"
       uaa_secret: ssh-proxy-secret
     rep:
       zone: z1
@@ -297,7 +297,7 @@ properties:
         authorities: oauth.login,scim.write,clients.read,notifications.write,critical_notifications.write,emails.write,scim.userids,password.write
         secret: login-secret
         authorized-grant-types: authorization_code,client_credentials,refresh_token
-        redirect-uri: "https://login.local.micropcf.io"
+        redirect-uri: "https://login.local.pcfdev.io"
       cf:
         id: cf
         override: true
@@ -379,22 +379,22 @@ properties:
     - name: doppler
       port: 8081
       uris:
-      - doppler.local.micropcf.io
+      - doppler.local.pcfdev.io
     - name: loggregator
       port: 8084
       uris:
-      - loggregator.local.micropcf.io
+      - loggregator.local.pcfdev.io
     - name: api
       port: 9022
       uris:
-      - api.local.micropcf.io
+      - api.local.pcfdev.io
     - name: uaa
       port: 8085
       uris:
-      - "uaa.local.micropcf.io"
-      - "*.uaa.local.micropcf.io"
-      - "login.local.micropcf.io"
-      - "*.login.local.micropcf.io"
+      - "uaa.local.pcfdev.io"
+      - "*.uaa.local.pcfdev.io"
+      - "login.local.pcfdev.io"
+      - "*.login.local.pcfdev.io"
   uaadb:
     address: localhost
     databases:
@@ -417,7 +417,7 @@ properties:
     default_to_diego_backend: true
     diego:
       stager_url: http://stager.service.cf.internal:8890
-    srv_api_uri: http://api.local.micropcf.io
+    srv_api_uri: http://api.local.pcfdev.io
     bulk_api_password: bulk-api-password
     internal_api_password: internal-api-password
     db_encryption_key: db-encryption-key
