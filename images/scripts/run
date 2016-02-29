@@ -27,6 +27,10 @@ if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_stop
 fi
 
+service dnsmasq stop
+
+rm -f /var/vcap/bosh/agent_state.json
+
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job /var/pcfdev/manifest.yml -type f)
 
 ip=$(ip route get 1 | awk '{print $NF;exit}')
@@ -45,8 +49,6 @@ resolvconf --disable-updates
 
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
 echo "listen-address=$ip" > /etc/dnsmasq.d/interface
-
-service dnsmasq stop
 
 host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver' || true)"
 cat <<EOF >/etc/resolv.conf
