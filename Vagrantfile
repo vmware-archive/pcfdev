@@ -27,6 +27,7 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--memory", resources[:memory]]
     v.customize ["modifyvm", :id, "--cpus", resources[:cpus]]
     v.customize ["modifyvm", :id, "--ioapic", "on"]
+    v.customize ["modifyvm", :id, "--paravirtprovider", "minimal"]
   end
 
   config.vm.provider "vmware_fusion" do |v|
