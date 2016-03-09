@@ -78,6 +78,7 @@
             "http_directory": "http",
             "ssh_wait_timeout": "20m",
             "shutdown_command": "echo vagrant | sudo -S shutdown -P now",
+            "format": "ova",
             "boot_command": [
                 "<esc><esc><enter><wait>",
                 "/install/vmlinuz noapic ",
@@ -227,7 +228,8 @@
     "post-processors": [
         {
             "type": "vagrant",
-            "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box"
+            "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box",
+            "keep_input_artifact": true
         }
     ]
 }
