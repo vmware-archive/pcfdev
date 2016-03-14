@@ -91,7 +91,6 @@ total=$(total_services)
 while started=$(started_services) && [[ $started -lt $total ]]; do
   counter=$(($counter + 1))
   [[ $(($counter % 60)) = 0 ]] && >&3 echo "$started out of $total running"
-  [[ $(($counter % 900)) = 0 ]] && $monit reload
   sleep 1
 done
 >&3 echo "$total out of $total running"
