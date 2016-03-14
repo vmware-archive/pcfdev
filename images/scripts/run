@@ -45,6 +45,10 @@ old_domain=$(cat /var/pcfdev/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo $domain > /var/pcfdev/domain
 
+# Update proxy configuration in garden_ctl script with values from /etc/environment
+perl -p -i -e "s/^export.*(http|https|no)_proxy=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
+sed -i "/set -x/a$(grep -i '(http\|https\|no)_proxy=' /etc/environment | xargs -I {} echo 'export {}\n' | tr -d '\n')" /var/vcap/jobs/garden/bin/garden_ctl
+
 resolvconf --disable-updates
 
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
