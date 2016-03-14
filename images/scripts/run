@@ -103,17 +103,6 @@ while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
 done
 
-host_security_group=$(cat <<EOF
-[
- {
-   "protocol": "tcp",
-   "destination": "$public_ip",
-   "ports": "1-65535"
- }
-]
-EOF
-)
-
 cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
 
@@ -124,15 +113,38 @@ cf target -o pcfdev-org -s pcfdev-space
 [[ $domain != $old_domain ]] && cf delete-shared-domain "$old_domain" -f
 
 cf enable-feature-flag diego_docker
-cf update-security-group host <(echo "$host_security_group") || cf create-security-group host <(echo "$host_security_group")
-cf bind-running-security-group host
+
+if ifconfig | grep -q "inet addr:$public_ip"; then
+  host_ip=$(echo "$public_ip" | awk -F '.' '{print $1 "." $2 "." $3 ".1"}')
+  host_security_group=$(cat <<EOF
+    [
+     {
+       "protocol": "tcp",
+       "destination": "$host_ip",
+       "ports": "1-65535"
+     }
+    ]
+EOF
+)
+
+  cf update-security-group host <(echo "$host_security_group") || cf create-security-group host <(echo "$host_security_group")
+  cf bind-running-security-group host
+fi
+
+proxy_environment_variables=$(
+  echo -n "{"
+  grep -i '\(http\|https\|no\)_proxy=' /etc/environment | sed -e 's/\(.*\)=\(.*\)/"\1": "\2"/' | paste -sd "," -
+  echo -n "}"
+)
+cf set-staging-environment-variable-group "$proxy_environment_variables"
+cf set-running-environment-variable-group "$proxy_environment_variables"
 
 while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
 done
 
 if [[ -x /var/pcfdev/post-run ]]; then
- /var/pcfdev/post-run $domain
+  /var/pcfdev/post-run $domain
 fi
 
 set +x
