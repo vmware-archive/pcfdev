@@ -47,7 +47,10 @@ echo $domain > /var/pcfdev/domain
 
 # Update proxy configuration in garden_ctl script with values from /etc/environment
 perl -p -i -e "s/^export.*(http|https|no)_proxy=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
-sed -i "/set -x/a$(grep -i '\(http\|https\|no\)_proxy=' /etc/environment | xargs -I {} echo 'export {}\n' | tr -d '\n')" /var/vcap/jobs/garden/bin/garden_ctl
+result=$(grep -i '\(http\|https\|no\)_proxy=' /etc/environment | xargs -I {} echo 'export {}\n' | tr -d '\n')
+if [[ -n "$result" ]]; then
+  sed -i "/set -x/a$result" /var/vcap/jobs/garden/bin/garden_ctl
+fi
 
 resolvconf --disable-updates
 
