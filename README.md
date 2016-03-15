@@ -76,3 +76,5 @@ If you are interested in contributing to PCF Dev, please refer to the [contribut
 
 See [LICENSE](LICENSE) for details.
 Copyright (c) 2015 [Pivotal Software, Inc](http://www.pivotal.io/).
+
+PCF Dev uses an implementation of Monit that can be found [here](https://github.com/pivotal-cf/pcfdev-monit), under the GPLv3 license.
