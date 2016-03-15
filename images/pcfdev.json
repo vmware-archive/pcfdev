@@ -200,6 +200,7 @@
             "inline": [
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
+                "rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
