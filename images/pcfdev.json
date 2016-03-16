@@ -205,10 +205,7 @@
                 "apt-get -y clean",
                 "/var/pcfdev/snapshot local.pcfdev.io",
                 "/var/pcfdev/reset",
-                "chmod 1777 /tmp",
-                "rm -f /var/vcap/packages/stager/bin/stager",
-                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/stager-0.1450.0.gz' | gunzip > /var/vcap/packages/stager/bin/stager",
-                "chmod +x /var/vcap/packages/stager/bin/stager"
+                "chmod 1777 /tmp"
             ]
         },
         {
