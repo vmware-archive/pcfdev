@@ -128,6 +128,40 @@ EOF
   cf bind-staging-security-group host
 fi
 
+pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
+if [[ ! -z $pcfdev_http_proxy ]]; then
+  http_proxy_security_group=$(cat <<EOF
+    [
+     {
+       "protocol": "tcp",
+       "destination": "$pcfdev_http_proxy",
+       "ports": "1-65535"
+     }
+    ]
+EOF
+)
+  cf update-security-group http_proxy <(echo "$http_proxy_security_group") || cf create-security-group http_proxy <(echo "$http_proxy_security_group")
+  cf bind-running-security-group http_proxy
+  cf bind-staging-security-group http_proxy
+fi
+
+pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")
+if [[ ! -z $pcfdev_https_proxy ]]; then
+  https_proxy_security_group=$(cat <<EOF
+    [
+     {
+       "protocol": "tcp",
+       "destination": "$pcfdev_https_proxy",
+       "ports": "1-65535"
+     }
+    ]
+EOF
+)
+  cf update-security-group https_proxy <(echo "$https_proxy_security_group") || cf create-security-group https_proxy <(echo "$https_proxy_security_group")
+  cf bind-running-security-group https_proxy
+  cf bind-staging-security-group https_proxy
+fi
+
 proxy_environment_variables=$(
   echo -n "{"
   grep -i '\(http\|https\|no\)_proxy=' /etc/environment | sed -e 's/\(.*\)=\(.*\)/"\1": "\2"/' | paste -sd "," -
