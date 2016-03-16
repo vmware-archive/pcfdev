@@ -10,9 +10,16 @@ Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-proxyconf") && !vagrant_up_aws
     config.proxy.http = ENV["http_proxy"] || ENV["HTTP_PROXY"]
     config.proxy.https = ENV["https_proxy"] || ENV["HTTPS_PROXY"]
+    ip = (ENV["PCFDEV_IP"] || "192.168.11.11")
+    ip_octets = ip.split('.')
+    ip_octets[3] = 1
+    host_ip = ip_octets.join('.')
+
     config.proxy.no_proxy = [
-      "localhost", "127.0.0.1",
-      (ENV["PCFDEV_IP"] || "192.168.11.11"),
+      "localhost",
+      "127.0.0.1",
+      host_ip,
+      ip,
       (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io")
     ].join(',')
   end
