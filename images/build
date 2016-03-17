@@ -2,8 +2,9 @@
 
 set -e
 
-pcfdev_dir=$(cd `dirname $0` && cd ../.. && pwd)
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 images_dir=$pcfdev_dir/images
+
 output_dir=$images_dir/base/output
 mkdir -p "$output_dir"
 rm -rf "$output_dir"/output-*
@@ -11,9 +12,7 @@ rm -rf "$output_dir"/output-*
 "$pcfdev_dir/bosh/setup-packer" "$output_dir/packer-bosh"
 
 releases='diego cf garden-linux etcd'
-if ! "$pcfdev_dir/bosh/retrieve" "$output_dir/assets" $releases; then
-  "$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
-fi
+"$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
 
 cp -a "$images_dir"/{http,scripts} "$output_dir/"
 spiff merge \
@@ -22,5 +21,5 @@ spiff merge \
   > "$output_dir/manifest.yml"
 
 pushd "$output_dir" >/dev/null
-  packer build $@ -var 'distro=base' "$images_dir/pcfdev.json"
+  packer build $@ -var 'distro=oss' "$images_dir/pcfdev.json"
 popd >/dev/null

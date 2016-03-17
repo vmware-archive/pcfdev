@@ -2,12 +2,7 @@
 *.box
 .vagrant
 
-/bin
-/pkg
-/test/bin
-/test/pkg
 /bosh/bin
 /bosh/pkg
 
-/images/base/output
-/images/pcfdev/output
+/images/output
