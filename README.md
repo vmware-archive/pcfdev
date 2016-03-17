@@ -1,3 +1,5 @@
+> **PCF Dev is currently in Closed Beta on the [Pivotal Network](https://network.pivotal.io/).  Our first Open Beta release should be available in the next couple of weeks.**
+
 # PCF Dev
 
 PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  PCF Dev gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  PCF Dev is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  PCF Dev is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
@@ -6,7 +8,7 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 
 ## Install
 
-1. Download the `pcfdev-<VERSION>.zip` from [Github releases](https://github.com/pivotal-cf/pcfdev/releases) or [nightly builds](https://pcfdev.s3.amazonaws.com/nightly/index.html).
+1. Download the latest `pcfdev-<VERSION>.zip` from the [Pivotal Network](https://network.pivotal.io/).  (Currently only available to select PCF customers)
 1. Unzip the `pcfdev-<VERSION>.zip`.
 1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
 1. Run `./start-osx` at a command prompt
@@ -16,7 +18,7 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 
 ### Prerequisites
 
-* [Vagrant](https://vagrantup.com/) 1.7+
+* [Vagrant](https://vagrantup.com/) 1.8+
 * [CF CLI](https://github.com/cloudfoundry/cli)
 * Internet connection required (for DNS)
 * [VirtualBox](https://www.virtualbox.org/): 5.0+
@@ -30,7 +32,7 @@ The following environment variables can be set during `start-osx` to customize t
   - defaults to AWS-assigned public IP on AWS
 1. `PCFDEV_DOMAIN` - sets an alternate alias for the system routes to be defined on
   - defaults to `local.pcfdev.io` when deploying locally
-  - defaults to <PCFDEV_IP>.xip.io on AWS or when `PCFDEV_IP` is set
+  - defaults to `<PCFDEV_IP>.xip.io` on AWS or when `PCFDEV_IP` is set
 1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
   - defaults to host # of logical CPUs
 1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
@@ -75,6 +77,6 @@ If you are interested in contributing to PCF Dev, please refer to the [contribut
 # Copyright
 
 See [LICENSE](LICENSE) for details.
-Copyright (c) 2015 [Pivotal Software, Inc](http://www.pivotal.io/).
+Copyright (c) 2016 [Pivotal Software, Inc](http://www.pivotal.io/).
 
-PCF Dev uses an implementation of Monit that can be found [here](https://github.com/pivotal-cf/pcfdev-monit), under the GPLv3 license.
+PCF Dev uses a version of Monit that can be found [here](https://github.com/pivotal-cf/pcfdev-monit), under the GPLv3 license.
