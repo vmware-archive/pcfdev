@@ -1,15 +1,3 @@
-[submodule "releases/cf-release"]
-	path = releases/cf-release
-	url = https://github.com/cloudfoundry/cf-release
-[submodule "releases/diego-release"]
-	path = releases/diego-release
-	url = https://github.com/cloudfoundry-incubator/diego-release
-[submodule "releases/etcd-release"]
-	path = releases/etcd-release
-	url = https://github.com/cloudfoundry-incubator/etcd-release
-[submodule "releases/garden-linux-release"]
-	path = releases/garden-linux-release
-	url = https://github.com/cloudfoundry-incubator/garden-linux-release
 [submodule "releases/cf-redis-release"]
 	path = releases/cf-redis-release
 	url = https://github.com/sclevine/cf-redis-release
