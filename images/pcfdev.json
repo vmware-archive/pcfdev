@@ -180,6 +180,7 @@
                 "apt-get -y install dnsmasq",
                 "service dnsmasq stop",
                 "update-rc.d -f dnsmasq remove",
+                "resolvconf --disable-updates",
                 "echo IGNORE_RESOLVCONF=yes >> /etc/default/dnsmasq",
                 "echo bind-interfaces > /etc/dnsmasq.d/pcfdev",
                 "echo \"address=/.local.pcfdev.io/$(cat /var/pcfdev/ip)\" > /etc/dnsmasq.d/domain",
