@@ -185,7 +185,7 @@
                 "echo bind-interfaces > /etc/dnsmasq.d/pcfdev",
                 "echo \"address=/.local.pcfdev.io/$(cat /var/pcfdev/ip)\" > /etc/dnsmasq.d/domain",
                 "echo \"listen-address=$(cat /var/pcfdev/ip)\" > /etc/dnsmasq.d/interface",
-                "echo \"nameserver $(cat /var/pcfdev/ip)\" >> /etc/resolv.conf",
+                "echo \"nameserver $(cat /var/pcfdev/ip)\n$(cat /etc/resolv.conf)\" > /etc/resolv.conf",
                 "service dnsmasq start"
             ]
         },
