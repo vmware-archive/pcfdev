@@ -153,7 +153,7 @@
                 "apt-get -y update",
                 "apt-get -y --force-yes dist-upgrade",
                 "apt-get -y update",
-                "apt-get -y install curl unzip zip jq",
+                "apt-get -y install curl unzip zip jq iostat",
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
@@ -168,6 +168,9 @@
                 "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
 
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
+
+                "gem install -q --no-rdoc --no-ri bundler",
+                "bundler config --global --jobs $(grep -c ^processor /proc/cpuinfo)",
 
                 "mkdir -p /var/pcfdev",
                 "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
