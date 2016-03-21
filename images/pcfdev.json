@@ -59,7 +59,7 @@
                 "initrd=/install/initrd.gz -- <enter>"
             ],
             "vmx_data": {
-                "numvcpus": "8",
+                "numvcpus": "4",
                 "memsize": "4096"
             }
         },
@@ -90,7 +90,7 @@
                 "initrd=/install/initrd.gz -- <enter>"
             ],
             "vboxmanage": [
-                [ "modifyvm", "{{.Name}}", "--cpus", "8" ],
+                [ "modifyvm", "{{.Name}}", "--cpus", "4" ],
                 [ "modifyvm", "{{.Name}}", "--memory", "4096" ],
                 [ "modifyvm", "{{.Name}}", "--natdnshostresolver1", "on" ],
                 [ "modifyvm", "{{.Name}}", "--nic1", "nat" ]
