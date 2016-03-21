@@ -153,7 +153,7 @@
                 "apt-get -y update",
                 "apt-get -y --force-yes dist-upgrade",
                 "apt-get -y update",
-                "apt-get -y install curl unzip zip jq iostat",
+                "apt-get -y install curl unzip zip jq sysstat",
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
