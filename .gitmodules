@@ -1,33 +1,6 @@
-[submodule "releases/cf-redis-release"]
-	path = releases/cf-redis-release
-	url = https://github.com/sclevine/cf-redis-release
 [submodule "bosh/src/github.com/cppforlife/packer-bosh"]
 	path = bosh/src/github.com/cppforlife/packer-bosh
 	url = https://github.com/cppforlife/packer-bosh
 [submodule "bosh/src/github.com/cppforlife/bosh-provisioner"]
 	path = bosh/src/github.com/cppforlife/bosh-provisioner
 	url = https://github.com/sclevine/bosh-provisioner
-[submodule "test/src/github.com/cloudfoundry/cf-acceptance-tests"]
-	path = test/src/github.com/cloudfoundry/cf-acceptance-tests
-	url = https://github.com/cloudfoundry/cf-acceptance-tests
-[submodule "releases/cf-mysql-release"]
-	path = releases/cf-mysql-release
-	url = https://github.com/ekcasey/cf-mysql-release
-[submodule "releases/cf-rabbitmq-release"]
-	path = releases/cf-rabbitmq-release
-	url = https://github.com/mdelillo/cf-rabbitmq-release.git
-[submodule "test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests"]
-	path = test/src/github.com/pivotal-cf/cf-rabbitmq-smoke-tests
-	url = https://github.com/ekcasey/cf-rabbitmq-smoke-tests
-[submodule "test/src/github.com/pivotal-cf/cf-redis-smoke-tests"]
-	path = test/src/github.com/pivotal-cf/cf-redis-smoke-tests
-	url = https://github.com/mdelillo/cf-redis-smoke-tests
-[submodule "test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests"]
-	path = test/src/github.com/cloudfoundry-incubator/cf-mysql-acceptance-tests
-	url = https://github.com/mdelillo/cf-mysql-acceptance-tests.git
-[submodule "src/github.com/onsi/ginkgo"]
-	path = src/github.com/onsi/ginkgo
-	url = https://github.com/onsi/ginkgo
-[submodule "src/github.com/onsi/gomega"]
-	path = src/github.com/onsi/gomega
-	url = https://github.com/onsi/gomega
