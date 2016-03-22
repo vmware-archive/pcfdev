@@ -197,7 +197,6 @@ exec 1>&3 2>&4
 
 echo "PCF Dev is now running."
 echo "To begin using PCF Dev, please run:"
-echo -e "\tcf api api.$domain --skip-ssl-validation"
-echo -e "\tcf login"
+echo -e "\tcf login -a api.$domain --skip-ssl-validation"
 echo "Email: admin"
 echo "Password: admin"
