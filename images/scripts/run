@@ -137,11 +137,12 @@ fi
 
 pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
 if [[ ! -z $pcfdev_http_proxy ]]; then
+  http_proxy_host=$(echo $pcfdev_http_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
   http_proxy_security_group=$(cat <<EOF
     [
      {
        "protocol": "tcp",
-       "destination": "$pcfdev_http_proxy",
+       "destination": "$http_proxy_host",
        "ports": "1-65535"
      }
     ]
@@ -154,11 +155,12 @@ fi
 
 pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")
 if [[ ! -z $pcfdev_https_proxy ]]; then
+  https_proxy_host=$(echo $pcfdev_https_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
   https_proxy_security_group=$(cat <<EOF
     [
      {
        "protocol": "tcp",
-       "destination": "$pcfdev_https_proxy",
+       "destination": "$https_proxy_host",
        "ports": "1-65535"
      }
     ]
