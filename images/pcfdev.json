@@ -93,7 +93,8 @@
                 [ "modifyvm", "{{.Name}}", "--cpus", "4" ],
                 [ "modifyvm", "{{.Name}}", "--memory", "4096" ],
                 [ "modifyvm", "{{.Name}}", "--natdnshostresolver1", "on" ],
-                [ "modifyvm", "{{.Name}}", "--nic1", "nat" ]
+                [ "modifyvm", "{{.Name}}", "--nic1", "nat" ],
+                [ "modifyvm", "{{.Name}}", "--paravirtprovider", "minimal" ]
             ]
         }
     ],
