@@ -76,7 +76,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", run: "always" do |s|
     s.inline = <<-SCRIPT
       set -e
-      if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)"; then
+      if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)" && echo "$public_ip" | grep -q "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"; then
         domain="#{ENV["PCFDEV_DOMAIN"] || "${public_ip}.xip.io"}"
       else
         domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
