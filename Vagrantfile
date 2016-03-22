@@ -8,8 +8,8 @@ Vagrant.configure("2") do |config|
   vagrant_up_aws = (vagrant_up && ARGV.join(' ').match(/provider(=|\s+)aws/))
 
   if Vagrant.has_plugin?("vagrant-proxyconf") && !vagrant_up_aws
-    config.proxy.http = ENV["http_proxy"] || ENV["HTTP_PROXY"]
-    config.proxy.https = ENV["https_proxy"] || ENV["HTTPS_PROXY"]
+    config.proxy.http = ENV["HTTP_PROXY"] || ENV["http_proxy"]
+    config.proxy.https = ENV["HTTPS_PROXY"] || ENV["https_proxy"]
     ip = (ENV["PCFDEV_IP"] || "192.168.11.11")
     ip_octets = ip.split('.')
     ip_octets[3] = 1
@@ -20,8 +20,9 @@ Vagrant.configure("2") do |config|
       "127.0.0.1",
       host_ip,
       ip,
-      (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io")
-    ].join(',')
+      (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io"),
+      (ENV["NO_PROXY"] || ENV["no_proxy"])
+    ].compact.join(',')
   end
 
   resources = calculate_resource_allocation
