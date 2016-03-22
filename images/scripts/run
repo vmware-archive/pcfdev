@@ -45,13 +45,6 @@ old_domain=$(cat /var/pcfdev/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo $domain > /var/pcfdev/domain
 
-# Update proxy configuration in garden_ctl script with values from /etc/environment
-perl -p -i -e "s/^export.*(http|https|no)_proxy=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
-result=$(grep -i '\(http\|https\|no\)_proxy=' /etc/environment | xargs -I {} echo 'export {}\n' | tr -d '\n')
-if [[ -n "$result" ]]; then
-  sed -i "/set -x/a$result" /var/vcap/jobs/garden/bin/garden_ctl
-fi
-
 resolvconf --disable-updates
 
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
@@ -65,6 +58,18 @@ $host_ns
 EOF
 
 service dnsmasq start
+
+# Update proxy configuration in garden_ctl script with values from /etc/environment
+pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
+pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")
+
+if [[ ! -z $pcfdev_http_proxy || ! -z $pcfdev_https_proxy ]]; then
+  perl -p -i -e "s/^export.*(http|https|no)_proxy=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
+  result=$(grep -i '\(http\|https\|no\)_proxy=' /etc/environment | xargs -I {} echo 'export {}\n' | tr -d '\n')
+  if [[ -n "$result" ]]; then
+    sed -i "/set -x/a$result" /var/vcap/jobs/garden/bin/garden_ctl
+  fi
+fi
 
 mkdir -p /tmp/cc_tmp
 chgrp vcap /tmp/cc_tmp
@@ -135,7 +140,6 @@ EOF
   cf bind-staging-security-group host
 fi
 
-pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
 if [[ ! -z $pcfdev_http_proxy ]]; then
   http_proxy_host=$(echo $pcfdev_http_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
   http_proxy_security_group=$(cat <<EOF
@@ -153,7 +157,6 @@ EOF
   cf bind-staging-security-group http_proxy
 fi
 
-pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")
 if [[ ! -z $pcfdev_https_proxy ]]; then
   https_proxy_host=$(echo $pcfdev_https_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
   https_proxy_security_group=$(cat <<EOF
@@ -171,13 +174,15 @@ EOF
   cf bind-staging-security-group https_proxy
 fi
 
-proxy_environment_variables=$(
-  echo -n "{"
-  grep -i '\(http\|https\|no\)_proxy=' /etc/environment | sed -e 's/\(.*\)=\(.*\)/"\1": "\2"/' | paste -sd "," -
-  echo -n "}"
-)
-cf set-staging-environment-variable-group "$proxy_environment_variables"
-cf set-running-environment-variable-group "$proxy_environment_variables"
+if [[ ! -z $pcfdev_http_proxy || ! -z $pcfdev_https_proxy ]]; then
+  proxy_environment_variables=$(
+    echo -n "{"
+    grep -i '\(http\|https\|no\)_proxy=' /etc/environment | sed -e 's/\(.*\)=\(.*\)/"\1": "\2"/' | paste -sd "," -
+    echo -n "}"
+  )
+  cf set-staging-environment-variable-group "$proxy_environment_variables"
+  cf set-running-environment-variable-group "$proxy_environment_variables"
+fi
 
 while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
