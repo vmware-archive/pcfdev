@@ -59,6 +59,8 @@ EOF
 
 service dnsmasq start
 
+sed -i '/\/proc\/sys\/net\/ipv4\/ip_local_port_range/d' /var/vcap/jobs/gorouter/bin/gorouter_ctl
+
 # Update proxy configuration in garden_ctl script with values from /etc/environment
 pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
 pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")

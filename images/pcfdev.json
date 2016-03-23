@@ -191,8 +191,7 @@
                 "echo \"nameserver 127.0.0.1\nnameserver $(cat /var/pcfdev/ip)\n$(cat /etc/resolv.conf)\" > /etc/resolv.conf",
                 "service dnsmasq start",
 
-                "echo net.ipv4.ip_local_port_range = 32768 61000 > /etc/sysctl.d/60-restrict-source-ports.conf",
-                "sysctl --system"
+                "echo net.ipv4.ip_local_port_range = 32768 61000 > /etc/sysctl.d/60-restrict-source-ports.conf"
             ]
         },
         {
