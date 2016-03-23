@@ -2,6 +2,8 @@
     "variables": {
         "version": "0",
         "distro": "pcfdev",
+        "cpus": "4",
+        "memory": "4096",
         "disk_size": "60"
     },
     "builders": [
@@ -59,8 +61,8 @@
                 "initrd=/install/initrd.gz -- <enter>"
             ],
             "vmx_data": {
-                "numvcpus": "4",
-                "memsize": "4096"
+                "numvcpus": "{{user `cpus`}}",
+                "memsize": "{{user `memory`}}"
             }
         },
         {
@@ -90,8 +92,8 @@
                 "initrd=/install/initrd.gz -- <enter>"
             ],
             "vboxmanage": [
-                [ "modifyvm", "{{.Name}}", "--cpus", "4" ],
-                [ "modifyvm", "{{.Name}}", "--memory", "4096" ],
+                [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
+                [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
                 [ "modifyvm", "{{.Name}}", "--natdnshostresolver1", "on" ],
                 [ "modifyvm", "{{.Name}}", "--nic1", "nat" ],
                 [ "modifyvm", "{{.Name}}", "--paravirtprovider", "minimal" ]
