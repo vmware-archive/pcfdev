@@ -59,7 +59,7 @@ Vagrant.configure("2") do |config|
       'Ebs.VolumeSize' => ENV["AWS_EBS_DISK_SIZE"] || 100,
       'Ebs.DeleteOnTermination' => true,
       'Ebs.VolumeType' => 'gp2',
-    }] 
+    }]
     aws.ebs_optimized = true
     aws.tags = { "Name" => (ENV["AWS_INSTANCE_NAME"] || "pcfdev") }
     aws.ami = ""
@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", run: "always" do |s|
     s.inline = <<-SCRIPT
       set -e
-      if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)" && echo "$public_ip" | grep -q "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"; then
+      if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)" && [[ $public_ip =~ ^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$ ]]; then
         domain="#{ENV["PCFDEV_DOMAIN"] || "${public_ip}.xip.io"}"
       else
         domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
@@ -87,7 +87,6 @@ Vagrant.configure("2") do |config|
       #{cf_cli_present} || echo "Don't have the cf command line utility? Download it from https://github.com/cloudfoundry/cli/releases"
     SCRIPT
   end
-
 end
 
 
