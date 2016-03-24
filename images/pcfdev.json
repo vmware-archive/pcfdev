@@ -165,7 +165,7 @@
 
                 "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
 
-                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.15.0&source=github-rel' | tar -C /usr/local/bin -xz",
+                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.16.1&source=github-rel' | tar -C /usr/local/bin -xz",
                 "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.3.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
                 "curl -L 'https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
                 "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
