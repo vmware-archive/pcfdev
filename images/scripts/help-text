@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z $1 ]]; then
+    >&2 echo "Usage:"
+    >&2 echo -e "\t$0 <domain>"
+    exit 1
+fi
+
+domain=$1
+
+echo "PCF Dev is now running."
+echo "To begin using PCF Dev, please run:"
+echo -e "\tcf login -a api.$domain --skip-ssl-validation"
+echo "Email: admin"
+echo "Password: admin"

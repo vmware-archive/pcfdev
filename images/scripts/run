@@ -16,6 +16,11 @@ source /var/pcfdev/common
 domain=$1
 public_ip=$2
 
+if [[ $$(cc_status_code "$domain") -eq 200 && (started_services) -eq $(total_services) ]]; then
+  >&3 /var/pcfdev/help-text $domain
+  exit 0
+fi
+
 if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_start
   $monit stop all
@@ -197,8 +202,4 @@ fi
 set +x
 exec 1>&3 2>&4
 
-echo "PCF Dev is now running."
-echo "To begin using PCF Dev, please run:"
-echo -e "\tcf login -a api.$domain --skip-ssl-validation"
-echo "Email: admin"
-echo "Password: admin"
+/var/pcfdev/help-text $domain
