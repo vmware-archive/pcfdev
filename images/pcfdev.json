@@ -204,8 +204,7 @@
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "rm -f /var/vcap/packages/rep/bin/rep",
-                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/rep-0.1454.0.tgz' | tar -xz -C /var/vcap/packages/rep/bin rep",
-                "chmod +x /var/vcap/packages/rep/bin/rep"
+                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/rep-0.1454.0.tgz' | tar -xz -C /var/vcap/packages/rep/bin rep"
             ]
         },
         {
