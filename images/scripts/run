@@ -16,8 +16,9 @@ source /var/pcfdev/common
 domain=$1
 public_ip=$2
 
-if [[ $$(cc_status_code "$domain") -eq 200 && (started_services) -eq $(total_services) ]]; then
-  >&3 /var/pcfdev/help-text $domain
+total=$(total_services)
+if [[ $total != 0 ]] && [[ $(started_services) = $total ]] && [[ $(cc_status_code "$domain") = 200 ]]; then
+  >&3 /var/pcfdev/help-text "$domain"
   exit 0
 fi
 

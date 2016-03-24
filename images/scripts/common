@@ -1,6 +1,6 @@
 monit="/var/vcap/bosh/bin/monit"
 
-monit_summary() { while output=$($monit summary 2>&1); [[ $output == *"error connecting to the monit daemon"* ]]; do sleep 1; done; echo "$output"; }
+monit_summary() { while output=$($monit summary 2>&1) && [[ $output = *"error connecting to the monit daemon"* ]]; do sleep 1; done; echo "$output"; }
 total_services() { monit_summary | grep -E '^(Process|File|System)' | wc -l; }
 started_services() { monit_summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
 stopped_services() { monit_summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
