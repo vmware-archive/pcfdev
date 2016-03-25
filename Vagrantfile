@@ -1,5 +1,5 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "pcfdev/base"
+  config.vm.box = "pcfdev/oss"
   config.vm.box_version = "0"
 
   config.vm.synced_folder ".", "/vagrant", disabled: true

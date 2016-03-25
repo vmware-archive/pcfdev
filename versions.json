@@ -1,0 +1,22 @@
+[
+  {
+    "name" : "cf-release",
+    "url" : "https://github.com/cloudfoundry/cf-release",
+    "sha" : "9e31b98e104825c136d96a711bec2135f4a6ed33"
+  },
+  {
+    "name" : "diego-release",
+    "url" : "https://github.com/cloudfoundry-incubator/diego-release",
+    "sha" : "642fc54e1724211f5fabfeefce6c35aaf3f1d604"
+  },
+  {
+    "name" : "garden-linux-release",
+    "url" : "https://github.com/cloudfoundry-incubator/garden-linux-release",
+    "sha" : "149336f94c0394fe08ba30d219f0c25402f073a4"
+  },
+  {
+    "name" : "etcd-release",
+    "url" : "https://github.com/cloudfoundry-incubator/etcd-release",
+    "sha" : "493f44cf44ae1123bea86137deb1913bbb5108b0"
+  }
+]

@@ -5,13 +5,14 @@ set -e
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 images_dir=$pcfdev_dir/images
 
-output_dir=$images_dir/base/output
+output_dir=$images_dir/output
 mkdir -p "$output_dir"
 rm -rf "$output_dir"/output-*
 
 "$pcfdev_dir/bosh/setup-packer" "$output_dir/packer-bosh"
 
 releases='diego cf garden-linux etcd'
+"$pcfdev_dir/bosh/clone-releases"
 "$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
 
 cp -a "$images_dir"/{http,scripts} "$output_dir/"

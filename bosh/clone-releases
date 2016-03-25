@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $(which jq) ]]; then
+    >&2 echo -e "\t'jq' not found in the PATH"
+    >&2 echo -e "\t Please install jq in order to continue"
+    >&2 echo -e "\t https://stedolan.github.io/jq/"
+    exit 1
+fi
+set -x
+
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+versions=$(cat $pcfdev_dir/versions.json)
+
+rm -rf "$pcfdev_dir/releases"
+mkdir "$pcfdev_dir/releases"
+
+number_of_releases=$(echo $versions | jq length)
+for i in $(seq 0 $((number_of_releases -1)))
+do
+  name=$(echo $versions | jq .[$i].name -r)
+  url=$(echo $versions | jq .[$i].url -r)
+  sha=$(echo $versions | jq .[$i].sha -r)
+  git clone $url $pcfdev_dir/releases/$name
+  git -C "$pcfdev_dir/releases/$name" co $sha
+  git -C "$pcfdev_dir/releases/$name" submodule update --init --recursive
+done
