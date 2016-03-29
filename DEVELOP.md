@@ -4,7 +4,6 @@ To develop PCF Dev you will need to have the following tools installed:
 
 - [Packer](https://www.packer.io) v0.9.0+
 - [Vagrant](https://www.vagrantup.com/) v1.8.1+
-- [Direnv](https://github.com/direnv/direnv) v2.7.0+
 - [Virtualbox](https://www.virtualbox.org/) 5.0+ (to build Virtualbox boxes)
 - [VMWare Fusion](https://www.vmware.com/products/fusion) 8+ or [VMWare Workstation](https://www.vmware.com/products/workstation) 11+ (to build VMWare boxes)
 - [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to build AWS boxes)
@@ -13,15 +12,6 @@ To develop PCF Dev you will need to have the following tools installed:
 
 ```bash
 git clone --recursive https://github.com/pivotal-cf/pcfdev.git
-```
-
-## Build PCF Dev
-
-Setup your shell for building PCF Dev:
-
-```bash
-cd pcfdev
-direnv allow
 ```
 
 ### Building a PCF Dev Box
