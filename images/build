@@ -15,7 +15,7 @@ releases='diego cf garden-linux etcd'
 "$pcfdev_dir/bosh/clone-releases"
 "$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
 
-cp -a "$images_dir"/{http,scripts} "$output_dir/"
+cp -a "$images_dir"/{http,keys,scripts} "$output_dir/"
 spiff merge \
   "$images_dir/manifest.yml" \
   <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
