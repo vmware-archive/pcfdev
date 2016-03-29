@@ -97,13 +97,13 @@ def calculate_resource_allocation
   case RUBY_PLATFORM
   when /darwin/i
     sysctl_path = `which sysctl || echo /usr/sbin/sysctl`.chomp
-    cpus ||= `#{sysctl_path} -n hw.ncpu`.to_i
+    cpus ||= `#{sysctl_path} -n hw.physicalcpu`.to_i
     max_memory = `#{sysctl_path} -n hw.memsize`.to_i / 1024 / 1024
   when /linux/i
-    cpus ||= `nproc`.to_i
+    cpus ||= `grep 'core id' /proc/cpuinfo | uniq | wc -l`.to_i
     max_memory = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
-    cpus ||= `wmic computersystem get numberoflogicalprocessors`.split("\n")[2].to_i
+    cpus ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
     max_memory = `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024
   else
     cpus ||= 2
