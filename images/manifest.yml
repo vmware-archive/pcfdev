@@ -50,6 +50,8 @@ jobs:
     release: cf
   - name: staticfile-buildpack
     release: cf
+  - name: java-offline-buildpack
+    release: cf
   - name: cloud_controller_clock
     release: cf
   - name: cloud_controller_ng
@@ -461,6 +463,18 @@ properties:
     - {name: php_buildpack, package: php-buildpack}
     - {name: staticfile_buildpack, package: staticfile-buildpack}
     - {name: binary_buildpack, package: binary-buildpack}
+    buildpacks:
+      blobstore_type: fog
+      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+    droplets:
+      blobstore_type: fog
+      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+    packages:
+      blobstore_type: fog
+      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+    resource_pool:
+      blobstore_type: fog
+      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
   ccdb:
     address: localhost
     databases:
@@ -515,6 +529,7 @@ properties:
   # For Garden:
   garden:
     allow_host_access: true
+    graph_cleanup_threshold_in_mb: 15000
     deny_networks:
     - 0.0.0.0/0
 
