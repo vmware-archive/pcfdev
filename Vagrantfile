@@ -1,4 +1,6 @@
 Vagrant.configure("2") do |config|
+  Vagrant.require_version ">= 1.8"
+
   config.vm.box = "pcfdev/oss"
   config.vm.box_version = "0"
 
