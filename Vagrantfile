@@ -1,19 +1,31 @@
 Vagrant.configure("2") do |config|
   Vagrant.require_version ">= 1.8"
+  @min_virtualbox_version = "5.0.0"
 
   config.vm.box = "pcfdev/oss"
   config.vm.box_version = "0"
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
+  local_public_ip = ENV["PCFDEV_IP"] || "192.168.11.11"
   vagrant_up = (!ARGV.nil? && ARGV.first == 'up')
-  vagrant_up_aws = (vagrant_up && ARGV.join(' ').match(/provider(=|\s+)aws/))
+  if vagrant_up
+    # its only accurate to determine the provider during 'vagrant up'
+    match = ARGV.join(' ').match(/provider(=|\s+)(?<provider>[A-Za-z_]+)/)
+    provider = (match ? match['provider'] : (ENV['VAGRANT_DEFAULT_PROVIDER'] || :virtualbox)).to_sym
+    vagrant_up_aws = provider == :aws
+    if provider == :virtualbox
+      validate_vbox_version
+      local_public_ip = ENV["PCFDEV_IP"] || free_ip || "192.168.11.11"
+    end
+  end
+
+  pcfdev_domain = ENV["PCFDEV_DOMAIN"] || domain_for_ip(local_public_ip)
 
   if Vagrant.has_plugin?("vagrant-proxyconf") && !vagrant_up_aws
     config.proxy.http = ENV["HTTP_PROXY"] || ENV["http_proxy"]
     config.proxy.https = ENV["HTTPS_PROXY"] || ENV["https_proxy"]
-    ip = (ENV["PCFDEV_IP"] || "192.168.11.11")
-    ip_octets = ip.split('.')
+    ip_octets = local_public_ip.split('.')
     ip_octets[3] = 1
     host_ip = ip_octets.join('.')
 
@@ -21,8 +33,8 @@ Vagrant.configure("2") do |config|
       "localhost",
       "127.0.0.1",
       host_ip,
-      ip,
-      (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io"),
+      local_public_ip,
+      pcfdev_domain,
       (ENV["NO_PROXY"] || ENV["no_proxy"])
     ].compact.join(',')
   end
@@ -70,7 +82,6 @@ Vagrant.configure("2") do |config|
     override.ssh.private_key_path = ENV["AWS_SSH_PRIVATE_KEY_PATH"]
   end
 
-  local_public_ip = ENV["PCFDEV_IP"] || "192.168.11.11"
   local_default_domain = (local_public_ip == "192.168.11.11") ? "local.pcfdev.io" : "#{local_public_ip}.xip.io"
   if !vagrant_up_aws
     config.vm.network "private_network", ip: local_public_ip
@@ -80,9 +91,9 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SCRIPT
       set -e
       if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)" && [[ $public_ip =~ ^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$ ]]; then
-        domain="#{ENV["PCFDEV_DOMAIN"] || "${public_ip}.xip.io"}"
+        domain="#{pcfdev_domain || "${public_ip}.xip.io"}"
       else
-        domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
+        domain="#{pcfdev_domain || local_default_domain}"
         public_ip="#{local_public_ip}"
       fi
       CF_ONLY=#{ENV["CF_ONLY"]} /var/pcfdev/run "$domain" "$public_ip"
@@ -126,4 +137,53 @@ def cf_cli_present
   else
     false
   end
+end
+
+def validate_vbox_version
+  output = `#{vbox_manage} --version`
+  if Gem::Version.new(output.strip) < Gem::Version.new(@min_virtualbox_version)
+    exit_with_message("Virtualbox >= #{@min_virtualbox_version} must be installed to use PCF Dev.")
+  end
+end
+
+def domain_for_ip(ip)
+  count = ip.split('.')[2].chars.uniq.join
+  count = '' if count == '1'
+  "local#{count}.pcfdev.io"
+end
+
+def free_ip
+  require 'socket'
+  inets = Socket.ip_address_list.find_all { |ip| ip.ipv4? }.map { |ip| ip.ip_address }
+  vbox_inets = `#{vbox_manage} list hostonlyifs`.scan(/IPAddress:\s+(?<ip>([0-9]{1,3}\.){3}[0-9]{1,3})/).flatten
+  (1..9).each do |i|
+    inet = "192.168.#{i}#{i}.1"
+    ip = "192.168.#{i}#{i}.11"
+    return ip if !inets.include?(inet) || (vbox_inets.include?(inet) && !responds(ip))
+  end
+  nil
+end
+
+def responds(ip)
+  cmd = "ping -q -c 1 -t 1 \"#{ip}\""
+  cmd = "ping -n 1 \"#{ip}\"" if is_windows?
+  output = `#{cmd}`
+  $?.success?
+end
+
+def vbox_manage
+  exe = 'VBoxManage'
+  exe << '.exe' if is_windows?
+  path = ENV['VBOX_INSTALL_PATH'] || ENV['VBOX_MSI_INSTALL_PATH']
+  exe = File.join(path, exe) if path
+  "\"#{exe}\""
+end
+
+def is_windows?
+  (RUBY_PLATFORM =~ /cygwin|mswin|mingw|bccwin|wince|emx/i) != nil
+end
+
+def exit_with_message(msg)
+  puts msg
+  exit 1
 end
