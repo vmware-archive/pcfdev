@@ -20,6 +20,8 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  pcfdev_domain = ENV["PCFDEV_DOMAIN"] || domain_for_ip(local_public_ip)
+
   if Vagrant.has_plugin?("vagrant-proxyconf") && !vagrant_up_aws
     config.proxy.http = ENV["HTTP_PROXY"] || ENV["http_proxy"]
     config.proxy.https = ENV["HTTPS_PROXY"] || ENV["https_proxy"]
@@ -32,7 +34,7 @@ Vagrant.configure("2") do |config|
       "127.0.0.1",
       host_ip,
       local_public_ip,
-      (ENV["PCFDEV_DOMAIN"] || "local.pcfdev.io"),
+      pcfdev_domain,
       (ENV["NO_PROXY"] || ENV["no_proxy"])
     ].compact.join(',')
   end
@@ -89,9 +91,9 @@ Vagrant.configure("2") do |config|
     s.inline = <<-SCRIPT
       set -e
       if public_ip="$(curl -m 2 -s http://169.254.169.254/latest/meta-data/public-ipv4)" && [[ $public_ip =~ ^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}$ ]]; then
-        domain="#{ENV["PCFDEV_DOMAIN"] || "${public_ip}.xip.io"}"
+        domain="#{pcfdev_domain || "${public_ip}.xip.io"}"
       else
-        domain="#{ENV["PCFDEV_DOMAIN"] || local_default_domain}"
+        domain="#{pcfdev_domain || local_default_domain}"
         public_ip="#{local_public_ip}"
       fi
       CF_ONLY=#{ENV["CF_ONLY"]} /var/pcfdev/run "$domain" "$public_ip"
@@ -142,6 +144,12 @@ def validate_vbox_version
   if Gem::Version.new(output.strip) < Gem::Version.new(@min_virtualbox_version)
     exit_with_message("Virtualbox >= #{@min_virtualbox_version} must be installed to use PCF Dev.")
   end
+end
+
+def domain_for_ip(ip)
+  count = ip.split('.')[2].chars.uniq.join
+  count = '' if count == '1'
+  "local#{count}.pcfdev.io"
 end
 
 def free_ip
