@@ -421,6 +421,16 @@ properties:
     roles:
     - {name: uaaadmin, password: admin, tag: admin}
     - {name: ccadmin, password: admin, tag: admin}
+  mysql:
+    host: 127.0.0.1
+    port: 3307
+    user: root
+    password: admin
+    db: ccdb
+    migration_check_table: migrations
+    database:
+      username: ccadmin
+      password: admin
   app_ssh:
     host_key_fingerprint: a6:d1:08:0b:b0:cb:9b:5f:c4:ba:44:2a:97:26:19:8a
   cc:
