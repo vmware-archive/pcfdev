@@ -220,7 +220,6 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
-                "service dnsmasq stop",
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "rm -rf /opt/bosh-provisioner",
                 "rm -f /var/pcfdev/manifest.yml",
@@ -228,7 +227,9 @@
                 "apt-get -y autoremove",
                 "apt-get -y clean",
                 "/var/pcfdev/snapshot local.pcfdev.io",
+                "service dnsmasq stop",
                 "/var/pcfdev/reset",
+                "rm -rf $HOME/.cf",
                 "chmod 1777 /tmp"
             ]
         },

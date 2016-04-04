@@ -1,8 +1,8 @@
 [
   {
     "name" : "cf-release",
-    "url" : "https://github.com/cloudfoundry/cf-release",
-    "sha" : "9e31b98e104825c136d96a711bec2135f4a6ed33"
+    "url" : "https://github.com/ekcasey/cf-release",
+    "sha" : "59a0bf5d3d7c7b4333be46060dfaef3a77b6ce6b"
   },
   {
     "name" : "diego-release",

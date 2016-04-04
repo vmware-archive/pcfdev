@@ -19,6 +19,8 @@ while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
 done
 
+cf api "api.$domain" --skip-ssl-validation
+cf auth admin admin
 while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
 done
