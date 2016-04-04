@@ -207,14 +207,6 @@
         {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "rm -f /var/vcap/packages/rep/bin/rep",
-                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/rep-0.1454.0.tgz' | tar -xz -C /var/vcap/packages/rep/bin rep"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "remote_path": "/home/vagrant/cleanup.sh",
             "override": {
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
