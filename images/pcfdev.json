@@ -4,7 +4,8 @@
         "distro": "pcfdev",
         "cpus": "4",
         "memory": "4096",
-        "disk_size": "60"
+        "disk_size": "60",
+        "dev": "false"
     },
     "builders": [
         {
@@ -213,8 +214,8 @@
             },
             "inline": [
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
-                "rm -rf /opt/bosh-provisioner",
-                "rm -f /var/pcfdev/manifest.yml",
+                "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
+                "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
