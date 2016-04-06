@@ -6,8 +6,8 @@
   },
   {
     "name" : "diego-release",
-    "url" : "https://github.com/cloudfoundry-incubator/diego-release",
-    "sha" : "642fc54e1724211f5fabfeefce6c35aaf3f1d604"
+    "url" : "https://github.com/aemengo/diego-release",
+    "sha" : "5251ef52a798ceccf8c05a47c270e109d41f7964"
   },
   {
     "name" : "garden-linux-release",

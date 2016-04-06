@@ -434,6 +434,8 @@ properties:
   app_ssh:
     host_key_fingerprint: a6:d1:08:0b:b0:cb:9b:5f:c4:ba:44:2a:97:26:19:8a
   cc:
+    default_app_disk_in_mb: 512
+    default_app_memory: 256
     default_to_diego_backend: true
     diego:
       stager_url: http://stager.service.cf.internal:8890

@@ -4,7 +4,8 @@
         "distro": "pcfdev",
         "cpus": "4",
         "memory": "4096",
-        "disk_size": "60"
+        "disk_size": "60",
+        "dev": "false"
     },
     "builders": [
         {
@@ -207,22 +208,14 @@
         {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "rm -f /var/vcap/packages/rep/bin/rep",
-                "curl -L 'https://pcfdev.s3.amazonaws.com/artifacts/rep-0.1454.0.tgz' | tar -xz -C /var/vcap/packages/rep/bin rep"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "remote_path": "/home/vagrant/cleanup.sh",
             "override": {
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
-                "rm -rf /opt/bosh-provisioner",
-                "rm -f /var/pcfdev/manifest.yml",
+                "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
+                "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
