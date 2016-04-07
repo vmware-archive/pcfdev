@@ -219,7 +219,6 @@
                 "echo manual > /etc/init/runsvdir.override",
                 "apt-get -y autoremove",
                 "apt-get -y clean",
-                "/var/pcfdev/snapshot local.pcfdev.io",
                 "service dnsmasq stop",
                 "/var/pcfdev/reset",
                 "rm -rf $HOME/.cf",

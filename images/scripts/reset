@@ -22,22 +22,10 @@ if status runsvdir | grep -q 'start/running'; then
 fi
 
 >&3 echo "Services stopped. Resetting data..."
-rm -rf /var/vcap/{store/*,nfs} /var/vcap/data/{compile,tmp}
+rm -rf /var/vcap/nfs /var/vcap/data/{compile,tmp}
 
-start runsvdir
-
-wait_for_monit_to_start
-
-$monit start postgres
-while ! $monit summary | grep "'postgres'" | grep -q running; do
-  sleep 1
-done
-
-psql -h 127.0.0.1 -p 5524 -U vcap -f /var/pcfdev/ccdb ccdb
-
-$monit stop postgres
-
-stop runsvdir
+>&3 echo "Deleting stale state files not needed for mysql migrations"
+find /var/vcap/store/* -maxdepth 0 ! -name "*.sql" | xargs rm -rf
 
 set +x
 exec 1>&3 2>&4

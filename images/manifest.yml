@@ -14,6 +14,9 @@ releases:
 - name: diego
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/diego-0.tgz
+- name: cf-mysql
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/cf-mysql-0.tgz
 
 networks:
 - name: default
@@ -68,8 +71,6 @@ jobs:
     release: cf
   - name: nats
     release: cf
-  - name: postgres
-    release: cf
   - name: route_registrar
     release: cf
   - name: uaa
@@ -105,6 +106,8 @@ jobs:
     release: diego
   - name: tps
     release: diego
+  - name: mysql
+    release: cf-mysql
 
 properties:
   <<: (( merge ))
@@ -406,31 +409,13 @@ properties:
       - "login.local.pcfdev.io"
       - "*.login.local.pcfdev.io"
   uaadb:
-    address: localhost
+    address: 127.0.0.1
     databases:
     - {name: uaadb, tag: uaa}
-    db_scheme: postgresql
-    port: 5524
+    db_scheme: mysql
+    port: 3306
     roles:
     - {name: uaaadmin, password: admin, tag: admin}
-  databases:
-    port: 5524
-    databases:
-    - {name: uaadb, tag: uaa, citext: true}
-    - {name: ccdb, tag: cc, citext: true}
-    roles:
-    - {name: uaaadmin, password: admin, tag: admin}
-    - {name: ccadmin, password: admin, tag: admin}
-  mysql:
-    host: 127.0.0.1
-    port: 3307
-    user: root
-    password: admin
-    db: ccdb
-    migration_check_table: migrations
-    database:
-      username: ccadmin
-      password: admin
   app_ssh:
     host_key_fingerprint: a6:d1:08:0b:b0:cb:9b:5f:c4:ba:44:2a:97:26:19:8a
   cc:
@@ -488,11 +473,11 @@ properties:
       blobstore_type: fog
       fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
   ccdb:
-    address: localhost
+    address: 127.0.0.1
     databases:
     - {name: ccdb, tag: cc}
-    db_scheme: postgres
-    port: 5524
+    db_scheme: mysql
+    port: 3306
     roles:
     - {name: ccadmin, password: admin, tag: admin}
   login:
@@ -561,3 +546,24 @@ properties:
     cluster:
       - name: database_z1
         instances: 1
+
+  cf_mysql:
+    host: mysql.local.pcfdev.io
+    external_host: mysql-broker.local.pcfdev.io
+    mysql:
+      cluster_ips: [placeholder-ip]
+      admin_password: admin
+      roadmin_password: admin
+      persistent_disk: 10000
+      database_startup_timeout: 120
+      bootstrap_endpoint:
+        username: admin
+        password: admin
+      galera_port: 4568
+      seeded_databases:
+      - name: uaadb
+        username: uaaadmin
+        password: admin
+      - name: ccdb
+        username: ccadmin
+        password: admin
