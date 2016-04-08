@@ -119,6 +119,10 @@ while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
 done
 
+while [[ $(uaa_response "$domain") != "ok" ]]; do
+  sleep 1
+done
+
 cf api "api.$domain" --skip-ssl-validation
 cf auth admin admin
 
