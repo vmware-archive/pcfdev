@@ -28,9 +28,8 @@ Vagrant.configure("2") do |config|
   end
 
   resources = calculate_resource_allocation
-  if resources[:memory] == 2048 && vagrant_up && !vagrant_up_aws
-    puts "WARNING: PCF Dev has reserved 2 GBs out of #{resources[:max_memory] / 1024} GBs total system memory."
-    puts "Performance may be impacted."
+  if vagrant_up && !vagrant_up_aws
+    puts "PCF Dev has reserved #{resources[:memory] / 1024} GB out of #{resources[:max_memory] / 1024} GB total system memory."
   end
 
   config.vm.provider "virtualbox" do |v|
