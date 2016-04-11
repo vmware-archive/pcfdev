@@ -4,7 +4,7 @@ Everyone is encouraged to help improve this project.
 
 Please submit pull requests against the **master branch**.
 
-Our [Concourse](http://concourse.ci) CI system is available at [ci.micropcf.io](https://ci.micropcf.io).
+Limited access to our [Concourse](http://concourse.ci) CI system is available at [ci.pcfdev.io](https://ci.pcfdev.io).
 
 Here are some ways *you* can contribute:
 
