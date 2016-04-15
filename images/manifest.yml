@@ -116,6 +116,7 @@ properties:
   system_domain: local.pcfdev.io
   app_domains: [local.pcfdev.io]
   system_domain_organization: pcfdev-org
+  network_name: default
   name: pcfdev
   ssl:
     skip_cert_verify: true

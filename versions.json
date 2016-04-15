@@ -21,7 +21,7 @@
   },
   {
     "name" : "cf-mysql-release",
-    "url" : "https://github.com/ekcase/cf-mysql-release",
-    "sha" : "0864fac431083425b641d8a6fa1b12671976815e"
+    "url" : "https://github.com/ekcasey/cf-mysql-release",
+    "sha" : "b19d3abfd6f0c749145a319b30d6a097c84e963a"
   }
 ]
