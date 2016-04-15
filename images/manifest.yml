@@ -61,6 +61,8 @@ jobs:
     release: cf
   - name: cloud_controller_worker
     release: cf
+  - name: blobstore
+    release: cf
   - name: doppler
     release: cf
   - name: gorouter
@@ -266,6 +268,7 @@ properties:
         gorouter: {}
         uaa: {}
         cloud_controller_ng: {}
+        blobstore: {}
       servers:
         lan: [placeholder-ip]
     require_ssl: false
@@ -409,6 +412,11 @@ properties:
       - "*.uaa.local.pcfdev.io"
       - "login.local.pcfdev.io"
       - "*.login.local.pcfdev.io"
+    - name: blobstore
+      port: 8086
+      registration_interval: 20s
+      uris:
+      - blobstore.local.pcfdev.io
   uaadb:
     address: 127.0.0.1
     databases:
@@ -462,17 +470,33 @@ properties:
     - {name: staticfile_buildpack, package: staticfile-buildpack}
     - {name: binary_buildpack, package: binary-buildpack}
     buildpacks:
-      blobstore_type: fog
-      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+      blobstore_type: webdav
+      webdav_config:
+        username: admin
+        password: admin
+        public_endpoint: http://blobstore.local.pcfdev.io
+        private_endpoint: https://blobstore.service.cf.internal:4043
     droplets:
-      blobstore_type: fog
-      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+      blobstore_type: webdav
+      webdav_config:
+        username: admin
+        password: admin
+        public_endpoint: http://blobstore.local.pcfdev.io
+        private_endpoint: https://blobstore.service.cf.internal:4043
     packages:
-      blobstore_type: fog
-      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+      blobstore_type: webdav
+      webdav_config:
+        username: admin
+        password: admin
+        public_endpoint: http://blobstore.local.pcfdev.io
+        private_endpoint: https://blobstore.service.cf.internal:4043
     resource_pool:
-      blobstore_type: fog
-      fog_connection: {local_root: /var/vcap/nfs/shared, provider: Local}
+      blobstore_type: webdav
+      webdav_config:
+        username: admin
+        password: admin
+        public_endpoint: http://blobstore.local.pcfdev.io
+        private_endpoint: https://blobstore.service.cf.internal:4043
   ccdb:
     address: 127.0.0.1
     databases:
@@ -523,6 +547,50 @@ properties:
       -----END RSA PRIVATE KEY-----
     ssl_skip_validation: true
     route_services_secret: route-services-secret
+  blobstore:
+    port: 8086
+    tls:
+      port: 4043
+      cert: |
+        -----BEGIN CERTIFICATE-----
+        MIIC0TCCAjoCCQDRLH9gxoogFzANBgkqhkiG9w0BAQUFADCBrDELMAkGA1UEBhMC
+        VVMxETAPBgNVBAgTCE5ldyBZb3JrMREwDwYDVQQHEwhOZXcgWW9yazEeMBwGA1UE
+        ChMVUGl2b3RhbCBTb2Z0d2FyZSwgSW5jMRUwEwYDVQQLEwxDbG91ZEZvdW5kcnkx
+        GjAYBgNVBAMUESoubG9jYWwucGNmZGV2LmlvMSQwIgYJKoZIhvcNAQkBFhVwY2Zk
+        ZXYtZW5nQHBpdm90YWwuaW8wHhcNMTYwMzA5MTUxMzE4WhcNMTcwMzA5MTUxMzE4
+        WjCBrDELMAkGA1UEBhMCVVMxETAPBgNVBAgTCE5ldyBZb3JrMREwDwYDVQQHEwhO
+        ZXcgWW9yazEeMBwGA1UEChMVUGl2b3RhbCBTb2Z0d2FyZSwgSW5jMRUwEwYDVQQL
+        EwxDbG91ZEZvdW5kcnkxGjAYBgNVBAMUESoubG9jYWwucGNmZGV2LmlvMSQwIgYJ
+        KoZIhvcNAQkBFhVwY2ZkZXYtZW5nQHBpdm90YWwuaW8wgZ8wDQYJKoZIhvcNAQEB
+        BQADgY0AMIGJAoGBAKpQpDfxV0enkW9q37vz6GAqGzQI4kJaOq0Vu0aNJE0QguZV
+        y2JZaBGdYE25hviPesDhrFASUeMek//1FgpntnRU52AsweHJ67KayFEppk8qC5yd
+        XOm177O4QKbMmA6BC3BMnF1nLnKqTS71cbGfzvqaAmNlr22BJP7krQleXiFzAgMB
+        AAEwDQYJKoZIhvcNAQEFBQADgYEAKor/gSMkfVFPfmTLuCvH3YrvSFRPjTxXHeMR
+        8C6hmkOHxw2tgxc5WI0+ZLCgVCS87ZiLoTFWAmeeUb6S2nIHr+WhTHr11Y+0EjZa
+        WWv8728elfnHAiWfmKgn80LEOVLU8dDciykSRGOdDYnTAXLgtZOxfLeReR232JuH
+        TkCCeJc=
+        -----END CERTIFICATE-----
+      private_key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIICXgIBAAKBgQCqUKQ38VdHp5Fvat+78+hgKhs0COJCWjqtFbtGjSRNEILmVcti
+        WWgRnWBNuYb4j3rA4axQElHjHpP/9RYKZ7Z0VOdgLMHhyeuymshRKaZPKgucnVzp
+        te+zuECmzJgOgQtwTJxdZy5yqk0u9XGxn876mgJjZa9tgST+5K0JXl4hcwIDAQAB
+        AoGAFMLx0dP8tMJriy53CZ1pBVf8qvIuSrJfFrxgcPBBrZdGrbdlrJ6Dfio2FCN6
+        nZA4AY1BCR3Cl7IhjoEc57XO2tpv7Ct5YZU3R/UGMZBTQJGTMdYLsXKVQPJFZZfr
+        nFvnL+dks1xmiLOPbSw45qvsC+KrQVFGV6ZqD6ZxjPKtlwECQQDiUcWMmL5k07XM
+        lvXHp/ZrfFdwBjlAcHDYNbQM0zid6C4m6YD1WI6zU/oCCS+gCT4cauoad2hcsUoN
+        zj1phOzzAkEAwKahynDyef2kSjsD8zDqY+HuRBKtDa8WB1mOgU737wIx8kfXgbNg
+        MlChsARn0yThm1L2yx4ZTk+PAtxAr4UZgQJBALRQgDuXisIcZ1E8yU+sg8l5hNSt
+        MLolm9K3Xt+E/ivZS8QW8HcJepBoDN3IYdh45LKRgDlb/5syaZT8R7Olg38CQQC3
+        EKDFgjan/YJUl2fVfDH+3/5N6YFQc4P3T/6+mY+4KtnTZLlAondS2JQMcuNGHNHV
+        iyzBLsTVSXyYNzuwjkYBAkEAq/pT9lmw42qc6AQk/LcfZFYXKV21m5LCDa95/7X2
+        TVeavLJv6412vDf+E6r/5jG634SsMkRDGeUsW9gUvPnaXg==
+        -----END RSA PRIVATE KEY-----
+    admin_users:
+      - username: admin
+        password: admin
+    secure_link:
+      secret: secure-link-secret
 
   # For Garden:
   garden:
