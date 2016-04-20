@@ -1,27 +1,22 @@
 [
   {
-    "name" : "cf-release",
-    "url" : "https://github.com/ekcasey/cf-release",
-    "sha" : "59a0bf5d3d7c7b4333be46060dfaef3a77b6ce6b"
+    "name" : "cf",
+    "url" : "s3://pcfdev/compiled-releases/cf-59a0bf5d3d7c7b4333be46060dfaef3a77b6ce6b.tgz"
   },
   {
-    "name" : "diego-release",
-    "url" : "https://github.com/aemengo/diego-release",
-    "sha" : "5251ef52a798ceccf8c05a47c270e109d41f7964"
+    "name" : "diego",
+    "url" : "s3://pcfdev/compiled-releases/diego-eb98d7f1f3dc2364a99c521db483fe774568e3f3.tgz"
   },
   {
-    "name" : "garden-linux-release",
-    "url" : "https://github.com/cloudfoundry-incubator/garden-linux-release",
-    "sha" : "149336f94c0394fe08ba30d219f0c25402f073a4"
+    "name" : "garden-linux",
+    "url" : "s3://pcfdev/compiled-releases/garden-linux-8105b31715f81e919bf8e79831561541199790a1.tgz"
   },
   {
-    "name" : "etcd-release",
-    "url" : "https://github.com/cloudfoundry-incubator/etcd-release",
-    "sha" : "493f44cf44ae1123bea86137deb1913bbb5108b0"
+    "name" : "etcd",
+    "url" : "s3://pcfdev/compiled-releases/etcd-ca94c86197adc8c7e3732e76db6a5a0cce760a19.tgz"
   },
   {
-    "name" : "cf-mysql-release",
-    "url" : "https://github.com/ekcasey/cf-mysql-release",
-    "sha" : "b19d3abfd6f0c749145a319b30d6a097c84e963a"
+    "name" : "cf-mysql",
+    "url" : "s3://pcfdev/compiled-releases/cf-mysql-b19d3abfd6f0c749145a319b30d6a097c84e963a.tgz"
   }
 ]

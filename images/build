@@ -4,18 +4,14 @@ set -e
 
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 images_dir=$pcfdev_dir/images
-
 output_dir=$images_dir/output
-mkdir -p "$output_dir"
-rm -rf "$output_dir"/output-*
+
+rm -rf "$output_dir"
+mkdir "$output_dir"
 
 "$pcfdev_dir/bosh/setup-packer" "$output_dir/packer-bosh"
+"$pcfdev_dir/bosh/fetch-assets" "$pcfdev_dir/versions.json" "$output_dir"
 
-releases='diego cf garden-linux etcd cf-mysql'
-"$pcfdev_dir/bosh/clone-releases"
-"$pcfdev_dir/bosh/build" "$output_dir/assets" $releases
-
-cp -a "$images_dir"/{http,keys,scripts} "$output_dir/"
 spiff merge \
   "$images_dir/manifest.yml" \
   <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \

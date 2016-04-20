@@ -9,9 +9,9 @@ if [[ -z $(which jq) ]]; then
     exit 1
 fi
 
-if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]] || [[ ! -d $(dirname "$2") ]]; then
   >&2 echo "Usage:"
-  >&2 echo -e "\t$0 /path/to/pcfdev-workspace"
+  >&2 echo -e "\t$0 /path/to/versions.json /path/to/pcfdev-workspace"
   exit 1
 fi
 
@@ -20,16 +20,12 @@ set -x
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 bosh_gopath=$pcfdev_dir/bosh
 
-pcfdev_workspace_dir=$1
-versions_json_path="${pcfdev_workspace_dir}/versions.json"
-output_dir="${pcfdev_workspace_dir}/images/output"
-assets_dir="${pcfdev_workspace_dir}/images/output/assets"
+versions_json_path=$1
+output_dir=$2
+assets_dir="${output_dir}/assets"
 
 rm -rf "$assets_dir"/{releases,versions,monit,agent}
 mkdir -p "$assets_dir"/{releases,versions}
-
-rm -rf "$pcfdev_workspace_dir/releases"
-mkdir "$pcfdev_workspace_dir/releases"
 
 cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
 GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
@@ -43,7 +39,7 @@ do
   url=$(echo $versions | jq .[$i].url -r)
   path=$(echo $versions | jq .[$i].path -r)
   if [[ "$path" != "null" ]]; then
-    "$pcfdev_dir/bosh/build" "$pcfdev_workspace_dir" "$path" "$name"
+    "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
   elif [[ "$url" != "null" ]]; then
     aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
   fi
