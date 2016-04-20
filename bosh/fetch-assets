@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $(which jq) ]]; then
+    >&2 echo -e "\t'jq' not found in the PATH"
+    >&2 echo -e "\t Please install jq in order to continue"
+    >&2 echo -e "\t https://stedolan.github.io/jq/"
+    exit 1
+fi
+
+if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
+  >&2 echo "Usage:"
+  >&2 echo -e "\t$0 /path/to/pcfdev-workspace"
+  exit 1
+fi
+
+set -x
+
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+bosh_gopath=$pcfdev_dir/bosh
+
+pcfdev_workspace_dir=$1
+versions_json_path="${pcfdev_workspace_dir}/versions.json"
+output_dir="${pcfdev_workspace_dir}/images/output"
+assets_dir="${pcfdev_workspace_dir}/images/output/assets"
+
+rm -rf "$assets_dir"/{releases,versions,monit,agent}
+mkdir -p "$assets_dir"/{releases,versions}
+
+rm -rf "$pcfdev_workspace_dir/releases"
+mkdir "$pcfdev_workspace_dir/releases"
+
+cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
+GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
+  go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
+
+versions=$(cat $versions_json_path)
+number_of_releases=$(echo $versions | jq length)
+for i in $(seq 0 $((number_of_releases -1)))
+do
+  name=$(echo $versions | jq .[$i].name -r)
+  url=$(echo $versions | jq .[$i].url -r)
+  path=$(echo $versions | jq .[$i].path -r)
+  if [[ "$path" != "null" ]]; then
+    "$pcfdev_dir/bosh/build" "$pcfdev_workspace_dir" "$path" "$name"
+  elif [[ "$url" != "null" ]]; then
+    aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
+  fi
+done
+
+cp $versions_json_path "$assets_dir/versions/versions_file"
+cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"

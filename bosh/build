@@ -2,32 +2,21 @@
 
 set -e
 
-if [[ -z $1 ]] || [[ ! -d $(dirname "$1") ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]] || [[ ! -d $(dirname "$1") ]] || [[ ! -d $(dirname "$2") ]]; then
   >&2 echo "Usage:"
-  >&2 echo -e "\t$0 /path/to/assets [first-release] [second-release] ..."
+  >&2 echo -e "\t$0 /path/to/pcfdev-workspace /path/to/release release"
   exit 1
 fi
 
-assets_dir=$(mkdir -p "$1" && cd "$1" && pwd)
-pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
-bosh_gopath=$pcfdev_dir/bosh
+pcfdev_workspace_dir=$1
+release_path=$2
+release_name=$3
+assets_dir="${pcfdev_workspace_dir}/images/output/assets"
+releases_dir="${pcfdev_workspace_dir}/releases"
 
-rm -rf "$assets_dir"/{monit,agent}
-cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
-
-GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
-  go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
-
-rm -rf "$assets_dir"/{releases,versions}
-mkdir "$assets_dir"/{releases,versions}
-
-for release in ${@:2}; do
-  pushd "$pcfdev_dir/releases/${release}-release" >/dev/null
-    [[ -f Gemfile ]] && gem install bundler && bundle install || true
-    yes yes | bosh -n reset release
-    bosh -n create release --name "$release" --version 0 --with-tarball --force
-    mv "dev_releases/$release/${release}-0.tgz" "$assets_dir/releases/"
-    version_file="$(echo ${release//-/_} | tr [:lower:] [:upper:])_RELEASE"
-    git describe --tags --always > "$assets_dir/versions/$version_file"
-  popd >/dev/null
-done
+pushd "$release_path" >/dev/null
+  [[ -f Gemfile ]] && gem install bundler && bundle install || true
+  yes yes | bosh -n reset release
+  bosh -n create release --name "$release_name" --version 0 --with-tarball --force
+  mv "dev_releases/$release_name/${release_name}-0.tgz" "$assets_dir/releases/"
+popd >/dev/null
