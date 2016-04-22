@@ -1,19 +1,19 @@
 [
   {
     "name" : "cf",
-    "url" : "s3://pcfdev/compiled-releases/cf-59a0bf5d3d7c7b4333be46060dfaef3a77b6ce6b.tgz"
+    "url" : "s3://pcfdev/compiled-releases/cf-v235-1-ge9635da.tgz"
   },
   {
     "name" : "diego",
-    "url" : "s3://pcfdev/compiled-releases/diego-eb98d7f1f3dc2364a99c521db483fe774568e3f3.tgz"
+    "url" : "s3://pcfdev/compiled-releases/diego-v0.1467.0-1-gc00904e.tgz"
   },
   {
     "name" : "garden-linux",
-    "url" : "s3://pcfdev/compiled-releases/garden-linux-8105b31715f81e919bf8e79831561541199790a1.tgz"
+    "url" : "s3://pcfdev/compiled-releases/garden-linux-e77acec695fe45439b9dfbefe45054dc1c59d669.tgz"
   },
   {
     "name" : "etcd",
-    "url" : "s3://pcfdev/compiled-releases/etcd-ca94c86197adc8c7e3732e76db6a5a0cce760a19.tgz"
+    "url" : "s3://pcfdev/compiled-releases/etcd-v45-0-g0efcf3b.tgz"
   },
   {
     "name" : "cf-mysql",
