@@ -17,6 +17,6 @@
   },
   {
     "name" : "cf-mysql",
-    "url" : "s3://pcfdev/compiled-releases/cf-mysql-b19d3abfd6f0c749145a319b30d6a097c84e963a.tgz"
+    "url" : "s3://pcfdev/compiled-releases/cf-mysql-v26-5-g9cc2e99.tgz"
   }
 ]
