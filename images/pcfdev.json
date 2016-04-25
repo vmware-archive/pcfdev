@@ -33,6 +33,7 @@
               "delete_on_termination": true
             }],
             "ssh_username": "ubuntu",
+            "ssh_timeout": "20m",
             "tags": {"Name": "{{user `version`}}"}
         },
         {
@@ -48,7 +49,7 @@
             "iso_checksum_type": "md5",
             "http_directory": "http",
             "tools_upload_flavor": "linux",
-            "ssh_wait_timeout": "20m",
+            "ssh_timeout": "20m",
             "shutdown_command": "echo vagrant | sudo -S shutdown -P now",
             "boot_command": [
                 "<esc><esc><enter><wait>",
@@ -78,7 +79,7 @@
             "iso_checksum": "9e5fecc94b3925bededed0fdca1bd417",
             "iso_checksum_type": "md5",
             "http_directory": "http",
-            "ssh_wait_timeout": "20m",
+            "ssh_timeout": "20m",
             "shutdown_command": "echo vagrant | sudo -S shutdown -P now",
             "format": "ova",
             "boot_command": [
