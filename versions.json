@@ -1,7 +1,7 @@
 [
   {
     "name" : "cf",
-    "url" : "s3://pcfdev/compiled-releases/cf-v235-1-ge9635da.tgz"
+    "url" : "s3://pcfdev/compiled-releases/cf-v235-2-g6cde6b7.tgz"
   },
   {
     "name" : "diego",
