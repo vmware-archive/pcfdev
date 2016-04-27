@@ -101,7 +101,9 @@ def calculate_resource_allocation
     cpus ||= `#{sysctl_path} -n hw.physicalcpu`.to_i
     max_memory = `#{sysctl_path} -n hw.memsize`.to_i / 1024 / 1024
   when /linux/i
-    cpus ||= `grep 'core id' /proc/cpuinfo | uniq | wc -l`.to_i
+    physicalcpus = `cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l`.to_i
+    cores = `grep 'core id' /proc/cpuinfo | sort | uniq | wc -l`.to_i
+    cpus ||=  physicalcpus * cores
     max_memory = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
     cpus ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
