@@ -39,6 +39,8 @@ jobs:
   templates:
   - name: consul_agent
     release: cf
+  - name: mysql
+    release: cf-mysql
   - name: go-buildpack
     release: cf
   - name: binary-buildpack
@@ -108,8 +110,6 @@ jobs:
     release: diego
   - name: tps
     release: diego
-  - name: mysql
-    release: cf-mysql
 
 properties:
   <<: (( merge ))
