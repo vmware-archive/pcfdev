@@ -45,5 +45,5 @@ do
   fi
 done
 
-cp $versions_json_path "$assets_dir/versions/versions_file"
+cp $versions_json_path "$assets_dir/VERSIONS"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"

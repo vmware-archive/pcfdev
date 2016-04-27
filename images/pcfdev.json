@@ -214,7 +214,7 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
-                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/VERSIONS /var/pcfdev/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",
