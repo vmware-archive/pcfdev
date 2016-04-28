@@ -91,7 +91,6 @@ if [[ $CF_ONLY = true ]]; then
     rm -f \
       *_rabbitmq-server.monitrc \
       *_rabbitmq-broker.monitrc \
-      *_mysql.monitrc \
       *_cf-mysql-broker.monitrc \
       *_cf-redis-broker.monitrc \
       *_syslog-configurator.monitrc
