@@ -239,6 +239,13 @@
         },
         {
             "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "echo 'vcap:vcap' | chpasswd"
+            ]
+        },
+        {
+            "type": "shell",
             "only": ["vmware-iso", "virtualbox-iso"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
