@@ -108,7 +108,7 @@
             "type": "shell",
             "only": ["vmware-iso", "virtualbox-iso"],
             "execute_command": "echo vagrant | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline": [ "echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
+            "inline": [ "echo 'vagrant ALL=(ALL) NOPASSWD: ALL\nvcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
         },
         {
             "type": "shell",
