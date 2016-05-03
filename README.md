@@ -1,4 +1,7 @@
 # PCF Dev
+> Japanese version is [here](README_ja.md)
+
+> oss pcfdev for cloudstack-vsphere is [here](DEVELOP_CS.md)
 
 PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  PCF Dev gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  PCF Dev is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  PCF Dev is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
 
@@ -39,7 +42,7 @@ The following environment variables can be set during `start-osx` to customize t
   - defaults to `<PCFDEV_IP>.xip.io` on AWS or when `PCFDEV_IP` is set
 1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
   - defaults to host # of logical CPUs
-1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
+1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM
   - defaults to 25% of host memory
 
 ### Using the Cloud Foundry CLI
