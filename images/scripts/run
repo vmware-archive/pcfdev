@@ -15,6 +15,11 @@ source /var/pcfdev/common
 
 domain=$1
 public_ip=$2
+token=$3
+
+if [[ -x /var/pcfdev/pre-run ]]; then
+  >&3 /var/pcfdev/pre-run "$token"
+fi
 
 total=$(total_services)
 if [[ $total != 0 ]] && [[ $(started_services) = $total ]] && [[ $(cc_status_code "$domain") = 200 ]]; then
