@@ -6,7 +6,8 @@ To develop PCF Dev you will need to have the following tools installed:
 - [Vagrant](https://www.vagrantup.com/) v1.8.1+
 - [Virtualbox](https://www.virtualbox.org/) 5.0+ (to build Virtualbox boxes)
 - [VMWare Fusion](https://www.vmware.com/products/fusion) 8+ or [VMWare Workstation](https://www.vmware.com/products/workstation) 11+ (to build VMWare boxes)
-- [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to build AWS boxes)
+- [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to download compiled assets from S3 and to build AWS boxes)
+- [jq](https://stedolan.github.io/jq/download/)
 
 ## Clone the PCF Dev source
 
@@ -21,9 +22,9 @@ To build OSS-only PCF Dev Vagrant boxes, run:
 ```bash
 cd images
 ./build <build options> (see below)
-vagrant box add --force output/pcfdev-virtualbox-v0.box --name pcfdev/pcfdev
-vagrant box add --force output/pcfdev-vmware-v0.box --name pcfdev/pcfdev
-vagrant box add --force output/pcfdev-aws-v0.box --name pcfdev/pcfdev
+vagrant box add --force output/oss-virtualbox-v0.box --name pcfdev/oss
+vagrant box add --force output/oss-vmware-v0.box --name pcfdev/oss
+vagrant box add --force output/oss-aws-v0.box --name pcfdev/oss
 ```
 
 Build options:
@@ -35,7 +36,7 @@ Build options:
 The Vagrantfile at the root of the repo is configured to run locally-built PCF Dev boxes.
 
 ```bash
-cd ../..
+cd ..
 vagrant up --provider=(virtualbox|vmware_fusion|vmware_workstation|aws)
 ```
 
