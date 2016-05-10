@@ -29,7 +29,12 @@ Vagrant.configure("2") do |config|
 
   resources = calculate_resource_allocation
   if vagrant_up && !vagrant_up_aws
-    puts "PCF Dev has reserved #{resources[:memory] / 1024} GB out of #{resources[:max_memory] / 1024} GB total system memory."
+    if resources[:free_memory] < 3_072
+      puts "PCF Dev requires 3GB of free memory. This host machine has #{resources[:free_memory]}MB free."
+      exit 1
+    else
+      puts "PCF Dev has reserved #{resources[:memory] / 1024} GB out of #{resources[:max_memory] / 1024} GB total system memory."
+    end
   end
 
   config.vm.provider "virtualbox" do |v|
@@ -98,22 +103,28 @@ def calculate_resource_allocation
   case RUBY_PLATFORM
   when /darwin/i
     sysctl_path = `which sysctl || echo /usr/sbin/sysctl`.chomp
-    cpus ||= `#{sysctl_path} -n hw.physicalcpu`.to_i
-    max_memory = `#{sysctl_path} -n hw.memsize`.to_i / 1024 / 1024
+    cpus        ||= `#{sysctl_path} -n hw.physicalcpu`.to_i
+    max_memory  = `#{sysctl_path} -n hw.memsize`.to_i / 1024 / 1024
+    output      = `top -l 1 | grep PhysMem | awk '{ print $6 }'`.chomp
+    free_memory ||= output.end_with?("G") ? output.to_i * 1024 : output.to_i
   when /linux/i
-    cpus ||= `grep 'core id' /proc/cpuinfo | uniq | wc -l`.to_i
-    max_memory = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
+    cpus        ||= `grep 'core id' /proc/cpuinfo | uniq | wc -l`.to_i
+    max_memory  = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
+    output      = `free | grep "^Mem" | awk '{ print $4,$6,$7}'`.chomp
+    free_memory = output.split.map(&:to_i).inject(:+)
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
-    cpus ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
-    max_memory = `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024
+    cpus        ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
+    max_memory  = `wmic OS get TotalVisibleMemorySize`.split("\n")[2].to_i / 1024
+    free_memory = `wmic OS get FreePhysicalMemory`.split("\n")[2].to_i / 1024
   else
-    cpus ||= 2
-    max_memory = 4096
+    cpus        ||= 2
+    max_memory  = 4096
+    free_memory = 4096
   end
 
-  memory ||= [[2048, max_memory / 2].max, 4096].min
+  memory ||= [free_memory, 4096].min
 
-  {memory: memory / 4 * 4, cpus: cpus, max_memory: max_memory}
+  {memory: memory / 4 * 4, cpus: cpus, max_memory: max_memory, free_memory: free_memory}
 end
 
 def cf_cli_present
