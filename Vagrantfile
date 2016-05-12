@@ -108,7 +108,9 @@ def calculate_resource_allocation
     output      = `top -l 1 | grep PhysMem | awk '{ print $6 }'`.chomp
     free_memory ||= output.end_with?("G") ? output.to_i * 1024 : output.to_i
   when /linux/i
-    cpus        ||= `grep 'core id' /proc/cpuinfo | uniq | wc -l`.to_i
+    physicalcpus = `cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l`.to_i
+    cores = `grep 'core id' /proc/cpuinfo | sort | uniq | wc -l`.to_i
+    cpus ||=  physicalcpus * cores
     max_memory  = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
     output      = `free | grep "^Mem" | awk '{ print $4,$6,$7}'`.chomp
     free_memory = output.split.map(&:to_i).inject(:+)
