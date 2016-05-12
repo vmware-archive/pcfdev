@@ -112,7 +112,7 @@ def calculate_resource_allocation
     cores = `grep 'core id' /proc/cpuinfo | sort | uniq | wc -l`.to_i
     cpus ||=  physicalcpus * cores
     max_memory  = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i / 1024
-    output      = `free | grep "^Mem" | awk '{ print $4,$6,$7}'`.chomp
+    output      = `free -m | grep "^Mem" | awk '{ print $4,$6,$7}'`.chomp
     free_memory = output.split.map(&:to_i).inject(:+)
   when /cygwin|mswin|mingw|bccwin|wince|emx/i
     cpus        ||= `wmic computersystem get numberofprocessors`.split("\n")[2].to_i
