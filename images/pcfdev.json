@@ -13,7 +13,7 @@
             "region": "us-east-1",
             "source_ami": "ami-6012160a",
             "instance_type": "c4.2xlarge",
-            "ami_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
+            "ami_name": "{{user `distro`}}-{{user `version`}}",
             "ami_groups": ["all"],
             "ami_regions": [
                 "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
@@ -39,7 +39,7 @@
         {
             "type": "vmware-iso",
             "headless": true,
-            "vm_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
+            "vm_name": "{{user `distro`}}-{{user `version`}}",
             "guest_os_type": "ubuntu-64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vagrant",
@@ -70,7 +70,7 @@
         {
             "type": "virtualbox-iso",
             "headless": true,
-            "vm_name": "{{user `distro`}}-{{isotime \"2006-01-02_1504\"}}",
+            "vm_name": "{{user `distro`}}-{{user `version`}}",
             "guest_os_type": "Ubuntu_64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vagrant",
@@ -108,7 +108,7 @@
             "type": "shell",
             "only": ["vmware-iso", "virtualbox-iso"],
             "execute_command": "echo vagrant | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline": [ "echo 'vagrant ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
+            "inline": [ "echo 'vagrant ALL=(ALL) NOPASSWD: ALL\nvcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
         },
         {
             "type": "shell",
@@ -214,7 +214,7 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
-                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/VERSIONS /var/pcfdev/",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",
@@ -235,6 +235,13 @@
                 "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
                 "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys",
                 "chown -R vagrant /home/vagrant/.ssh"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "echo 'vcap:vcap' | chpasswd"
             ]
         },
         {

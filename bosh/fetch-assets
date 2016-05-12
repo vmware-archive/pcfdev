@@ -22,7 +22,7 @@ bosh_gopath=$pcfdev_dir/bosh
 
 versions_json_path=$1
 output_dir=$2
-assets_dir="${output_dir}/assets"
+assets_dir=${output_dir}/assets
 
 rm -rf "$assets_dir"/{releases,versions,monit,agent}
 mkdir -p "$assets_dir"/{releases,versions}
@@ -31,19 +31,18 @@ cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,ag
 GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
   go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
 
-versions=$(cat $versions_json_path)
+versions=$(cat "$versions_json_path")
 number_of_releases=$(echo $versions | jq length)
-for i in $(seq 0 $((number_of_releases -1)))
-do
+for i in $(seq 0 $((number_of_releases -1))); do
   name=$(echo $versions | jq .[$i].name -r)
   url=$(echo $versions | jq .[$i].url -r)
   path=$(echo $versions | jq .[$i].path -r)
-  if [[ "$path" != "null" ]]; then
+  if [[ $path != null ]]; then
     "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
-  elif [[ "$url" != "null" ]]; then
+  elif [[ $url != null ]]; then
     aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
   fi
 done
 
-cp $versions_json_path "$assets_dir/versions/versions_file"
+cp "$versions_json_path" "$assets_dir/VERSIONS"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"
