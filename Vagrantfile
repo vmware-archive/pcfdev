@@ -105,8 +105,8 @@ def calculate_resource_allocation
     sysctl_path = `which sysctl || echo /usr/sbin/sysctl`.chomp
     cpus        ||= `#{sysctl_path} -n hw.physicalcpu`.to_i
     max_memory  = `#{sysctl_path} -n hw.memsize`.to_i / 1024 / 1024
-    output      = `top -l 1 | grep PhysMem | awk '{ print $6 }'`.chomp
-    free_memory ||= output.end_with?("G") ? output.to_i * 1024 : output.to_i
+    output      = `vm_stat | grep -e 'Pages free:' -e 'Pages inactive:' -e 'Pages speculative:' | awk '{ print $3 }' | tr -d '.'`.chomp
+    free_memory = output.split.map(&:to_i).inject(:+) * 4096 / 1024 / 1024
   when /linux/i
     physicalcpus = `cat /proc/cpuinfo | grep "physical id" | sort | uniq | wc -l`.to_i
     cores = `grep 'core id' /proc/cpuinfo | sort | uniq | wc -l`.to_i
