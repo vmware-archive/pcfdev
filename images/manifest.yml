@@ -41,54 +41,13 @@ jobs:
     release: cf
   - name: mysql
     release: cf-mysql
-  - name: go-buildpack
-    release: cf
-  - name: binary-buildpack
-    release: cf
-  - name: nodejs-buildpack
-    release: cf
-  - name: ruby-buildpack
-    release: cf
-  - name: php-buildpack
-    release: cf
-  - name: python-buildpack
-    release: cf
-  - name: staticfile-buildpack
-    release: cf
-  - name: java-offline-buildpack
-    release: cf
-  - name: cloud_controller_clock
-    release: cf
-  - name: cloud_controller_ng
-    release: cf
-  - name: cloud_controller_worker
-    release: cf
-  - name: blobstore
-    release: cf
-  - name: doppler
-    release: cf
-  - name: gorouter
-    release: cf
-  - name: loggregator_trafficcontroller
-    release: cf
-  - name: metron_agent
-    release: cf
-  - name: nats
-    release: cf
-  - name: route_registrar
-    release: cf
-  - name: uaa
-    release: cf
-
-  - name: etcd
-    release: etcd
 
   - name: garden
     release: garden-linux
+  - name: etcd
+    release: etcd
 
   - name: auctioneer
-    release: diego
-  - name: bbs
     release: diego
   - name: cc_uploader
     release: diego
@@ -110,6 +69,47 @@ jobs:
     release: diego
   - name: tps
     release: diego
+  - name: bbs
+    release: diego
+
+  - name: go-buildpack
+    release: cf
+  - name: binary-buildpack
+    release: cf
+  - name: nodejs-buildpack
+    release: cf
+  - name: ruby-buildpack
+    release: cf
+  - name: php-buildpack
+    release: cf
+  - name: python-buildpack
+    release: cf
+  - name: staticfile-buildpack
+    release: cf
+  - name: java-offline-buildpack
+    release: cf
+  - name: blobstore
+    release: cf
+  - name: metron_agent
+    release: cf
+  - name: nats
+    release: cf
+  - name: route_registrar
+    release: cf
+  - name: cloud_controller_clock
+    release: cf
+  - name: cloud_controller_ng
+    release: cf
+  - name: cloud_controller_worker
+    release: cf
+  - name: uaa
+    release: cf
+  - name: doppler
+    release: cf
+  - name: gorouter
+    release: cf
+  - name: loggregator_trafficcontroller
+    release: cf
 
 properties:
   <<: (( merge ))
