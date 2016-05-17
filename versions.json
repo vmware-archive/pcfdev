@@ -1,22 +1,32 @@
 [
   {
     "name" : "cf",
-    "url" : "s3://pcfdev/compiled-releases/cf-v235-1-ge9635da.tgz"
+    "version": "v235-1-ge9635da",
+    "source_location": "https://github.com/pcfdev-forks/cf-release",
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/cf-04bdb39e13904c90a246b9bba6901eb4a501ee9d.tgz"
   },
   {
     "name" : "diego",
-    "url" : "s3://pcfdev/compiled-releases/diego-v0.1467.0-1-gc00904e.tgz"
+    "version": "v0.1467.0-1-gc00904e",
+    "source_location": "https://github.com/pcfdev-forks/cf-diego-release",
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/diego-eb98d7f1f3dc2364a99c521db483fe774568e3f3.tgz"
   },
   {
     "name" : "garden-linux",
-    "url" : "s3://pcfdev/compiled-releases/garden-linux-e77acec695fe45439b9dfbefe45054dc1c59d669.tgz"
+    "version": "v0.337.0",
+    "source_location": "https://github.com/cloudfoundry-incubator/garden-linux-release",
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/garden-linux-e77acec695fe45439b9dfbefe45054dc1c59d669.tgz"
   },
   {
     "name" : "etcd",
-    "url" : "s3://pcfdev/compiled-releases/etcd-v45-0-g0efcf3b.tgz"
+    "version": "v45-0-g0efcf3b",
+    "source_location": "https://github.com/cloudfoundry-incubator/etcd-release",
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/etcd-9ee049f29f4a6ac987032c5fcf6d2fcd6507fd08.tgz"
   },
   {
     "name" : "cf-mysql",
-    "url" : "s3://pcfdev/compiled-releases/cf-mysql-v26-5-g9cc2e99.tgz"
+    "version": "v26-5-g9cc2e99",
+    "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/cf-mysql-9cc2e99743742e9f5e7008553f371cd47c10dd88.tgz"
   }
 ]

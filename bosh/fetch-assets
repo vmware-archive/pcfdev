@@ -35,7 +35,7 @@ versions=$(cat "$versions_json_path")
 number_of_releases=$(echo $versions | jq length)
 for i in $(seq 0 $((number_of_releases -1))); do
   name=$(echo $versions | jq .[$i].name -r)
-  url=$(echo $versions | jq .[$i].url -r)
+  url=$(echo $versions | jq .[$i].compiled_release_url -r)
   path=$(echo $versions | jq .[$i].path -r)
   if [[ $path != null ]]; then
     "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
