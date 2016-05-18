@@ -22,7 +22,7 @@ if [[ -x /var/pcfdev/pre-run ]]; then
 fi
 
 total=$(total_services)
-if [[ $total != 0 ]] && [[ $(started_services) = $total ]] && [[ $(cc_status_code "$domain") = 200 ]]; then
+if [[ $total != 0 ]] && [[ $(started_service_count) = $total ]] && [[ $(cc_status_code "$domain") = 200 ]]; then
   >&3 /var/pcfdev/help-text "$domain"
   exit 0
 fi
@@ -107,12 +107,14 @@ start runsvdir
 
 wait_for_monit_to_start
 
-$monit start all
+start_services consul_agent mariadb_ctrl garden etcd
+start_services cloud_controller_migration 
+start_remaining
 
 >&3 echo "Waiting for services to start..."
 total=$(total_services)
 
-while started=$(started_services) && [[ $started -lt $total ]]; do
+while started=$(started_service_count) && [[ $started -lt $total ]]; do
   counter=$(($counter + 1))
   [[ $(($counter % 60)) = 0 ]] && >&3 echo "$started out of $total running"
   sleep 1

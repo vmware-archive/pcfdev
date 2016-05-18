@@ -37,8 +37,6 @@ jobs:
   - name: default
 
   templates:
-  - name: consul_agent
-    release: cf
   - name: mysql
     release: cf-mysql
 
@@ -72,21 +70,7 @@ jobs:
   - name: bbs
     release: diego
 
-  - name: go-buildpack
-    release: cf
-  - name: binary-buildpack
-    release: cf
-  - name: nodejs-buildpack
-    release: cf
-  - name: ruby-buildpack
-    release: cf
-  - name: php-buildpack
-    release: cf
-  - name: python-buildpack
-    release: cf
-  - name: staticfile-buildpack
-    release: cf
-  - name: java-offline-buildpack
+  - name: consul_agent
     release: cf
   - name: blobstore
     release: cf
@@ -109,6 +93,22 @@ jobs:
   - name: gorouter
     release: cf
   - name: loggregator_trafficcontroller
+    release: cf
+  - name: go-buildpack
+    release: cf
+  - name: binary-buildpack
+    release: cf
+  - name: nodejs-buildpack
+    release: cf
+  - name: ruby-buildpack
+    release: cf
+  - name: php-buildpack
+    release: cf
+  - name: python-buildpack
+    release: cf
+  - name: staticfile-buildpack
+    release: cf
+  - name: java-offline-buildpack
     release: cf
 
 properties:

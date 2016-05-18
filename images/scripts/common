@@ -2,11 +2,23 @@ monit="/var/vcap/bosh/bin/monit"
 
 monit_summary() { while output=$($monit summary 2>&1) && [[ $output = *"error connecting to the monit daemon"* ]]; do sleep 1; done; echo "$output"; }
 total_services() { monit_summary | grep -E '^(Process|File|System)' | wc -l; }
-started_services() { monit_summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | wc -l; }
-stopped_services() { monit_summary | grep 'not monitored' | grep -v 'pending' | wc -l; }
+started_service_count() { started_services | wc -l; }
+started_services() { monit_summary | grep -E '(running|accessible|Timestamp changed|PID changed)' | awk '{print $2}' | tr -d "'"; }
+stopped_service_count() { stopped_services | wc -l; }
+stopped_services() { monit_summary | grep 'not monitored' | grep -v 'pending' | awk '{print $2}' | tr -d "'"; }
 cc_status_code() { curl -s -I -o /dev/null -w %{http_code} -H "Host: api.$1" http://localhost/v2/info; }
 uaa_response() { curl -s -H "Host: login.$1" http://localhost/healthz; }
 available_buildpacks() { cf curl /v2/buildpacks | jq '.resources | map(select(.entity.filename | length > 0)) | length'; }
 wait_for_monit_to_start() { while [[ $(total_services) = 0 ]]; do sleep 1; done; }
 wait_for_monit_to_stop() { while [[ $(total_services) != 0 ]]; do sleep 1; done; }
-wait_for_services_to_stop() { while [[ $(stopped_services) -lt $(total_services) ]]; do sleep 1; done; }
+wait_for_services_to_stop() { while [[ $(stopped_service_count) -lt $(total_services) ]]; do sleep 1; done; }
+
+start_services() {
+  for service in $@; do
+    $monit start $service
+  done
+  for service in $@; do
+    while ! monit_summary | grep $service | grep -q running; do sleep 1; done;
+  done
+}
+start_remaining() { for service in $(stopped_services); do $monit start $service; done; }
