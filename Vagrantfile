@@ -30,8 +30,7 @@ Vagrant.configure("2") do |config|
   resources = calculate_resource_allocation
   if vagrant_up && !vagrant_up_aws
     if resources[:free_memory] < 3_072
-      puts "PCF Dev requires 3GB of free memory. This host machine has #{resources[:free_memory]}MB free."
-      exit 1
+      puts "Warning: limited free memory is available on your system. Performance may be impacted."
     else
       puts "PCF Dev has reserved #{resources[:memory] / 1024} GB out of #{resources[:max_memory] / 1024} GB total system memory."
     end
