@@ -168,14 +168,14 @@ EOF
 fi
 
 isIP() {
-   echo $1 | grep -q -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
+  echo "$1" | grep -q -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
 }
 
 getIP() {
-  if isIP $1; then
-    echo $1
+  if isIP "$1"; then
+    echo "$1"
   else
-    dig +short $1
+    dig +short "$1"
   fi
 }
 
@@ -206,7 +206,7 @@ fi
 if [[ ! -z $pcfdev_https_proxy ]]; then
   https_proxy_host=$(echo $pcfdev_https_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
   https_proxy_ip=$(getIP $https_proxy_host)
-  if [[ ${https_proxy_ip} == "" ]]; then
+  if [[ -z ${https_proxy_ip} ]]; then
     echo "Could not resolve HTTPS_PROXY: ${https_proxy_host}"
     exit 1
   fi
