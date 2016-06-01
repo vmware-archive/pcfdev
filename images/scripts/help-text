@@ -8,7 +8,16 @@ fi
 
 domain=$1
 
-echo "PCF Dev is now running."
+cat <<EOF
+ _______  _______  _______    ______   _______  __   __
+|       ||       ||       |  |      | |       ||  | |  |
+|    _  ||       ||    ___|  |  _    ||    ___||  |_|  |
+|   |_| ||       ||   |___   | | |   ||   |___ |       |
+|    ___||      _||    ___|  | |_|   ||    ___||       |
+|   |    |     |_ |   |      |       ||   |___  |     |
+|___|    |_______||___|      |______| |_______|  |___|
+EOF
+echo "is now running."
 echo "To begin using PCF Dev, please run:"
 echo -e "\tcf login -a api.$domain --skip-ssl-validation"
 echo "Email: admin"
