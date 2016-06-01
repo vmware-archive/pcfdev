@@ -4,9 +4,9 @@ To develop PCF Dev you will need to have the following tools installed:
 
 - [Packer](https://www.packer.io) v0.9.0+
 - [Vagrant](https://www.vagrantup.com/) v1.8.1+
-- [Virtualbox](https://www.virtualbox.org/) 5.0+ (to build Virtualbox boxes)
-- [VMWare Fusion](https://www.vmware.com/products/fusion) 8+ or [VMWare Workstation](https://www.vmware.com/products/workstation) 11+ (to build VMWare boxes)
-- [Vagrant AWS plugin](https://github.com/mitchellh/vagrant-aws) v0.6.0+ and an [AWS Account](https://aws.amazon.com/) (to build AWS boxes)
+- [Virtualbox](https://www.virtualbox.org/) 5.0+
+- [Go](https://golang.org) 1.6.1+
+- [jq](https://stedolan.github.io/jq/) 1.5+
 
 ## Clone the PCF Dev source
 
@@ -16,27 +16,23 @@ git clone --recursive https://github.com/pivotal-cf/pcfdev.git
 
 ### Building a PCF Dev Box
 
-To build OSS-only PCF Dev Vagrant boxes, run:
+To build an OSS-only PCF Dev Vagrant box, run:
 
 ```bash
 cd images
-./build <build options> (see below)
+./build -only=virtualbox-iso # pass -debug for more output
 vagrant box add --force output/pcfdev-virtualbox-v0.box --name pcfdev/pcfdev
-vagrant box add --force output/pcfdev-vmware-v0.box --name pcfdev/pcfdev
-vagrant box add --force output/pcfdev-aws-v0.box --name pcfdev/pcfdev
 ```
 
-Build options:
-* `-only=` with one or more of the following comma-separated builders: `virtualbox-iso`, `vmware-iso`, and/or `amazon-ebs`
-* `-debug` to build all boxes in debug mode, pausing between each step with SSH login available
+> Note: Support for VMware Fusion/Workstation has been discontinued. Support for AWS will continue using the same OVA as Virtualbox and the [PCF Dev AWS repo](https://github.com/pivotal-cf/pcfdev-aws).
 
 ### Deploying a locally-built PCF Dev box
 
-The Vagrantfile at the root of the repo is configured to run locally-built PCF Dev boxes.
+The Vagrantfile at the root of the repo is configured to run a locally-built PCF Dev box.
 
 ```bash
-cd ../..
-vagrant up --provider=(virtualbox|vmware_fusion|vmware_workstation|aws)
+cd ..
+vagrant up
 ```
 
 ## Contributing
