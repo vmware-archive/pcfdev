@@ -103,6 +103,8 @@ if [[ $CF_ONLY = true ]]; then
   rm -f /var/pcfdev/post-run
 fi
 
+>&3 echo "Waiting for services to start..."
+
 start runsvdir
 
 wait_for_monit_to_start
@@ -111,7 +113,6 @@ start_services consul_agent mariadb_ctrl garden etcd
 start_services cloud_controller_migration 
 start_remaining
 
->&3 echo "Waiting for services to start..."
 total=$(total_services)
 
 while started=$(started_service_count) && [[ $started -lt $total ]]; do
