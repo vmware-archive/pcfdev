@@ -70,6 +70,8 @@ jobs:
   - name: bbs
     release: diego
 
+  - name: syslog_drain_binder
+    release: cf
   - name: consul_agent
     release: cf
   - name: blobstore
