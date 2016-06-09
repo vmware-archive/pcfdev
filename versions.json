@@ -1,9 +1,9 @@
 [
   {
     "name" : "cf",
-    "version": "v235-3-g04bdb39",
+    "version": "v235-4-g0ae2cd7",
     "source_location": "https://github.com/pcfdev-forks/cf-release",
-    "compiled_release_url" : "s3://pcfdev/compiled-releases/cf-04bdb39e13904c90a246b9bba6901eb4a501ee9d.tgz"
+    "compiled_release_url" : "s3://pcfdev/compiled-releases/cf-0ae2cd7a50ff1affcae37cd43c31f09e7d384e3f.tgz"
   },
   {
     "name" : "diego",

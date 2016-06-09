@@ -109,7 +109,7 @@ start runsvdir
 
 wait_for_monit_to_start
 
-start_services consul_agent mariadb_ctrl garden etcd
+start_services consul_agent mariadb_ctrl galera-healthcheck garden etcd
 start_services cloud_controller_migration 
 start_remaining
 
