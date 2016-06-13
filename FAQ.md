@@ -14,29 +14,9 @@ PCF Dev is intended for application developers who wish to develop and debug the
 
 Yes.  PCF Dev is designed to mirror PCF exactly.  If your application runs on PCF Dev, it will run on PCF with no modification in almost all cases.
 
-### Why do I need Vagrant?
-
-Vagrant is a product from Hashicorp that "provides easy to configure, reproducible, and portable work environments", allowing us to perform the task of provisioning a Cloud Foundry environment for you.  In conjunction with Atlas (formerly Vagrant Cloud), we can distribute the Linux VM required to run Cloud Foundry and then provision and configure the server using the virtualization platform of your choosing.  More information about Vagrant can be found [here](https://docs.vagrantup.com/v2/why-vagrant/index.html).
-
 ## Troubleshooting
 
-### Why does `vagrant up` say it has "no available version" ?
-
-Cloning the repository and running `vagrant up` from the root will result in the error below.  Please follow the [install instructions](README.md#install) and use one of the published `Vagrantfile`s.
-
-```
-The box you're attempting to add has no available version that
-matches the constraints you requested. Please double-check your
-settings. Also verify that if you specified version constraints,
-that the provider you wish to use is available for these constriants.
-
-Box: pcfdev/pcfdev
-Address: https://atlas.hashicorp.com/pcfdev/pcfdev
-Constraints: 0
-Available versions: 0.0.1, 0.1.0, 0.2.0, .... etc
-```
-
-### Why does `cf api` fail with "Invalid SSL Cert" error ?
+### Why does `cf api` and/or `cf login` fail with an "Invalid SSL Cert" error?
 
 PCF Dev comes with a self-signed SSL certificate for its API and requires the `--skip-ssl-validation` option.  This also applies to the Spring Boot Dashboard, which requires the checkbox "Self-signed" in order to connect.
 
@@ -46,47 +26,6 @@ Setting api endpoint to api.local.pcfdev.io...
 FAILED
 Invalid SSL Cert for api.local.pcfdev.io
 TIP: Use 'cf api --skip-ssl-validation' to continue with an insecure API endpoint
-```
-
-### My box download failed and I can't resume the download.  What do I do?
-
-Prior to Vagrant 1.8.0, it is necessary to manually delete temporary files in `~/.vagrant.d/tmp` prior to running `vagrant up` again.  Newer versions of Vagrant support resuming box downloads properly.
-
-```
-==> default: Adding box 'pcfdev/pcfdev' (v0.48.0) for provider: virtualbox
-    default: Downloading: https://atlas.hashicorp.com/pcfdev/boxes/pcfdev/versions/0.48.0/providers/virtualbox.box
-==> default: Box download is resuming from prior download progress
-An error occurred while downloading the remote file. The error
-message, if any, is reproduced below. Please fix this error and try
-again.
-
-HTTP server doesn't seem to support byte ranges. Cannot resume.
-```
-
-### Why does `vagrant up` say my network collides with another device?
-
-By default, PCF Dev will attempt to reserve `192.168.11.11` as its address.  If this network is already in use (for example, if you try using VMware after VirtualBox), you'll see one of the below errors.  Please see the [configuration](README.md#configuration) section to set `PCFDEV_IP` to a valid address.
-
-We recommend trying one of the following first:
-
-```bash
-PCFDEV_IP=192.168.22.11 PCFDEV_DOMAIN=local2.pcfdev.io vagrant up --provider=<provider>
-PCFDEV_IP=192.168.33.11 PCFDEV_DOMAIN=local3.pcfdev.io vagrant up --provider=<provider>
-PCFDEV_IP=192.168.44.11 PCFDEV_DOMAIN=local4.pcfdev.io vagrant up --provider=<provider>
-```
-
-```
-The specified host network collides with a non-hostonly network!
-This will cause your specified IP to be inaccessible. Please change
-the IP or name of your host only network so that it no longer matches that of
-a bridged or non-hostonly network.
-```
-
-```
-The host only network with the IP '192.168.11.11' would collide with
-another device 'vboxnet'. This means that VMware cannot create
-a proper networking device to route to your VM. Please choose
-another IP or shut down the existing device.
 ```
 
 ## Networking

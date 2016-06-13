@@ -12,50 +12,32 @@ However, we encourage you to leave any feedback or issues you may encounter rega
 
 ## Install
 
-1. Download the latest `pcfdev-<VERSION>.zip` from the [Pivotal Network](https://network.pivotal.io/).
-1. Unzip the `pcfdev-<VERSION>.zip`.
-1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
-1. Run `./start-osx` at a command prompt
-  - See [Configuration](#configuration) for additional options
+1. Download the latest `pcfdev-cli-VERSION-PLATFORM.zip` from the [Pivotal Network](https://network.pivotal.io/).
+1. Unzip the zip file and navigate to its containing folder.
+1. Run `cf install-plugin pcfdev-cli-VERSION-PLATFORM` at your command line
+1. Run `cf dev start`
 
-> Check out the [troubleshooting guide](FAQ.md#troubleshooting) for more information.
+> Check out the [documentation](https://docs.pivotal.io/pcf-dev/) for more information. Running `cf dev help` will display an overview of PCF Dev VM management commands.
 
 ### Prerequisites
 
-* [Vagrant](https://vagrantup.com/) 1.8+
 * [CF CLI](https://github.com/cloudfoundry/cli)
-* Internet connection required (for DNS)
 * [VirtualBox](https://www.virtualbox.org/): 5.0+
-
-### Configuration
-
-The following environment variables can be set during `start-osx` to customize the PCF Dev deployment:
-
-1. `PCFDEV_IP` - sets the IP address to bring up the VM on
-  - defaults to 192.168.11.11 locally
-  - defaults to AWS-assigned public IP on AWS
-1. `PCFDEV_DOMAIN` - sets an alternate alias for the system routes to be defined on
-  - defaults to `local.pcfdev.io` when deploying locally
-  - defaults to `<PCFDEV_IP>.xip.io` on AWS or when `PCFDEV_IP` is set
-1. `VM_CORES` (local only) - number of CPU cores to allocate on the Guest VM
-  - defaults to host # of logical CPUs
-1. `VM_MEMORY` (local only) - number of MB to allocate on the Guest VM 
-  - defaults to 25% of host memory
+* Internet connection (or [Dnsmasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) or [Acrylic](http://mayakron.altervista.org/wikibase/show.php?id=AcrylicHome)) required for wildcard DNS resolution
 
 ### Using the Cloud Foundry CLI
 
-Follow the instructions provided at the end of `start-osx` to connect to PCF Dev:
+Follow the instructions provided at the end of `cf dev start` to connect to PCF Dev:
 
 ```
 ==> default: PCF Dev is now running.
 ==> default: To begin using PCF Dev, please run:
-==> default: 	cf api api.local.pcfdev.io --skip-ssl-validation
-==> default: 	cf login
+==> default: 	cf login -a https://api.local.pcfdev.io --skip-ssl-validation
 ==> default: Email: admin
 ==> default: Password: admin
 ```
 
-> `local.pcfdev.io` above will show the domain configured for your PCF Dev instance.
+> The `local.pcfdev.io` domain may differ slightly for your PCF Dev instance.
 
 To stage a simple app on PCF Dev, `cd` into the app directory and run `cf push <APP_NAME>`.
 
@@ -63,16 +45,11 @@ See cf documentation for information on [deploying apps](http://docs.cloudfoundr
 
 ## Uninstall
 
-To temporarily stop PCF Dev:
+To temporarily stop PCF Dev run `cf dev stop`.
 
-1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
-1. Run `./stop-osx` at a command prompt
-  - You can use the `start-osx` script to resume the stopped PCF Dev instance
+To destroy your PCF Dev VM run `cf dev destroy`.
 
-To permanently destroy PCF Dev:
-
-1. Open a terminal or command prompt and navigate to the `pcfdev-<VERSION>` folder.
-1. Run `./destroy-osx` at a command prompt
+To uninstall the PCF Dev cf CLI plugin run `cf uninstall-plugin pcfdev`
 
 ## Contributing
 
