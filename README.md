@@ -25,16 +25,31 @@ However, we encourage you to leave any feedback or issues you may encounter rega
 * [VirtualBox](https://www.virtualbox.org/): 5.0+
 * Internet connection (or [Dnsmasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) or [Acrylic](http://mayakron.altervista.org/wikibase/show.php?id=AcrylicHome)) required for wildcard DNS resolution
 
-### Using the Cloud Foundry CLI
+### Using the Cloud Foundry CLI Plugin
 
 Follow the instructions provided at the end of `cf dev start` to connect to PCF Dev:
 
 ```
-==> default: PCF Dev is now running.
-==> default: To begin using PCF Dev, please run:
-==> default: 	cf login -a https://api.local.pcfdev.io --skip-ssl-validation
-==> default: Email: admin
-==> default: Password: admin
+Downloading VM...
+Progress: |====================>| 100%
+VM downloaded
+Importing VM...
+Starting VM...
+Provisioning VM...
+Waiting for services to start...
+49 out of 49 running
+ _______  _______  _______    ______   _______  __   __
+|       ||       ||       |  |      | |       ||  | |  |
+|    _  ||       ||    ___|  |  _    ||    ___||  |_|  |
+|   |_| ||       ||   |___   | | |   ||   |___ |       |
+|    ___||      _||    ___|  | |_|   ||    ___||       |
+|   |    |     |_ |   |      |       ||   |___  |     |
+|___|    |_______||___|      |______| |_______|  |___|
+is now running.
+To begin using PCF Dev, please run:
+	cf login -a api.local.pcfdev.io --skip-ssl-validation
+Email: admin
+Password: admin
 ```
 
 > The `local.pcfdev.io` domain may differ slightly for your PCF Dev instance.
