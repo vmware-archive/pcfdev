@@ -141,82 +141,20 @@ cf target -o pcfdev-org -s pcfdev-space
 
 cf enable-feature-flag diego_docker
 
-if ifconfig | grep -q "inet addr:$public_ip"; then
-  host_ip=$(echo "$public_ip" | awk -F '.' '{print $1 "." $2 "." $3 ".1"}')
-  host_security_group=$(cat <<EOF
-    [
-     {
-       "protocol": "tcp",
-       "destination": "$host_ip",
-       "ports": "1-65535"
-     }
-    ]
+security_group=$(cat <<EOF
+  [
+   {
+     "protocol": "all",
+     "destination": "0.0.0.0/0",
+     "ports": "1-65535"
+   }
+  ]
 EOF
 )
 
-  cf update-security-group host <(echo "$host_security_group") || cf create-security-group host <(echo "$host_security_group")
-  cf bind-running-security-group host
-  cf bind-staging-security-group host
-fi
-
-isIP() {
-  echo "$1" | grep -q -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"
-}
-
-getIP() {
-  if isIP "$1"; then
-    echo "$1"
-  else
-    dig +short "$1"
-  fi
-}
-
-
-if [[ ! -z $pcfdev_http_proxy ]]; then
-  http_proxy_host=$(echo $pcfdev_http_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
-  http_proxy_ip=$(getIP $http_proxy_host)
-  if [[ ${http_proxy_ip} == "" ]]; then
-    echo "Could not resolve HTTP_PROXY: ${http_proxy_host}"
-    exit 1
-  fi
-
-  http_proxy_security_group=$(cat <<EOF
-    [
-     {
-       "protocol": "tcp",
-       "destination": "$http_proxy_ip",
-       "ports": "1-65535"
-     }
-    ]
-EOF
-)
-  cf update-security-group http_proxy <(echo "$http_proxy_security_group") || cf create-security-group http_proxy <(echo "$http_proxy_security_group")
-  cf bind-running-security-group http_proxy
-  cf bind-staging-security-group http_proxy
-fi
-
-if [[ ! -z $pcfdev_https_proxy ]]; then
-  https_proxy_host=$(echo $pcfdev_https_proxy | sed -e's,^.*://,,' | sed -e's/^.*@//' | cut -d ':' -f 1)
-  https_proxy_ip=$(getIP $https_proxy_host)
-  if [[ -z ${https_proxy_ip} ]]; then
-    echo "Could not resolve HTTPS_PROXY: ${https_proxy_host}"
-    exit 1
-  fi
-
-  https_proxy_security_group=$(cat <<EOF
-    [
-     {
-       "protocol": "tcp",
-       "destination": "$https_proxy_ip",
-       "ports": "1-65535"
-     }
-    ]
-EOF
-)
-  cf update-security-group https_proxy <(echo "$https_proxy_security_group") || cf create-security-group https_proxy <(echo "$https_proxy_security_group")
-  cf bind-running-security-group https_proxy
-  cf bind-staging-security-group https_proxy
-fi
+cf update-security-group all <(echo "$security_group") || cf create-security-group all <(echo "$security_group")
+cf bind-running-security-group all
+cf bind-staging-security-group all
 
 if [[ ! -z $pcfdev_http_proxy || ! -z $pcfdev_https_proxy ]]; then
   proxy_environment_variables=$(
