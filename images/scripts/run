@@ -130,7 +130,7 @@ while [[ $(uaa_response "$domain") != "ok" ]]; do
   sleep 1
 done
 
-cf api "api.$domain" --skip-ssl-validation
+cf api "https://api.$domain" --skip-ssl-validation
 cf auth admin admin
 
 cf create-org pcfdev-org

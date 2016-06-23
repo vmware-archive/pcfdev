@@ -19,6 +19,6 @@ cat <<EOF
 EOF
 echo "is now running."
 echo "To begin using PCF Dev, please run:"
-echo -e "\tcf login -a api.$domain --skip-ssl-validation"
+echo -e "\tcf login -a https://api.$domain --skip-ssl-validation"
 echo "Email: admin"
 echo "Password: admin"
