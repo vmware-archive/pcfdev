@@ -48,8 +48,8 @@ Waiting for services to start...
 is now running.
 To begin using PCF Dev, please run:
 	cf login -a https://api.local.pcfdev.io --skip-ssl-validation
-Email: admin
-Password: admin
+Email: user
+Password: user
 ```
 
 > The `local.pcfdev.io` domain may differ slightly for your PCF Dev instance.
