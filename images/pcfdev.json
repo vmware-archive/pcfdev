@@ -165,7 +165,7 @@
                 "apt-get -y update",
                 "apt-get -y --force-yes dist-upgrade",
                 "apt-get -y update",
-                "apt-get -y install curl unzip zip jq sysstat",
+                "apt-get -y install curl unzip zip jq sysstat vim",
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
@@ -219,6 +219,7 @@
             },
             "inline": [
                 "mv /opt/bosh-provisioner/assets/VERSIONS /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",

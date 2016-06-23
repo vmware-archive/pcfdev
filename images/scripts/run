@@ -40,6 +40,8 @@ fi
 
 service dnsmasq stop
 
+nginx -s stop || true
+
 rm -f /var/vcap/bosh/agent_state.json
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)

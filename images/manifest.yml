@@ -652,6 +652,11 @@ properties:
     - {name: ccadmin, password: admin, tag: admin}
   login:
     protocol: http
+    logout:
+      redirect:
+        parameter:
+          disable: false
+
   router:
     debug_addr: 0.0.0.0:17003
     enable_ssl: true
