@@ -145,8 +145,7 @@ security_group=$(cat <<EOF
   [
    {
      "protocol": "all",
-     "destination": "0.0.0.0/0",
-     "ports": "1-65535"
+     "destination": "0.0.0.0/0"
    }
   ]
 EOF
