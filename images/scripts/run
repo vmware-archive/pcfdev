@@ -139,7 +139,7 @@ cf create-org pcfdev-org
 cf create-space pcfdev-space -o pcfdev-org
 cf target -o pcfdev-org -s pcfdev-space
 
-cf create-user user user
+cf create-user user pass
 cf set-org-role user pcfdev-org OrgManager
 cf set-space-role user pcfdev-org  pcfdev-space SpaceManager
 cf set-space-role user pcfdev-org  pcfdev-space SpaceDeveloper
