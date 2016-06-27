@@ -24,7 +24,7 @@ cd images
 vagrant box add --force output/pcfdev-virtualbox-v0.box --name pcfdev/pcfdev
 ```
 
-> Note: Support for VMware Fusion/Workstation has been discontinued. Support for AWS will continue using the same OVA as Virtualbox and the [PCF Dev AWS repo](https://github.com/pivotal-cf/pcfdev-aws).
+> Note: Support for VMware Fusion/Workstation has been discontinued. Support for AWS is temporarily suspended until a commercial version of PCF Dev becomes available from the AWS Marketplace.
 
 ### Deploying a locally-built PCF Dev box
 

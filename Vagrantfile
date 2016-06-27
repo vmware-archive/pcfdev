@@ -43,16 +43,6 @@ Vagrant.configure("2") do |config|
     v.customize ["modifyvm", :id, "--paravirtprovider", "minimal"]
   end
 
-  config.vm.provider "vmware_fusion" do |v|
-    v.vmx["memsize"] = resources[:memory]
-    v.vmx["numvcpus"] = resources[:cpus]
-  end
-
-  config.vm.provider "vmware_workstation" do |v|
-    v.vmx["memsize"] = resources[:memory]
-    v.vmx["numvcpus"] = resources[:cpus]
-  end
-
   config.vm.provider "aws" do |aws, override|
     aws.access_key_id = ENV["AWS_ACCESS_KEY_ID"]
     aws.secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]

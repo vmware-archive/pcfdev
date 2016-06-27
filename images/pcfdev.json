@@ -39,37 +39,6 @@
             "tags": {"Name": "v{{user `version`}}", "License":"{{user `eula_url`}}"}
         },
         {
-            "type": "vmware-iso",
-            "headless": true,
-            "vm_name": "{{user `distro`}}-v{{user `version`}}",
-            "guest_os_type": "ubuntu-64",
-            "disk_size": "{{user `disk_size`}}000",
-            "ssh_username": "vagrant",
-            "ssh_password": "vagrant",
-            "iso_url": "https://pcfdev.s3.amazonaws.com/artifacts/ubuntu-14.04.3-server-amd64.iso",
-            "iso_checksum": "9e5fecc94b3925bededed0fdca1bd417",
-            "iso_checksum_type": "md5",
-            "http_directory": "http",
-            "tools_upload_flavor": "linux",
-            "ssh_timeout": "20m",
-            "shutdown_command": "echo vagrant | sudo -S shutdown -P now",
-            "boot_command": [
-                "<esc><esc><enter><wait>",
-                "/install/vmlinuz noapic ",
-                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-                "hostname=pcfdev ",
-                "fb=false debconf/frontend=noninteractive ",
-                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
-                "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
-                "initrd=/install/initrd.gz -- <enter>"
-            ],
-            "vmx_data": {
-                "numvcpus": "{{user `cpus`}}",
-                "memsize": "{{user `memory`}}"
-            }
-        },
-        {
             "type": "virtualbox-iso",
             "headless": true,
             "vm_name": "{{user `distro`}}-v{{user `version`}}",
@@ -108,17 +77,9 @@
     "provisioners": [
         {
             "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
+            "only": ["virtualbox-iso"],
             "execute_command": "echo vagrant | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
             "inline": [ "echo 'vagrant ALL=(ALL) NOPASSWD: ALL\nvcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
-        },
-        {
-            "type": "shell",
-            "only": ["vmware-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "apt-get install -y open-vm-tools"
-            ]
         },
         {
             "type": "shell",
@@ -228,32 +189,19 @@
                 "service dnsmasq stop",
                 "/var/pcfdev/reset",
                 "rm -rf $HOME/.cf",
-                "chmod 1777 /tmp"
-            ]
-        },
-        {
-            "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "mkdir -p /home/vagrant/.ssh",
-                "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
-                "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys",
-                "chown -R vagrant /home/vagrant/.ssh"
-            ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
+                "chmod 1777 /tmp",
                 "echo 'vcap:vcap' | chpasswd"
             ]
         },
         {
             "type": "shell",
-            "only": ["vmware-iso", "virtualbox-iso"],
+            "only": ["virtualbox-iso"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
+                "mkdir -p /home/vagrant/.ssh",
+                "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
+                "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys",
+                "chown -R vagrant /home/vagrant/.ssh",
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
                 "rm -f /EMPTY"
             ]
