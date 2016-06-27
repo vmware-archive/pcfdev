@@ -15,10 +15,9 @@ source /var/pcfdev/common
 
 domain=$1
 public_ip=$2
-token=$3
 
 if [[ -x /var/pcfdev/pre-run ]]; then
-  >&3 /var/pcfdev/pre-run "$token"
+  >&3 /var/pcfdev/pre-run "$domain"
 fi
 
 total=$(total_services)
