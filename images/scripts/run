@@ -183,4 +183,6 @@ fi
 set +x
 exec 1>&3 2>&4
 
+while true ; do nc -l 8800; done &
+
 /var/pcfdev/help-text $domain
