@@ -45,11 +45,14 @@ for i in $(seq 0 $((number_of_releases -1))); do
 done
 
 number_of_extras=$(echo $versions | jq '.extras | length')
-for i in $(seq 0 $((number_of_extras -1))); do
-  name=$(echo $versions | jq .extras[$i].name -r)
-  url=$(echo $versions | jq .extras[$i].url -r)
-  aws s3 cp "$url" "${assets_dir}/extras/${name}.tgz"
-done
+echo "$number_of_extras extras"
+if [[ $number_of_extras > 0 ]]; then
+  for i in $(seq 0 $((number_of_extras -1))); do
+    name=$(echo $versions | jq .extras[$i].name -r)
+    url=$(echo $versions | jq .extras[$i].url -r)
+    aws s3 cp "$url" "${assets_dir}/extras/${name}.tgz"
+  done
+fi
 
 cp "$versions_json_path" "$assets_dir/VERSIONS"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"
