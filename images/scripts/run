@@ -150,20 +150,6 @@ cf set-space-role user pcfdev-org  pcfdev-space SpaceAuditor
 
 cf enable-feature-flag diego_docker
 
-security_group=$(cat <<EOF
-  [
-   {
-     "protocol": "all",
-     "destination": "0.0.0.0/0"
-   }
-  ]
-EOF
-)
-
-cf update-security-group all <(echo "$security_group") || cf create-security-group all <(echo "$security_group")
-cf bind-running-security-group all
-cf bind-staging-security-group all
-
 if [[ ! -z $pcfdev_http_proxy || ! -z $pcfdev_https_proxy ]]; then
   proxy_environment_variables=$(
     echo -n "{"

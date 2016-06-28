@@ -596,10 +596,13 @@ properties:
       rules:
       - {destination: 0.0.0.0/0, ports: '53', protocol: tcp}
       - {destination: 0.0.0.0/0, ports: '53', protocol: udp}
+    - name: all_pcfdev
+      rules:
+      - {destination: 0.0.0.0/0, ports: 1-65535, protocol: all}
     staging_upload_user: staging-user
     staging_upload_password: staging-pass
-    default_running_security_groups: [public_networks, dns]
-    default_staging_security_groups: [public_networks, dns]
+    default_running_security_groups: [public_networks, dns, all_pcfdev]
+    default_staging_security_groups: [public_networks, dns, all_pcfdev]
     external_protocol: http
     install_buildpacks:
     - {name: java_buildpack, package: buildpack_java_offline}
