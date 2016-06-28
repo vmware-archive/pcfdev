@@ -8,7 +8,7 @@ domain=$(cat /var/pcfdev/domain)
 status_code=$(cc_status_code ${domain})
 service_count=$(total_services)
 
-if [[ ${status_code} == "200" && ${service_count} == "50" ]]
+if [[ ${status_code} == "200" && -f "/run/pcfdev-healthcheck" ]]
 then
   echo -n 'ok'
   exit 0

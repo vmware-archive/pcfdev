@@ -11,6 +11,8 @@ fi
 exec 3>&1 4>&2 >>/var/pcfdev/run.log 2>&1
 set -x
 
+rm -f /run/pcfdev-healthcheck
+
 source /var/pcfdev/common
 
 domain=$1
@@ -182,5 +184,7 @@ fi
 
 set +x
 exec 1>&3 2>&4
+
+touch /run/pcfdev-healthcheck
 
 /var/pcfdev/help-text $domain
