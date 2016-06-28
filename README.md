@@ -13,9 +13,9 @@ However, we encourage you to leave any feedback or issues you may encounter rega
 ## Install
 
 1. Download the latest `pcfdev-VERSION-PLATFORM.zip` from the [Pivotal Network](https://network.pivotal.io/).
-1. Unzip the zip file and navigate to its containing folder.
-1. Run `cf install-plugin pcfdev-VERSION-PLATFORM` at your command line
-1. Run `cf dev start`
+1. Unzip the zip file and navigate to its containing folder using PowerShell or a Unix terminal.
+1. Run the extracted binary.
+1. Run `cf dev start`.
 
 > Check out the [documentation](https://docs.pivotal.io/pcf-dev/) for more information. Running `cf dev help` will display an overview of PCF Dev VM management commands.
 
