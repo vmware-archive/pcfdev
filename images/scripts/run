@@ -2,9 +2,9 @@
 
 set -e
 
-if [[ -z $1 ]] || [[ -z $2 ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]]; then
     >&2 echo "Usage:"
-    >&2 echo -e "\t$0 <domain> <public-ip>"
+    >&2 echo -e "\t$0 <domain> <public-ip> <service1,service2>"
     exit 1
 fi
 
@@ -17,6 +17,7 @@ source /var/pcfdev/common
 
 domain=$1
 public_ip=$2
+services=$3
 
 if [[ -x /var/pcfdev/pre-run ]]; then
   >&3 /var/pcfdev/pre-run "$domain"
@@ -165,7 +166,7 @@ while [[ $(available_buildpacks) -lt 8 ]]; do
 done
 
 if [[ -x /var/pcfdev/post-run ]]; then
-  /var/pcfdev/post-run $domain
+  /var/pcfdev/post-run $domain $services
 fi
 
 set +x
