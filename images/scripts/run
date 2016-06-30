@@ -2,7 +2,7 @@
 
 set -e
 
-if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]]; then
     >&2 echo "Usage:"
     >&2 echo -e "\t$0 <domain> <public-ip> <service1,service2>"
     exit 1
@@ -20,7 +20,7 @@ public_ip=$2
 services=$3
 
 if [[ -x /var/pcfdev/pre-run ]]; then
-  >&3 /var/pcfdev/pre-run "$domain"
+  >&3 /var/pcfdev/pre-run "$domain" "$services"
 fi
 
 total=$(total_services)
