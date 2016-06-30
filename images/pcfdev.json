@@ -17,10 +17,6 @@
             "ami_name": "{{user `distro`}}-v{{user `version`}}",
             "ami_description": "{{user `eula_url`}}",
             "ami_groups": ["all"],
-            "ami_regions": [
-                "ap-northeast-1", "ap-northeast-2", "ap-southeast-1", "ap-southeast-2",
-                "sa-east-1", "eu-central-1", "eu-west-1", "us-west-1", "us-west-2"
-            ],
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
