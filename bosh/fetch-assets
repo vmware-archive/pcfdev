@@ -40,7 +40,14 @@ for i in $(seq 0 $((number_of_releases -1))); do
   if [[ $path != null ]]; then
     "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
   elif [[ $url != null ]]; then
-    aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
+    if [[ ${url:0:5} == "s3://" ]]; then
+      aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
+    elif [[ ${url:0:7} == "http://" ]] || [[ ${url:0:8} == "https://" ]]; then
+      curl -o "${assets_dir}/releases/${name}-0.tgz" -L ${url}
+    else
+      echo "Invalid scheme for url: ${url}"
+      exit 1
+    fi
   fi
 done
 
