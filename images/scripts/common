@@ -22,3 +22,9 @@ start_services() {
   done
 }
 start_remaining() { for service in $(stopped_services); do $monit start $service; done; }
+
+restart_service() {
+  service=$1
+  monit restart $service
+  while ! monit_summary | grep $service | grep -v pending | grep -q running; do sleep 1; done;
+}
