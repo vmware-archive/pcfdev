@@ -578,6 +578,7 @@ properties:
     bulk_api_password: bulk-api-password
     internal_api_password: internal-api-password
     db_encryption_key: db-encryption-key
+    db_logging_level: info
     quota_definitions:
       default:
           memory_limit: 102400
@@ -598,7 +599,7 @@ properties:
       - {destination: 0.0.0.0/0, ports: '53', protocol: udp}
     - name: all_pcfdev
       rules:
-      - {destination: 0.0.0.0/0, ports: 1-65535, protocol: all}
+      - {destination: 0.0.0.0/0, protocol: all}
     staging_upload_user: staging-user
     staging_upload_password: staging-pass
     default_running_security_groups: [public_networks, dns, all_pcfdev]
