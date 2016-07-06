@@ -176,8 +176,10 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
-                "mv /opt/bosh-provisioner/assets/VERSIONS /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
+                "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
+                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "echo manual > /etc/init/runsvdir.override",

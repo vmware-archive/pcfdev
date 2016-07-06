@@ -61,5 +61,5 @@ if [[ $number_of_extras > 0 ]]; then
   done
 fi
 
-cp "$versions_json_path" "$assets_dir/VERSIONS"
+cp "$versions_json_path" "$assets_dir/versions"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"
