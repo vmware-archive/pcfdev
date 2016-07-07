@@ -165,6 +165,8 @@ while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
 done
 
+setup_service_broker p-mysql http://mysql-broker.$domain mysql
+
 if [[ -x /var/pcfdev/post-run ]]; then
   /var/pcfdev/post-run $domain $services
 fi
