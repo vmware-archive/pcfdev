@@ -163,7 +163,7 @@ cf set-space-role user pcfdev-org  pcfdev-space SpaceAuditor
 
 cf enable-feature-flag diego_docker
 
-if [[ ! -z $pcfdev_http_proxy || ! -z $pcfdev_https_proxy ]]; then
+if [[ ! -z $pcfdev_http_proxy ]] || [[ ! -z $pcfdev_https_proxy ]]; then
   proxy_environment_variables=$(
     echo -n "{"
     grep -i '\(http\|https\|no\)_proxy=' /etc/environment | sed -e 's/\(.*\)=\(.*\)/"\1": "\2"/' | paste -sd "," -
