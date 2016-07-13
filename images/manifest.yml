@@ -432,6 +432,7 @@ properties:
   uaa:
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
+    proxy_ips_regex: ".*"
     clients:
       ssh-proxy:
         authorized-grant-types: authorization_code
@@ -497,7 +498,7 @@ properties:
         override: true
       users:
       - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read
-    require_https: false
+    require_https: true
     ssl:
       port: -1
     jwt:
@@ -655,7 +656,7 @@ properties:
     roles:
     - {name: ccadmin, password: admin, tag: admin}
   login:
-    protocol: http
+    protocol: https
     logout:
       redirect:
         parameter:
