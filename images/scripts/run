@@ -46,6 +46,18 @@ nginx -s stop || true
 
 rm -f /var/vcap/bosh/agent_state.json
 
+cp /etc/ssl/openssl.cnf /var/pcfdev/openssl.cnf
+echo "[ subject_alt_name ]" >> /var/pcfdev/openssl.cnf
+echo "subjectAltName = DNS:*.$domain, DNS:*.login.$domain, DNS:*.uaa.$domain" >> /var/pcfdev/openssl.cnf
+openssl req -x509 -nodes -newkey rsa:2048 \
+  -config /var/pcfdev/openssl.cnf \
+  -extensions subject_alt_name \
+  -keyout /var/pcfdev/pcfdev.key \
+  -out /var/pcfdev/pcfdev.crt \
+  -subj "/C=US/ST=New York/L=New York/O=Pivotal/OU=Cloud Foundry/CN=*.$domain/emailAddress=pcfdev-eng@pivotal.io"
+cp /var/pcfdev/pcfdev.key /var/vcap/jobs/gorouter/config/key.pem
+cp /var/pcfdev/pcfdev.crt /var/vcap/jobs/gorouter/config/cert.pem
+
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)
 
 ip=$(ip route get 1 | awk '{print $NF;exit}')
