@@ -40,7 +40,6 @@ if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_stop
 fi
 
-service dnsmasq stop
 
 nginx -s stop || true
 
@@ -72,19 +71,31 @@ old_domain=$(cat /var/pcfdev/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo $domain > /var/pcfdev/domain
 
+#setup dnsmasq
 resolvconf --disable-updates
+service dnsmasq stop
+
+if [[ -f /var/pcfdev/external-resolv.conf ]]; then
+  cp /var/pcfdev/external-resolv.conf /etc/resolv.conf
+else
+ external_ns=$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep  nameserver || true)
+ cat <<EOF >/etc/resolv.conf
+ $external_ns
+EOF
+  cp /etc/resolv.conf /var/pcfdev/external-resolv.conf
+fi
 
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
 echo "listen-address=$ip" > /etc/dnsmasq.d/interface
-
-host_ns="$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep -m 1 '^nameserver' || true)"
-cat <<EOF >/etc/resolv.conf
-nameserver 127.0.0.1
-nameserver $ip
-$host_ns
-EOF
+sed -i "s,#resolv-file=*$,resolv-file=/var/pcfdev/external-resolv.conf,g" /etc/dnsmasq.conf
 
 service dnsmasq start
+echo "nameserver $ip"  >/etc/resolv.conf
+
+
+#set dnsmasq as recursor for consul
+sed -i "s/\(^[ ]*\)\${recursors}/\1-recursor=$ip/" /var/vcap/jobs/consul_agent/bin/agent_ctl
+
 
 sed -i '/\/proc\/sys\/net\/ipv4\/ip_local_port_range/d' /var/vcap/jobs/gorouter/bin/gorouter_ctl
 
@@ -126,6 +137,7 @@ start runsvdir
 wait_for_monit_to_start
 
 start_services consul_agent mariadb_ctrl galera-healthcheck garden etcd
+echo "nameserver 127.0.0.1"  >/etc/resolv.conf
 start_services cloud_controller_migration
 start_remaining
 
