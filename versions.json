@@ -26,9 +26,9 @@
     },
     {
       "name" : "cf-mysql",
-      "version": "v26-5-g9cc2e99",
+      "version": "v26-6-ge74b1f0",
       "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-9cc2e99743742e9f5e7008553f371cd47c10dd88.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-e74b1f0fadde08e7486d0e4d04d3ab4f06daba6e.tgz"
     }
   ]
 }
