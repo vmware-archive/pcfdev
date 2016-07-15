@@ -75,19 +75,17 @@ echo $domain > /var/pcfdev/domain
 resolvconf --disable-updates
 service dnsmasq stop
 
-if [[ -f /var/pcfdev/external-resolv.conf ]]; then
-  cp /var/pcfdev/external-resolv.conf /etc/resolv.conf
-else
- external_ns=$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep  nameserver || true)
- cat <<EOF >/etc/resolv.conf
- $external_ns
-EOF
+# if 127.0.0.1 is the only nameserver in /etc/resolv.conf, do nothing
+# else save external namsevers
+if [[ $(grep /etc/resolv.conf nameserver) != "nameserver 127.0.0.1" ]]; then
+  external_ns=$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep nameserver || true)
+  echo $external_ns >/etc/resolv.conf
   cp /etc/resolv.conf /var/pcfdev/external-resolv.conf
 fi
 
 echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
 echo "listen-address=$ip" > /etc/dnsmasq.d/interface
-sed -i "s,#resolv-file=*$,resolv-file=/var/pcfdev/external-resolv.conf,g" /etc/dnsmasq.conf
+sed -i "s,#resolv-file=.*$,resolv-file=/var/pcfdev/external-resolv.conf,g" /etc/dnsmasq.conf
 
 service dnsmasq start
 echo "nameserver $ip"  >/etc/resolv.conf
@@ -137,7 +135,7 @@ start runsvdir
 wait_for_monit_to_start
 
 start_services consul_agent mariadb_ctrl galera-healthcheck garden etcd
-echo "nameserver 127.0.0.1"  >/etc/resolv.conf
+echo "nameserver 127.0.0.1" >/etc/resolv.conf
 start_services cloud_controller_migration
 start_remaining
 
