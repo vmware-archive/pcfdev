@@ -17,7 +17,7 @@ source /var/pcfdev/common
 
 domain=$1
 public_ip=$2
-services=$3
+services=${3:-mysql}
 
 if [[ -x /var/pcfdev/pre-run ]]; then
   >&3 /var/pcfdev/pre-run "$domain" "$services"
