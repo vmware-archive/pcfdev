@@ -819,9 +819,10 @@ properties:
     advertise_urls_dns_suffix: etcd.service.cf.internal
 
   cf_mysql:
-    host: mysql.local.pcfdev.io
+    host: localhost
     external_host: mysql-broker.local.pcfdev.io
     mysql:
+      sock: /var/vcap/sys/run/mysql/mysqld.sock
       cluster_ips: [placeholder-ip]
       admin_password: admin
       roadmin_password: admin
