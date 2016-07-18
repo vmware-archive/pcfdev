@@ -242,7 +242,7 @@ properties:
         1rHeshh0P/QfCQ==
         -----END RSA PRIVATE KEY-----
       enable_cf_auth: true
-      uaa_token_url: "http://login.local.pcfdev.io/oauth/token"
+      uaa_token_url: "https://login.local.pcfdev.io/oauth/token"
       uaa_secret: ssh-proxy-secret
     rep:
       zone: z1
@@ -798,6 +798,7 @@ properties:
     graph_cleanup_threshold_in_mb: 15000
     deny_networks:
     - 0.0.0.0/0
+    dns_servers: [placeholder-ip]
 
   # For ETCd:
   etcd:
