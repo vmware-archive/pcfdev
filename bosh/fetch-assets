@@ -17,15 +17,29 @@ fi
 
 set -x
 
+shasum_matches() {
+  path=$1
+  checksum=$2
+
+  if [[ ! -f "$path" ]]; then
+    return 1
+  fi
+
+  if [[ $(shasum -a 1 ${path} | cut -d ' ' -f 1) != ${checksum} ]]; then
+    return 1
+  fi
+}
+
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 bosh_gopath=$pcfdev_dir/bosh
 
 versions_json_path=$1
 output_dir=$2
 assets_dir=${output_dir}/assets
+release_dir=$(cd $output_dir && cd .. && cd .. && pwd)/releases
 
-rm -rf "$assets_dir"/{releases,extras,versions,monit,agent}
 mkdir -p "$assets_dir"/{releases,extras,versions}
+mkdir -p "${release_dir}"
 
 cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
 GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
@@ -36,20 +50,35 @@ number_of_releases=$(echo $versions | jq '.releases | length')
 for i in $(seq 0 $((number_of_releases -1))); do
   name=$(echo $versions | jq .releases[$i].name -r)
   url=$(echo $versions | jq .releases[$i].compiled_release_url -r)
+  sha1=$(echo $versions | jq .releases[$i].sha1 -r)
   path=$(echo $versions | jq .releases[$i].path -r)
+  output_path="${release_dir}/${name}-0.tgz"
+
   if [[ $path != null ]]; then
     "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
   elif [[ $url != null ]]; then
+    if shasum_matches "${output_path}" $sha1; then
+      continue
+    fi
+
     if [[ ${url:0:5} == "s3://" ]]; then
-      aws s3 cp "$url" "${assets_dir}/releases/${name}-0.tgz"
+      aws s3 cp "$url" "${output_path}"
     elif [[ ${url:0:7} == "http://" ]] || [[ ${url:0:8} == "https://" ]]; then
-      curl -o "${assets_dir}/releases/${name}-0.tgz" -L ${url}
+      curl -o "${output_path}" -L ${url}
     else
       echo "Invalid scheme for url: ${url}"
       exit 1
     fi
+
+    if ! shasum_matches "${output_path}" $sha1; then
+      echo "Download failed for: ${url}"
+      exit 1
+    fi
   fi
+
 done
+
+cp ${release_dir}/*.tgz "${assets_dir}/releases"
 
 number_of_extras=$(echo $versions | jq '.extras | length')
 echo "$number_of_extras extras"
