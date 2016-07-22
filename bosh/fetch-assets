@@ -55,7 +55,7 @@ for i in $(seq 0 $((number_of_releases -1))); do
   output_path="${release_dir}/${name}-0.tgz"
 
   if [[ $path != null ]]; then
-    "$pcfdev_dir/bosh/build" "$path" "$name" "${assets_dir}/releases" 
+    "$pcfdev_dir/bosh/build" "$path" "$name" "$release_dir"
   elif [[ $url != null ]]; then
     if shasum_matches "${output_path}" $sha1; then
       continue
