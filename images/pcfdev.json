@@ -84,7 +84,8 @@
                 "apt-get install -y dkms",
                 "mount -o loop /home/vagrant/VBoxGuestAdditions.iso /mnt",
                 "sh /mnt/VBoxLinuxAdditions.run --nox11",
-                "umount /mnt"
+                "umount /mnt",
+                "apt-get install -y open-vm-tools"
             ]
         },
         {
