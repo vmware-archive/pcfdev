@@ -40,9 +40,6 @@ if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_stop
 fi
 
-
-nginx -s stop || true
-
 rm -f /var/vcap/bosh/agent_state.json
 
 # Generate SSL certificate that matches the system domain

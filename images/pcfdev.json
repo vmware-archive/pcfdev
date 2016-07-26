@@ -129,7 +129,8 @@
                 "apt-get -y install libgcrypt20 libgcrypt20-dev",
                 "apt-get -y install postgresql-client-9.4",
                 "apt-get -y install nginx",
-                "nginx -s stop",
+                "service nginx stop",
+                "update-rc.d -f nginx remove",
 
                 "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
 
