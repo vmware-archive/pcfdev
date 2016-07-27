@@ -123,6 +123,8 @@ start runsvdir
 
 wait_for_monit_to_start
 
+/var/vcap/jobs/consul_agent/bin/pre-start
+
 start_services consul_agent mariadb_ctrl galera-healthcheck garden etcd
 echo "nameserver 127.0.0.1" >/etc/resolv.conf
 start_services cloud_controller_migration

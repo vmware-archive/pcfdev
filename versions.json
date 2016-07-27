@@ -10,7 +10,7 @@
     {
       "name" : "diego",
       "version": "v0.1467.0-1-g069649e",
-      "sha1": "c0922581b4ab2aef00f79c644cda6ad54f2a204f",
+      "sha1": "25056af74f5ce68438300dcaf709677bcf3c831d",
       "source_location": "https://github.com/pcfdev-forks/diego-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-069649ebea2227e98e469e7ef5e004106874f845.tgz"
     },
