@@ -55,6 +55,13 @@ openssl req -x509 -nodes -newkey rsa:2048 \
 cp /var/pcfdev/pcfdev.key /var/vcap/jobs/gorouter/config/key.pem
 cp /var/pcfdev/pcfdev.crt /var/vcap/jobs/gorouter/config/cert.pem
 
+# Add self-signed cert to existing trusted certs
+if [[ ! -f /var/pcfdev/trusted_ca.crt ]]; then
+    cp /var/vcap/jobs/rootfses/config/certs/trusted_ca.crt /var/pcfdev/trusted_ca.crt
+fi
+cat /var/pcfdev/trusted_ca.crt /var/vcap/jobs/gorouter/config/cert.pem > /var/vcap/jobs/rootfses/config/certs/trusted_ca.crt
+/var/vcap/jobs/rootfses/bin/pre-start
+
 # Replace the old system domain / IP with the new system domain / IP
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)
