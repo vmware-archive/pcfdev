@@ -46,12 +46,12 @@ GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath GO15VENDOREXPERIMENT=1 \
   go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
 
 versions=$(cat "$versions_json_path")
-number_of_releases=$(echo $versions | jq '.releases | length')
-for i in $(seq 0 $((number_of_releases -1))); do
-  name=$(echo $versions | jq .releases[$i].name -r)
-  url=$(echo $versions | jq .releases[$i].compiled_release_url -r)
-  sha1=$(echo $versions | jq .releases[$i].sha1 -r)
-  path=$(echo $versions | jq .releases[$i].path -r)
+releases=$(echo $versions | jq -r '.releases | keys[]')
+
+for name in $releases; do
+  url=$(echo $versions | jq ".releases.\"${name}\".compiled_release_url" -r)
+  sha1=$(echo $versions | jq ".releases.\"${name}\".sha1" -r)
+  path=$(echo $versions | jq ".releases.\"${name}\".path" -r)
   output_path="${release_dir}/${name}-0.tgz"
 
   if [[ $path != null ]]; then
@@ -81,14 +81,11 @@ done
 cp ${release_dir}/*.tgz "${assets_dir}/releases"
 
 number_of_extras=$(echo $versions | jq '.extras | length')
-echo "$number_of_extras extras"
-if [[ $number_of_extras > 0 ]]; then
-  for i in $(seq 0 $((number_of_extras -1))); do
-    name=$(echo $versions | jq .extras[$i].name -r)
-    url=$(echo $versions | jq .extras[$i].url -r)
+extras=$(echo $versions | jq -r '.extras | keys[]')
+  for name in $extras; do
+    url=$(echo $versions | jq ".extras.\"${name}\".url" -r)
     aws s3 cp "$url" "${assets_dir}/extras/${name}.tgz"
   done
-fi
 
 cp "$versions_json_path" "$assets_dir/versions"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"

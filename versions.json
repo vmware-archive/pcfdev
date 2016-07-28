@@ -1,39 +1,35 @@
 {
-  "releases": [
-    {
-      "name" : "cf",
+  "releases": {
+    "cf" : {
       "version": "v235-4-g0ae2cd7",
       "sha1": "43f7717f7e606548c23ed65874309f4c739abaae",
       "source_location": "https://github.com/pcfdev-forks/cf-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-0ae2cd7a50ff1affcae37cd43c31f09e7d384e3f.tgz"
     },
-    {
-      "name" : "diego",
+    "diego" : {
       "version": "v0.1467.0-1-g069649e",
       "sha1": "25056af74f5ce68438300dcaf709677bcf3c831d",
       "source_location": "https://github.com/pcfdev-forks/diego-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-069649ebea2227e98e469e7ef5e004106874f845.tgz"
     },
-    {
-      "name" : "garden-linux",
+    "garden-linux" : {
       "version": "v0.337.0-0-ge77acec",
       "sha1": "fd5bedf9ea0432b1307de16e6ec5bdbb8b18886e",
       "source_location": "https://github.com/cloudfoundry-incubator/garden-linux-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-linux-e77acec695fe45439b9dfbefe45054dc1c59d669.tgz"
     },
-    {
-      "name" : "etcd",
+    "etcd" : {
       "version": "v45-0-g0efcf3b",
       "sha1": "e5a102fa9cab07c8d0e99dd56e115e31bc098c8c",
       "source_location": "https://github.com/cloudfoundry-incubator/etcd-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-0efcf3b505b973e7180e92565c5ba56619724cae.tgz"
     },
-    {
+    "cf-mysql" : {
       "name" : "cf-mysql",
       "version": "v26-5-g9cc2e99",
       "sha1": "5ea649d045fc7c77d2be98b64dec4bda617ac08b",
       "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-9cc2e99743742e9f5e7008553f371cd47c10dd88.tgz"
     }
-  ]
+  }
 }
