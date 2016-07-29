@@ -80,12 +80,13 @@ done
 
 cp ${release_dir}/*.tgz "${assets_dir}/releases"
 
-number_of_extras=$(echo $versions | jq '.extras | length')
-extras=$(echo $versions | jq -r '.extras | keys[]')
+if [[ $(echo $versions | jq -r 'has("extras")') == 'true' ]]; then
+  extras=$(echo $versions | jq -r '.extras | keys[]')
   for name in $extras; do
     url=$(echo $versions | jq ".extras.\"${name}\".url" -r)
     aws s3 cp "$url" "${assets_dir}/extras/${name}.tgz"
   done
+fi
 
 cp "$versions_json_path" "$assets_dir/versions"
 cp -a "$pcfdev_dir"/images/{http,keys,scripts} "$output_dir"
