@@ -23,11 +23,6 @@ if [[ -x /var/pcfdev/pre-run ]]; then
   /var/pcfdev/pre-run "$domain" "$services"
 fi
 
-total=$(total_services)
-if [[ $total != 0 ]] && [[ $(started_service_count) = $total ]] && [[ $(cc_status_code "$domain") = 200 ]]; then
-  >&3 /var/pcfdev/help-text "$domain"
-  exit 0
-fi
 
 if status runsvdir | grep -q 'start/running'; then
   wait_for_monit_to_start
