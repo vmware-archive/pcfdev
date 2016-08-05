@@ -189,7 +189,8 @@
                 "/var/pcfdev/reset",
                 "rm -rf $HOME/.cf",
                 "chmod 1777 /tmp",
-                "echo 'vcap:vcap' | chpasswd"
+                "echo 'vcap:vcap' | chpasswd",
+                "chown -R vcap:vcap /var/vcap/store"
             ]
         },
         {

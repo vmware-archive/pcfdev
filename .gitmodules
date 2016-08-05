@@ -3,4 +3,4 @@
 	url = https://github.com/cppforlife/packer-bosh
 [submodule "bosh/src/github.com/cppforlife/bosh-provisioner"]
 	path = bosh/src/github.com/cppforlife/bosh-provisioner
-	url = https://github.com/sclevine/bosh-provisioner
+	url = https://github.com/pcfdev-forks/bosh-provisioner

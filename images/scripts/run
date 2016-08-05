@@ -52,10 +52,10 @@ cp /var/pcfdev/pcfdev.crt /var/vcap/jobs/gorouter/config/cert.pem
 
 # Add self-signed cert to existing trusted certs
 if [[ ! -f /var/pcfdev/trusted_ca.crt ]]; then
-    cp /var/vcap/jobs/rootfses/config/certs/trusted_ca.crt /var/pcfdev/trusted_ca.crt
+  cp /var/vcap/jobs/cflinuxfs2-rootfs-setup/config/certs/trusted_ca.crt /var/pcfdev/trusted_ca.crt
 fi
-cat /var/pcfdev/trusted_ca.crt /var/vcap/jobs/gorouter/config/cert.pem > /var/vcap/jobs/rootfses/config/certs/trusted_ca.crt
-/var/vcap/jobs/rootfses/bin/pre-start
+cat /var/pcfdev/trusted_ca.crt /var/vcap/jobs/gorouter/config/cert.pem > /var/vcap/jobs/cflinuxfs2-rootfs-setup/config/certs/trusted_ca.crt
+/var/vcap/jobs/cflinuxfs2-rootfs-setup/bin/pre-start
 
 # Replace the old system domain / IP with the new system domain / IP
 
@@ -118,11 +118,19 @@ start runsvdir
 
 wait_for_monit_to_start
 
-/var/vcap/jobs/consul_agent/bin/pre-start
+start_services mariadb_ctrl galera-healthcheck
 
-start_services consul_agent mariadb_ctrl galera-healthcheck garden etcd
+while ! mysql -uroot -padmin -e"show databases;"; do
+  sleep 1
+done
+
+for script in /var/vcap/jobs/*/bin/pre-start
+do
+  $script
+done
+
+start_services consul_agent garden etcd
 echo "nameserver 127.0.0.1" >/etc/resolv.conf
-start_services cloud_controller_migration
 start_remaining
 
 total=$(total_services)
@@ -140,6 +148,11 @@ done
 
 while [[ $(uaa_response "$domain") != "ok" ]]; do
   sleep 1
+done
+
+for script in /var/vcap/jobs/*/bin/post-start
+do
+  $script
 done
 
 cf api "https://api.$domain" --skip-ssl-validation

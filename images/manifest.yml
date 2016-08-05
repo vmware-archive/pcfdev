@@ -17,6 +17,9 @@ releases:
 - name: cf-mysql
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-mysql-0.tgz
+- name: cflinuxfs2
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/cflinuxfs2-0.tgz
 
 networks:
 - name: default
@@ -47,32 +50,33 @@ jobs:
 
   - name: auctioneer
     release: diego
-  - name: cc_uploader
-    release: diego
   - name: converger
     release: diego
   - name: file_server
     release: diego
-  - name: nsync
-    release: diego
   - name: rep
-    release: diego
-  - name: rootfses
     release: diego
   - name: route_emitter
     release: diego
   - name: ssh_proxy
     release: diego
-  - name: stager
-    release: diego
-  - name: tps
-    release: diego
   - name: bbs
     release: diego
+
+  - name: cflinuxfs2-rootfs-setup
+    release: cflinuxfs2
 
   - name: syslog_drain_binder
     release: cf
   - name: consul_agent
+    release: cf
+  - name: stager
+    release: cf
+  - name: nsync
+    release: cf
+  - name: tps
+    release: cf
+  - name: cc_uploader
     release: cf
   - name: blobstore
     release: cf
@@ -116,7 +120,6 @@ jobs:
 properties:
   <<: (( merge ))
   support_address: pcfdev@pivotal.io
-  domain: local.pcfdev.io
   system_domain: local.pcfdev.io
   app_domains: [local.pcfdev.io]
   system_domain_organization: pcfdev-org
@@ -125,10 +128,7 @@ properties:
   ssl:
     skip_cert_verify: true
 
-  # For Diego:
-  diego:
-    ssl:
-      skip_cert_verify: true
+  capi:
     nsync:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -139,6 +139,7 @@ properties:
       cc:
         base_url: http://cloud-controller-ng.service.cf.internal:9022
         basic_auth_password: internal-api-password
+      diego_privileged_containers: true
     stager:
       listen_addr: 0.0.0.0:8890
       staging_task_callback_url: http://stager.service.cf.internal:8890
@@ -150,6 +151,7 @@ properties:
         require_ssl: false
       cc:
         basic_auth_password: internal-api-password
+      diego_privileged_containers: true
     tps:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -164,6 +166,10 @@ properties:
       listener:
         debug_addr: 0.0.0.0:17021
       traffic_controller_url: wss://doppler.local.pcfdev.io:443
+  # For Diego:
+  diego:
+    ssl:
+      skip_cert_verify: true
     auctioneer:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -180,6 +186,7 @@ properties:
       ca_cert: ""
       server_cert: ""
       server_key: ""
+      health_addr: "127.0.0.1:8891"
       auctioneer:
         api_url: http://auctioneer.service.cf.internal:9016
       etcd:
@@ -252,6 +259,7 @@ properties:
         client_cert: ""
         client_key: ""
         require_ssl: false
+      preloaded_rootfses: ["cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"]
 
   # For CF:
   nats:
@@ -405,6 +413,7 @@ properties:
     agent:
       domain: cf.internal
       mode: server
+      bind_addr: placeholder-ip
       services:
         etcd: {}
         gorouter: {}
@@ -430,6 +439,7 @@ properties:
   metron_endpoint:
     shared_secret: loggregator-secret
   uaa:
+    url: "https://uaa.local.pcfdev.io"
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
     proxy_ips_regex: ".*"
@@ -528,6 +538,7 @@ properties:
     zones:
       internal:
         hostnames:
+        - login.local.pcfdev.io
         - uaa.service.cf.internal
   route_registrar:
     routes:
@@ -656,14 +667,18 @@ properties:
     roles:
     - {name: ccadmin, password: admin, tag: admin}
   login:
+    url: "https://login.local.pcfdev.io"
     protocol: https
     logout:
       redirect:
         parameter:
           disable: false
+  hm9000:
+    port: "some-port"
+    url: "some-url"
 
   router:
-    debug_addr: 0.0.0.0:17003
+    debug_address: 0.0.0.0:17003
     enable_ssl: true
     ssl_cert: |
       -----BEGIN CERTIFICATE-----
