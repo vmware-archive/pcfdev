@@ -78,6 +78,12 @@
         },
         {
             "type": "shell",
+            "only": ["amazon-ebs"],
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [ "echo 'vcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
+        },
+        {
+            "type": "shell",
             "only": ["virtualbox-iso"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -93,7 +99,8 @@
             "only": ["amazon-ebs"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
-                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done"
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
+                "ln -sf /usr/bin/mawk /usr/bin/awk"
             ]
         },
         {
