@@ -224,7 +224,8 @@
                 "rm -rf $HOME/.cf",
                 "chmod 1777 /tmp",
                 "echo 'vcap:vcap' | chpasswd",
-                "chown -R vcap:vcap /var/vcap/store"
+                "chown -R vcap: /var/vcap/store",
+                "chown -R vcap: /var/pcfdev"
             ]
         }
     ],
