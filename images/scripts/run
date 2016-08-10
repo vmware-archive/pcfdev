@@ -4,7 +4,7 @@ set -e
 
 if [[ -z $1 ]] || [[ -z $2 ]]; then
     >&2 echo "Usage:"
-    >&2 echo -e "\t$0 <domain> <public-ip> <service1,service2>"
+    >&2 echo -e "\t$0 <domain> <public-ip> <service1,service2> <docker-registry1,docker-registry2>"
     exit 1
 fi
 
@@ -18,6 +18,7 @@ source /var/pcfdev/common
 domain=$1
 public_ip=$2
 services=$3
+registries=$4
 
 if [[ -x /var/pcfdev/pre-run ]]; then
   /var/pcfdev/pre-run "$domain" "$services"
@@ -111,6 +112,22 @@ chgrp vcap /tmp/cc_tmp
 chmod 1777 /tmp/cc_tmp
 cc_worker_ctl=/var/vcap/jobs/cloud_controller_ng/bin/cloud_controller_worker_ctl
 grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDIR=/tmp/cc_tmp' "$cc_worker_ctl"
+
+# Add registries to insecure_docker_registries
+if [[ -n "$registries" ]]; then
+  perl -p -i -e "s/.*-insecureDockerRegistry=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
+  perl -p -i -e "s/.*-insecureDockerRegistry=.*\n//i" /var/vcap/jobs/stager/bin/stager_as_vcap
+
+  insecureDockerRegistryOptions=""
+  for registry in $(echo "$registries" | tr ',' '\n'); do
+    insecureDockerRegistryOptions="${insecureDockerRegistryOptions}-insecureDockerRegistry=$registry "
+  done
+
+  if [[ -n "$insecureDockerRegistryOptions" ]]; then
+    sed -i "/-maxContainers/a$insecureDockerRegistryOptions \\\\" /var/vcap/jobs/garden/bin/garden_ctl
+    sed -i "/-dockerRegistryAddress/a$insecureDockerRegistryOptions \\\\" /var/vcap/jobs/stager/bin/stager_as_vcap
+  fi
+fi
 
 >&3 echo "Waiting for services to start..."
 
