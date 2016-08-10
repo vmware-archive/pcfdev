@@ -178,26 +178,16 @@
         {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "remote_path": "/home/vagrant/cleanup.sh",
+            "remote_path": "/home/vagrant/start_services.sh",
             "override": {
-                "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
+                "amazon-ebs": { "remote_path": "/home/ubuntu/start_services.sh" }
             },
             "inline": [
-                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
-                "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
-                "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
-                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
-                "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
-                "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
+                "mkdir -p /var/vcap/monit/job",
                 "echo manual > /etc/init/runsvdir.override",
-                "apt-get -y autoremove",
-                "apt-get -y clean",
-                "service dnsmasq stop",
-                "/var/pcfdev/reset",
-                "rm -rf $HOME/.cf",
-                "chmod 1777 /tmp",
-                "echo 'vcap:vcap' | chpasswd",
-                "chown -R vcap:vcap /var/vcap/store"
+                "stop runsvdir",
+                "index=0; for file in /var/vcap/jobs/*/monit; do cp $file /var/vcap/monit/job/$(printf \"%04d\" $index)-$(basename $(dirname $file)).monitrc; index=$((index + 1)); done",
+                "/var/pcfdev/run $(cat /var/pcfdev/domain) $(cat /var/pcfdev/ip)"
             ]
         },
         {
@@ -211,6 +201,30 @@
                 "chown -R vagrant /home/vagrant/.ssh",
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
                 "rm -f /EMPTY"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "remote_path": "/home/vagrant/cleanup.sh",
+            "override": {
+                "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
+            },
+            "inline": [
+                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
+                "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
+                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
+                "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
+                "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
+                "apt-get -y autoremove",
+                "apt-get -y clean",
+                "service dnsmasq stop",
+                "/var/pcfdev/reset",
+                "rm -rf $HOME/.cf",
+                "chmod 1777 /tmp",
+                "echo 'vcap:vcap' | chpasswd",
+                "chown -R vcap:vcap /var/vcap/store"
             ]
         }
     ],
