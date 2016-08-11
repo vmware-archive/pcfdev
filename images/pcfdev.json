@@ -141,8 +141,8 @@
 
                 "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
 
-                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.16.1&source=github-rel' | tar -C /usr/local/bin -xz",
-                "curl -L 'https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
+                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.21.1&source=github-rel' | tar -C /usr/local/bin -xz",
+                "curl -L 'https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
                 "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
                 "curl -o /usr/local/bin/veritas -L https://github.com/pivotal-cf-experimental/veritas/releases/download/latest/veritas",
                 "chmod +x /usr/local/bin/veritas",
@@ -177,6 +177,17 @@
         },
         {
             "type": "shell",
+            "only": ["virtualbox-iso"],
+            "remote_path": "/home/vagrant/add_vagrant_key.sh",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "mkdir -p /home/vagrant/.ssh",
+                "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
+                "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+            ]
+        },
+        {
+            "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "remote_path": "/home/vagrant/start_services.sh",
             "override": {
@@ -190,17 +201,8 @@
                 "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
                 "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
                 "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
-                "/var/pcfdev/start local.pcfdev.io"
-            ]
-        },
-        {
-            "type": "shell",
-            "only": ["virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "mkdir -p /home/vagrant/.ssh",
-                "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
-                "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+                "/var/pcfdev/start local.pcfdev.io",
+                "/var/pcfdev/stop"
             ]
         },
         {

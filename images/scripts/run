@@ -25,16 +25,7 @@ if [[ -x /var/pcfdev/pre-run ]]; then
 fi
 
 
-if status runsvdir | grep -q 'start/running'; then
-  wait_for_monit_to_start
-  $monit stop all
-
-  >&3 echo "Waiting for services to stop..."
-
-  wait_for_services_to_stop
-  stop runsvdir
-  wait_for_monit_to_stop
-fi
+>&3 /var/pcfdev/stop
 
 rm -f /var/vcap/bosh/agent_state.json
 
@@ -129,7 +120,7 @@ if [[ -n "$registries" ]]; then
   fi
 fi
 
-/var/pcfdev/start "$domain"
+>&3 2>&4 /var/pcfdev/start "$domain"
 
 cf api "https://api.$domain" --skip-ssl-validation
 cf auth admin admin

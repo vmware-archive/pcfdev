@@ -22,7 +22,7 @@ start_services() {
       reload=true
     fi
   done
-  if $reload; then
+  if [[ -n $reload ]]; then
     $monit reload
   fi
   for service in $@; do

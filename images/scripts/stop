@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+exec 3>&1 4>&2 >>/var/pcfdev/run.log 2>&1
+set -x
+
+source /var/pcfdev/common
+
+if status runsvdir | grep -q 'start/running'; then
+  >&3 echo "Waiting for services to stop..."
+  wait_for_monit_to_start
+  $monit stop all
+  wait_for_services_to_stop
+  stop runsvdir
+  wait_for_monit_to_stop
+fi

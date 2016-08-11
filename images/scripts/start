@@ -8,12 +8,13 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
+exec 3>&1 4>&2 >>/var/pcfdev/run.log 2>&1
 set -x
 source /var/pcfdev/common
 
 domain=$1
 
-echo "Waiting for services to start..."
+>&3 echo "Waiting for services to start..."
 
 start runsvdir
 wait_for_monit_to_start
@@ -23,17 +24,17 @@ do
   $script
 done
 start_services consul_agent garden etcd
-echo "nameserver 127.0.0.1" >/etc/resolv.conf
+>&3 echo "nameserver 127.0.0.1" >/etc/resolv.conf
 start_remaining
 
 total=$(total_services)
 
 while started=$(started_service_count) && [[ $started -lt $total ]]; do
   counter=$(($counter + 1))
-  [[ $(($counter % 60)) = 0 ]] && echo "$started out of $total running"
+  [[ $(($counter % 60)) = 0 ]] && >&3 echo "$started out of $total running"
   sleep 1
 done
-echo "$total out of $total running"
+>&3 echo "$total out of $total running"
 
 while [[ $(cc_status_code "$domain") != 200 ]]; do
   sleep 1
@@ -47,3 +48,4 @@ for script in /var/vcap/jobs/*/bin/post-start
 do
   $script
 done
+exec 1>&3 2>&4
