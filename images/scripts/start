@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+if [[ -z $1 ]]; then
+    >&2 echo "Usage:"
+    >&2 echo -e "\t$0 <domain>"
+    exit 1
+fi
+
+set -x
+source /var/pcfdev/common
+
+domain=$1
+
+echo "Waiting for services to start..."
+
+start runsvdir
+wait_for_monit_to_start
+start_services mariadb_ctrl galera-healthcheck
+for script in /var/vcap/jobs/*/bin/pre-start
+do
+  $script
+done
+start_services consul_agent garden etcd
+echo "nameserver 127.0.0.1" >/etc/resolv.conf
+start_remaining
+
+total=$(total_services)
+
+while started=$(started_service_count) && [[ $started -lt $total ]]; do
+  counter=$(($counter + 1))
+  [[ $(($counter % 60)) = 0 ]] && echo "$started out of $total running"
+  sleep 1
+done
+echo "$total out of $total running"
+
+while [[ $(cc_status_code "$domain") != 200 ]]; do
+  sleep 1
+done
+
+while [[ $(uaa_response "$domain") != "ok" ]]; do
+  sleep 1
+done
+
+for script in /var/vcap/jobs/*/bin/post-start
+do
+  $script
+done

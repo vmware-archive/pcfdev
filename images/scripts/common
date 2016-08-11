@@ -15,13 +15,49 @@ wait_for_services_to_stop() { while [[ $(stopped_service_count) -lt $(total_serv
 
 start_services() {
   for service in $@; do
-    $monit start $service
+    if ! exists_in_monit $service; then 
+      src=$(find_monit_file $service)
+      dst=$(next_monit_index)-$(basename $(dirname "$src")).monitrc
+      cp "$src"  "/var/vcap/monit/job/$dst"
+      reload=true
+    fi
   done
+  if $reload; then
+    $monit reload
+  fi
+  for service in $@; do
+      while ! monit_summary | grep -q $service; do sleep 1; done;
+      $monit start $service
+  done
+
   for service in $@; do
     while ! monit_summary | grep $service | grep -q running; do sleep 1; done;
   done
 }
-start_remaining() { for service in $(stopped_services); do $monit start $service; done; }
+
+start_remaining() { 
+  rm /var/vcap/monit/job/0*
+  for file in /var/vcap/jobs/*/monit; do
+     dst=$(next_monit_index)-$(basename $(dirname "$file")).monitrc
+     cp "$file"  "/var/vcap/monit/job/$dst"
+  done
+  $monit reload
+  expected_services=$(grep -c "check process" /var/vcap/monit/job/*)
+  while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_services ]] ; do sleep 1; done;
+  $monit start all
+}
+
+exists_in_monit() {
+  grep $1 /var/vcap/monit/job/* -q
+}
+
+find_monit_file() {
+  grep $1 /var/vcap/jobs/*/monit -l
+}
+
+next_monit_index(){
+ printf %04d $(ls /var/vcap/monit/job/ | wc -l)
+}
 
 restart_service() {
   service=$1
