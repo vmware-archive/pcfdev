@@ -26,8 +26,8 @@ start_services() {
     $monit reload
   fi
   for service in $@; do
-      while ! monit_summary | grep -q $service; do sleep 1; done;
-      $monit start $service
+    while ! monit_summary | grep -q $service; do sleep 1; done;
+    $monit start $service
   done
 
   for service in $@; do
@@ -38,11 +38,11 @@ start_services() {
 start_remaining() { 
   rm /var/vcap/monit/job/0*
   for file in /var/vcap/jobs/*/monit; do
-     dst=$(next_monit_index)-$(basename $(dirname "$file")).monitrc
-     cp "$file"  "/var/vcap/monit/job/$dst"
+    dst=$(next_monit_index)-$(basename $(dirname "$file")).monitrc
+    cp "$file"  "/var/vcap/monit/job/$dst"
   done
   $monit reload
-  expected_services=$(grep -c "check process" /var/vcap/monit/job/*)
+  expected_services=$(grep "check process" /var/vcap/monit/job/*)
   while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_services ]] ; do sleep 1; done;
   $monit start all
 }
@@ -56,7 +56,7 @@ find_monit_file() {
 }
 
 next_monit_index(){
- printf %04d $(ls /var/vcap/monit/job/ | wc -l)
+  printf %04d $(ls /var/vcap/monit/job/ | wc -l)
 }
 
 restart_service() {

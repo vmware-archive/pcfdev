@@ -19,8 +19,7 @@ domain=$1
 start runsvdir
 wait_for_monit_to_start
 start_services mariadb_ctrl galera-healthcheck
-for script in /var/vcap/jobs/*/bin/pre-start
-do
+for script in /var/vcap/jobs/*/bin/pre-start; do
   $script
 done
 start_services consul_agent garden etcd
