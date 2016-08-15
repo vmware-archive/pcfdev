@@ -124,7 +124,6 @@ properties:
   system_domain: local.pcfdev.io
   app_domains: [local.pcfdev.io]
   system_domain_organization: pcfdev-org
-  network_name: default
   name: pcfdev
   ssl:
     skip_cert_verify: true
@@ -839,14 +838,17 @@ properties:
     external_host: mysql-broker.local.pcfdev.io
     mysql:
       cluster_ips: [placeholder-ip]
+      cluster_health:
+        password: admin
       admin_password: admin
       roadmin_password: admin
       persistent_disk: 10000
       database_startup_timeout: 120
-      bootstrap_endpoint:
-        username: admin
-        password: admin
       galera_port: 4568
+      galera_healthcheck:
+        endpoint_username: admin
+        endpoint_password: admin
+        db_password: admin
       seeded_databases:
       - name: uaadb
         username: uaaadmin

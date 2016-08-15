@@ -26,10 +26,10 @@
     },
     "cf-mysql" : {
       "name" : "cf-mysql",
-      "version": "v26-8-g3c198d6",
-      "sha1": "9c6fc0d903f450f4daf766e784bbb8ff0d1f5670",
+      "version": "v26.3-2-g58975fd",
+      "sha1": "0037e6ead3ab122b6da89164696b0f8874e355f3",
       "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-3c198d64f1405e9008daa3a24db80f2477a6807b.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-58975fdde19eaa8438375ca102f295e5febb5696.tgz"
     },
     "cflinuxfs2" : {
       "version": "v1.18.0",
