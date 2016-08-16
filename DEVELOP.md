@@ -19,8 +19,7 @@ git clone --recursive https://github.com/pivotal-cf/pcfdev.git
 To build an OSS-only PCF Dev Vagrant box, run:
 
 ```bash
-cd images
-./build -only=virtualbox-iso # pass -debug for more output
+./bin/build -only=virtualbox-iso # pass -debug for more output
 vagrant box add --force output/pcfdev-virtualbox-v0.box --name pcfdev/pcfdev
 ```
 

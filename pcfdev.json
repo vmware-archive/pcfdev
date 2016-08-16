@@ -44,7 +44,7 @@
             "iso_url": "https://pcfdev.s3.amazonaws.com/artifacts/ubuntu-14.04.3-server-amd64.iso",
             "iso_checksum": "9e5fecc94b3925bededed0fdca1bd417",
             "iso_checksum_type": "md5",
-            "http_directory": "http",
+            "http_directory": "preseed",
             "ssh_timeout": "20m",
             "shutdown_command": "echo vagrant | sudo -S shutdown -P now",
             "format": "ova",
@@ -109,16 +109,6 @@
             "destination": "/tmp/manifest.yml"
         },
         {
-            "type": "file",
-            "source": "scripts",
-            "destination": "/tmp"
-        },
-        {
-            "type": "file",
-            "source": "keys",
-            "destination": "/tmp"
-        },
-        {
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -152,8 +142,7 @@
                 "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "sed \"s/placeholder-ip/$(cat /var/pcfdev/ip)/\" /tmp/manifest.yml > /var/pcfdev/manifest.yml",
-                "chmod +x /tmp/scripts/*",
-                "mv /tmp/scripts/* /var/pcfdev/",
+
                 "mkdir -p /var/vcap/store",
 
                 "resolvconf --disable-updates",
@@ -183,7 +172,7 @@
             "inline": [
                 "mkdir -p /home/vagrant/.ssh",
                 "wget --no-check-certificate -O /home/vagrant/.ssh/authorized_keys 'https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub'",
-                "cat /tmp/keys/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+                "cat /opt/bosh-provisioner/assets/keys/* >> /home/vagrant/.ssh/authorized_keys"
             ]
         },
         {
@@ -197,8 +186,9 @@
                 "mkdir -p /var/vcap/monit/job",
                 "echo manual > /etc/init/runsvdir.override",
                 "stop runsvdir",
-                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
+                "mv /opt/bosh-provisioner/assets/scripts/* /var/pcfdev",
                 "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
+                "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
                 "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
                 "/var/pcfdev/start local.pcfdev.io",

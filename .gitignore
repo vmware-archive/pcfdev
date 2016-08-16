@@ -5,5 +5,5 @@
 /bosh/bin
 /bosh/pkg
 
-/images/output
+/output
 /releases

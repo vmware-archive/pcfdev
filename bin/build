@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+output_dir=$pcfdev_dir/output
+
+rm -rf "$output_dir"
+mkdir "$output_dir"
+
+"$pcfdev_dir/bin/setup-packer" "$output_dir/packer-bosh"
+"$pcfdev_dir/bin/fetch-assets" "$pcfdev_dir/versions.json" "$output_dir"
+
+spiff merge \
+  "$pcfdev_dir/manifest.yml" \
+  <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
+  > "$output_dir/manifest.yml"
+
+pushd "$output_dir" >/dev/null
+  packer build $@ -var 'distro=oss' "$pcfdev_dir/pcfdev.json"
+popd >/dev/null
