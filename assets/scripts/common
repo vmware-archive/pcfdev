@@ -44,7 +44,7 @@ start_remaining() {
   $monit reload
   expected_service_count=$(grep "check process" /var/vcap/monit/job/* | wc -l)
   while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_service_count ]] ; do sleep 1; done;
-  $monit start all
+  $monit start all || true
 }
 
 exists_in_monit() {
