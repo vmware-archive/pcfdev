@@ -42,8 +42,8 @@ start_remaining() {
     cp "$file"  "/var/vcap/monit/job/$dst"
   done
   $monit reload
-  expected_services=$(grep "check process" /var/vcap/monit/job/*)
-  while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_services ]] ; do sleep 1; done;
+  expected_service_count=$(grep "check process" /var/vcap/monit/job/* | wc -l)
+  while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_service_count ]] ; do sleep 1; done;
   $monit start all
 }
 
