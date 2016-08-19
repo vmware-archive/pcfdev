@@ -4,3 +4,12 @@
 [submodule "bosh/src/github.com/cppforlife/bosh-provisioner"]
 	path = bosh/src/github.com/cppforlife/bosh-provisioner
 	url = https://github.com/pcfdev-forks/bosh-provisioner
+[submodule "src/github.com/onsi/ginkgo"]
+	path = src/github.com/onsi/ginkgo
+	url = https://github.com/onsi/ginkgo
+[submodule "src/github.com/onsi/gomega"]
+	path = src/github.com/onsi/gomega
+	url = https://github.com/onsi/gomega
+[submodule "src/gopkg.in/yaml.v2"]
+	path = src/gopkg.in/yaml.v2
+	url = https://gopkg.in/yaml.v2
