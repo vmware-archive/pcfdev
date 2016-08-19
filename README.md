@@ -6,7 +6,7 @@ PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’
 
 ## Open Source
 
-This repository contains source code that allows developers to build an open source version of PCF Dev that only contains the Elastic Runtime. The binary distribution of PCF Dev that is available on the [Pivotal Network](https://network.pivotal.io/) contains other PCF components (such as the MySQL, Redis, and RabbitMQ marketplace services) that are not available in this repository.
+This repository contains source code that allows developers to build an open source version of PCF Dev that only contains the Elastic Runtime and the CF MySQL Broker. The binary distribution of PCF Dev that is available on the [Pivotal Network](https://network.pivotal.io/) contains other PCF components (such as the Redis, RabbitMQ and Spring Cloud Services marketplace services as well as Apps Manager) that are not available in this repository.
 
 However, we encourage you to leave any feedback or issues you may encounter regarding the full, binary distribution of PCF Dev in [this repository's Github issues](https://github.com/pivotal-cf/pcfdev/issues).
 
@@ -37,7 +37,7 @@ Importing VM...
 Starting VM...
 Provisioning VM...
 Waiting for services to start...
-49 out of 49 running
+40 out of 40 running
  _______  _______  _______    ______   _______  __   __
 |       ||       ||       |  |      | |       ||  | |  |
 |    _  ||       ||    ___|  |  _    ||    ___||  |_|  |
@@ -47,7 +47,7 @@ Waiting for services to start...
 |___|    |_______||___|      |______| |_______|  |___|
 is now running.
 To begin using PCF Dev, please run:
-	cf login -a https://api.local.pcfdev.io --skip-ssl-validation
+    cf login -a https://api.local.pcfdev.io --skip-ssl-validation
 Admin user => Email: admin / Password: admin
 Regular user => Email: user / Password: pass
 ```
