@@ -203,6 +203,8 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
+                "tar czf /var/pcfdev/packer-syslogs.tgz /var/vcap/sys/log",
+                "rm -f /var/vcap/sys/log/*/*.log",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
                 "{{user `dev`}} || rm -f /var/pcfdev/manifest.yml",
                 "apt-get -y autoremove",
