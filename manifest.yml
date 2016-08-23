@@ -270,6 +270,7 @@ properties:
         client_cert: ""
         client_key: ""
         require_ssl: false
+      ping_timeout_in_seconds: 600
       preloaded_rootfses: ["cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"]
 
   # For CF:

@@ -7,10 +7,10 @@
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-e1ea06a6fc868670423ac4f4ab3ffd69725dc180.tgz"
     },
     "diego" : {
-      "version": "v0.1480.0",
-      "sha1": "bfd87d6ef08458e19e2abc6fc6888ba9ac29fde6",
+      "version": "v0.1480.0-1-gf19f23f",
+      "sha1": "6d1ab777614248745dba1e20e3546ca1962dc3e2",
       "source_location": "https://github.com/cloudfoundry/diego-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-8d1450da393eae98d565b9e0e7154c742e75e513.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1480.0-1-gf19f23f.tgz"
     },
     "garden-linux" : {
       "version": "v0.339.0",
