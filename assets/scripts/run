@@ -137,6 +137,11 @@ cf set-space-role user pcfdev-org  pcfdev-space SpaceAuditor
 
 [[ $domain != $old_domain ]] && cf delete-shared-domain "$old_domain" -f
 
+cf create-shared-domain tcp.$domain --router-group default-tcp
+quota_definition_url=$(cf curl /v2/quota_definitions?q=name:default | jq -r .resources[0].metadata.url)
+cf curl $quota_definition_url -X PUT -d '{"total_routes": 100}'
+cf curl $quota_definition_url -X PUT -d '{"total_reserved_route_ports": -1}'
+
 cf enable-feature-flag diego_docker
 
 if [[ ! -z $pcfdev_http_proxy ]] || [[ ! -z $pcfdev_https_proxy ]]; then

@@ -6,6 +6,12 @@
       "source_location": "https://github.com/cloudfoundry/cf-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-e1ea06a6fc868670423ac4f4ab3ffd69725dc180.tgz"
     },
+    "routing" : {
+      "version": "0.136.0",
+      "sha1": "8a4445c5cd7cad39600c95a8132cf242d8066762",
+      "source_location": "https://github.com/cloudfoundry/diego-release",
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0.tgz"
+    },
     "diego" : {
       "version": "v0.1480.0-1-g54b8349",
       "sha1": "b4ad6886ff4ace8868675f10168e49bc0daac87e",

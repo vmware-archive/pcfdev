@@ -20,6 +20,9 @@ releases:
 - name: cflinuxfs2
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cflinuxfs2-0.tgz
+- name: routing
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/routing-0.tgz
 
 networks:
 - name: default
@@ -49,6 +52,19 @@ jobs:
     release: garden-linux
   - name: etcd
     release: etcd
+
+  - name: gorouter
+    release: routing
+  - name: haproxy
+    release: routing
+  - name: route_registrar
+    release: routing
+  - name: router_configurer
+    release: routing
+  - name: routing-api
+    release: routing
+  - name: tcp_emitter
+    release: routing
 
   - name: auctioneer
     release: diego
@@ -86,8 +102,6 @@ jobs:
     release: cf
   - name: nats
     release: cf
-  - name: route_registrar
-    release: cf
   - name: cloud_controller_clock
     release: cf
   - name: cloud_controller_ng
@@ -97,8 +111,6 @@ jobs:
   - name: uaa
     release: cf
   - name: doppler
-    release: cf
-  - name: gorouter
     release: cf
   - name: loggregator_trafficcontroller
     release: cf
@@ -129,6 +141,7 @@ properties:
   name: pcfdev
   ssl:
     skip_cert_verify: true
+  skip_ssl_validation: true
 
   capi:
     nsync:
@@ -177,6 +190,32 @@ properties:
       port: (( properties.nats.port ))
       username: (( properties.nats.user ))
       password: (( properties.nats.password ))
+  bbs:
+    api_location: bbs.service.cf.internal:8889
+    ca_cert: ""
+    require_ssl: false
+  haproxy:
+    health_check_port: 8088
+  routing_api:
+    debug_address: 0.0.0.0:17103
+    enabled: true
+    system_domain: local.pcfdev.io
+    etcd:
+      servers: [etcd.service.cf.internal]
+    router_groups:
+    - name: default-tcp
+      reservable_ports: 61001-61100
+      type: tcp
+  router_configurer:
+    debug_address: 0.0.0.0:17104
+    oauth_secret: tcp-router-secret
+  tcp_emitter:
+    debug_address: 0.0.0.0:17105
+    oauth_secret: tcp-emitter-secret
+    bbs:
+      client_cert: ""
+      client_key: ""
+
   # For Diego:
   diego:
     ssl:
@@ -432,6 +471,8 @@ properties:
         uaa: {}
         cloud_controller_ng: {}
         blobstore: {}
+        routing-api: {}
+        bbs: {}
       servers:
         lan: [placeholder-ip]
   doppler:
@@ -454,6 +495,59 @@ properties:
     url: "https://uaa.local.pcfdev.io"
     catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
     port: 8085
+    tls_port: 8443
+    ssl:
+      port: 8443
+    sslCertificate: |
+      -----BEGIN CERTIFICATE-----
+      MIIDdjCCAl4CCQDutDq0s9mZ7zANBgkqhkiG9w0BAQsFADB9MQswCQYDVQQGEwJV
+      UzERMA8GA1UECBMITmV3LVlvcmsxETAPBgNVBAcTCE5ldyBZb3JrMRAwDgYDVQQK
+      EwdQaXZvdGFsMRAwDgYDVQQLEwdQQ0YgRGV2MSQwIgYJKoZIhvcNAQkBFhVwY2Zk
+      ZXYtZW5nQHBpdm90YWwuaW8wHhcNMTYwODI1MTYzNTQ1WhcNMTcwODI1MTYzNTQ1
+      WjB9MQswCQYDVQQGEwJVUzERMA8GA1UECBMITmV3LVlvcmsxETAPBgNVBAcTCE5l
+      dyBZb3JrMRAwDgYDVQQKEwdQaXZvdGFsMRAwDgYDVQQLEwdQQ0YgRGV2MSQwIgYJ
+      KoZIhvcNAQkBFhVwY2ZkZXYtZW5nQHBpdm90YWwuaW8wggEiMA0GCSqGSIb3DQEB
+      AQUAA4IBDwAwggEKAoIBAQCasAI1gTdYJihXfrV6MUD/uSHD0B5wkoA0j6N28pd1
+      yuRowwS5PWFYKOF3zffnjv9FhK445kSw25muLbE2J6mnYb0n6J+6/3A+CoidVAQl
+      dzz6gotPioXGhsnE1EyFtoFgzkzYhxMu5FBuD8Vl+ctlhFT7aH39c2Y7j79jx5ZE
+      zyV5k0S9yt8zCkvlrmLMdTI69wkySCh3JZavfYgTD6tGN8YbVbVOsUEvEjg5qznK
+      l1y4jlZAvAN1tkfNX46NPty2pLsQZhZKV0RDSZSos8D4IUqjxlhZlRVDnQG3h2e4
+      v8sFoUNlpkbdDClyC00cVjFFXFq/ibUsImrpqBD4/EIFAgMBAAEwDQYJKoZIhvcN
+      AQELBQADggEBAEHJjnBTdH97wgsbebfxsRi1MLb8Ido96PD/vbc9A9b2CxDD18Sa
+      VVvkA6qqT4eD0E2AqaWJbiSqBpMiJLq2TmZuw0NkZFI55wWFxCBUOrEiMu+XGkgz
+      Q3yYm+KvbtMjsNcWOsWylY2cmRSkGdUa/Q+jqudjmFCFXBB8sBnzLCgAbKiSEFwF
+      T+P0AhPVo994s0yQzMPzg/E5If3pbrDfreu7Qto36pNOA1RdvDM6Chq9gF90DEFd
+      QtLqZtbkcukO4iWu2RYVDPCJRy/qDXLoOOkvJblZM2jhp6owEB0xTKwI1QhNkdr7
+      8Q1hCLQ8VeJFKTaZcsVCc9vSr0uHeOCplsc=
+      -----END CERTIFICATE-----
+    sslPrivateKey: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAmrACNYE3WCYoV361ejFA/7khw9AecJKANI+jdvKXdcrkaMME
+      uT1hWCjhd833547/RYSuOOZEsNuZri2xNiepp2G9J+ifuv9wPgqInVQEJXc8+oKL
+      T4qFxobJxNRMhbaBYM5M2IcTLuRQbg/FZfnLZYRU+2h9/XNmO4+/Y8eWRM8leZNE
+      vcrfMwpL5a5izHUyOvcJMkgodyWWr32IEw+rRjfGG1W1TrFBLxI4Oas5ypdcuI5W
+      QLwDdbZHzV+OjT7ctqS7EGYWSldEQ0mUqLPA+CFKo8ZYWZUVQ50Bt4dnuL/LBaFD
+      ZaZG3QwpcgtNHFYxRVxav4m1LCJq6agQ+PxCBQIDAQABAoIBAE05fYDUp5qcQhuc
+      KGF+YWLJO/AT4H52xQZ4hzUE21R1HB6o7ZzE5eorTpSPASpbG1nLaWcCnlxk5Y4t
+      RYExv+LOSq631bZ3e8OdYqKYpRFHO+wcbAwjrbF07RoUmrdOa7y2gWq/1HXeicDI
+      otXMJRzjOcHhYrS7fdhSZUwdAgoLUYed9J195YNHPyQdUhn98+mYtSaHw5vXkzXB
+      owzIy+1GtiYQodoa74jiVO2l4Uo7cOVfw/iwE6Oj5WWZWncQ26rdDQUjyIL1gm7/
+      fk+wOYnDUjJC1dNeclMAEIktzsTkftNgC8w/2iBFBscInPaa8p/FDy9rY7feYd7q
+      VxZ2y8ECgYEAySKh0jqRoDQrWGtHF4SWu7ACBGE7jEmTMvfDF1Ld7Kpu07HFU98K
+      RiN+GczaLaPlelmc/lWeMvsY7ZxFO4HFSruJ+XeuxTgEIn8QJbLTyx0vb5TVt9Uc
+      V7m045hg/YLKKkKaNwjZZBzMmoO2h+7u02vnRuNzpaFhgMqufichBxkCgYEAxOHo
+      wqeichR53ye+FL/xQhNdD/btk8cT/DykqqH2PfFhGv/dh70jrHk/OaN8yVxhZKw2
+      NCA6dwQ8ChrUH35/2vgsLKIlZMSIs+hLq3clYoVqulsARnTiG0+klKr4WFGR4lzp
+      anD1ddl3Goi+TmiSqE0a4rfuye0LG5+3cPsHi80CgYEAkCowjrzIMGn0P5X1CNhS
+      KgkICRegVPdPeJK51PfidYXblgSviWQuuwMpmViJcXkuPDoLGwlHMQdlYLpHrVVg
+      kiZFyPeN33I9FHS6oCrDP6yVmYa2gONRQ1eqXg+URWD/grbmTlgbaXRy+rU5mcka
+      iZOn29mfxLIdbvDXjTiCpdECgYBlke5Uzcq+c9XTzFsBtWwvnHG8VLWIMYIb9OU2
+      qkuw9SAVn76X0nne9sYpZDByaVhNaZKlHaNL10FqLSEWBlrLipCvjg8gh0vHFKZF
+      FTiSNSY0cdIYhyBG2rWbhQCN/7b1Qt2gbhoT7FbHt5gGN2jBrtWZ9S4ZulKqs6Ed
+      hkQEWQKBgQCMrGxbbm4oxPNAnm2HIVi3wdzWXNSj8jJ92yVLcmwtOL5XyIvXXP0w
+      NJHPaDScrCLe+Rg2uesx3OUitaouwgi5qVNAnY9Q2LH7x1nUWhn9K4tKx9V6m8IR
+      KCP1QthazaNXbdGdY66hoHKSTCXzuvgJ+Irsr0+5PrdLgTZIu8UslA==
+      -----END RSA PRIVATE KEY-----
     proxy_ips_regex: ".*"
     clients:
       ssh-proxy:
@@ -479,7 +573,7 @@ properties:
         id: cf
         override: true
         authorized-grant-types: implicit,password,refresh_token
-        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read
+        scope: cloud_controller.read,cloud_controller.write,openid,password.write,cloud_controller.admin,scim.read,scim.write,doppler.firehose,uaa.user,routing.router_groups.read,routing.router_groups.write
         authorities: uaa.none
         access-token-validity: 600
         refresh-token-validity: "2592000"
@@ -504,7 +598,7 @@ properties:
         authorized-grant-types: client_credentials,refresh_token
         secret: gorouter-secret
       tcp_emitter:
-        authorities: routing.routes.write,routing.routes.read
+        authorities: routing.routes.write,routing.routes.read,routing.router_groups.read
         authorized-grant-types: client_credentials,refresh_token
         secret: tcp-emitter-secret
       tcp_router:
@@ -519,10 +613,8 @@ properties:
       user:
         override: true
       users:
-      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read
+      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write
     require_https: true
-    ssl:
-      port: -1
     jwt:
       signing_key: |
         -----BEGIN RSA PRIVATE KEY-----
@@ -550,7 +642,6 @@ properties:
     zones:
       internal:
         hostnames:
-        - login.local.pcfdev.io
         - uaa.service.cf.internal
   route_registrar:
     routes:

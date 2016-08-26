@@ -9,12 +9,24 @@ stopped_services() { monit_summary | grep 'not monitored' | grep -v 'pending' | 
 cc_status_code() { curl -s -I -o /dev/null -w %{http_code} -H "Host: api.$1" http://localhost/v2/info; }
 uaa_response() { curl -s -H "Host: login.$1" http://localhost/healthz; }
 available_buildpacks() { cf curl /v2/buildpacks | jq '.resources | map(select(.entity.filename | length > 0)) | length'; }
-wait_for_monit_to_start() { while [[ $($monit summary 2>&1 | grep 'the monit daemon is not running') ]]; do sleep 1; done; }
+wait_for_monit_to_start() { while [[ $(total_services) = 0 ]]; do sleep 1; done; }
 wait_for_monit_to_stop() { while [[ $(total_services) != 0 ]]; do sleep 1; done; }
 wait_for_services_to_stop() { while [[ $(stopped_service_count) -lt $(total_services) ]]; do sleep 1; done; }
 
 start_services() {
   for service in $@; do
+    if ! exists_in_monit $service; then
+      src=$(find_monit_file $service)
+      dst=$(next_monit_index)-$(basename $(dirname "$src")).monitrc
+      cp "$src"  "/var/vcap/monit/job/$dst"
+      reload=true
+    fi
+  done
+  if [[ -n $reload ]]; then
+    $monit reload
+  fi
+  for service in $@; do
+    while ! monit_summary | grep -q $service; do sleep 1; done;
     $monit start $service
   done
 
@@ -24,20 +36,15 @@ start_services() {
 }
 
 start_remaining() { 
-  for service in $(stopped_services); do
-    $monit start $service
+  rm /var/vcap/monit/job/0*
+  for file in /var/vcap/jobs/*/monit; do
+    dst=$(next_monit_index)-$(basename $(dirname "$file")).monitrc
+    cp "$file"  "/var/vcap/monit/job/$dst"
   done
-}
-
-move_monit_control_files() {
-  find /var/vcap/monit/job/ -name '*.monitrc' | grep -v pcfdev | xargs rm -f
-
-  for file in $(ls /var/vcap/jobs/*/monit)
-  do
-    dirname=$(dirname $file)
-    jobname=$(basename $dirname)
-    cp $file "/var/vcap/monit/job/$(next_monit_index)-${jobname}.monitrc"
-  done
+  $monit reload
+  expected_service_count=$(grep "check process" /var/vcap/monit/job/* | wc -l)
+  while [[ $(monit_summary | grep ^Process | wc -l) -lt $expected_service_count ]] ; do sleep 1; done;
+  $monit start all || true
 }
 
 exists_in_monit() {
