@@ -137,10 +137,6 @@ cf set-space-role user pcfdev-org  pcfdev-space SpaceAuditor
 
 [[ $domain != $old_domain ]] && cf delete-shared-domain "$old_domain" -f
 
-default_router_group=$(/var/vcap/packages/etcd/etcdctl ls /v1/router_groups)
-/var/vcap/packages/etcd/etcdctl rm $default_router_group
-restart_service routing-api
-
 cf create-shared-domain tcp.$domain --router-group default-tcp
 quota_definition_url=$(cf curl /v2/quota_definitions?q=name:default | jq -r .resources[0].metadata.url)
 cf curl $quota_definition_url -X PUT -d '{"total_routes": 100}'
