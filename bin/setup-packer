@@ -16,7 +16,7 @@ bosh_gopath=$(cd `dirname $0` && cd .. && pwd)/bosh
 packer_bosh_gopath=$bosh_gopath/src/github.com/cppforlife/packer-bosh/Godeps/_workspace
 
 GOPATH=$packer_bosh_gopath:$bosh_gopath \
-  eval "go build -a -o $packer_bosh github.com/cppforlife/packer-bosh/main"
+  go build -a -o $packer_bosh github.com/cppforlife/packer-bosh/main
 
 chmod +x $packer_bosh
 
