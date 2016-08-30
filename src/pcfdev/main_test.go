@@ -54,4 +54,32 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
 		Expect(session).To(gbytes.Say("local.pcfdev.io"))
 	})
+
+	Context("when provisioning fails", func() {
+		var failingBinaryPath string
+
+		BeforeEach(func() {
+			tempDir, err := ioutil.TempDir("", "")
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(
+				ioutil.WriteFile(
+					filepath.Join(tempDir, "provision_script"),
+					[]byte("#!/bin/bash\nexit 42"),
+					0755),
+			).To(Succeed())
+
+			failingBinaryPath, err = gexec.Build(
+				"pcfdev",
+				"-ldflags",
+				"-X main.provisionScriptPath="+filepath.Join(tempDir, "provision_script"),
+			)
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		It("should exit with the exit status of the provision script", func() {
+			session, _ := gexec.Start(exec.Command(failingBinaryPath), GinkgoWriter, GinkgoWriter)
+			Eventually(session).Should(gexec.Exit(42))
+		})
+	})
 })
