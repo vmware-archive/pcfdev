@@ -20,9 +20,9 @@ GOPATH=$packer_bosh_gopath:$bosh_gopath \
 
 chmod +x $packer_bosh
 
-if [[ -f $HOME/.packerconfig ]]; then
-  packer_config=$(cat $HOME/.packerconfig)
+if [[ -f $PACKER_CONFIG ]]; then
+  packer_config=$(cat $PACKER_CONFIG)
   echo "Updating existing ~/.packerconfig to point to downloaded packer-bosh."
 fi
 filter='. + {"provisioners": (.provisioners + {"packer-bosh": "'$packer_bosh'"})}'
-echo ${packer_config:-'{}'} | jq "$filter" >$HOME/.packerconfig
+echo ${packer_config:-'{}'} | jq "$filter" >$PACKER_CONFIG
