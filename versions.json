@@ -1,10 +1,10 @@
 {
   "releases": {
     "cf" : {
-      "version": "v239-3-ge1ea06a",
-      "sha1": "e0bc75e838b9a5bfb66c16edfe095973636fafa5",
+      "version": "v239-3-ge49c376",
+      "sha1": "42be8aaff994045bc47ee96a0dd12934117de2e9",
       "source_location": "https://github.com/cloudfoundry/cf-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-e1ea06a6fc868670423ac4f4ab3ffd69725dc180.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-3-ge49c376.tgz"
     },
     "routing" : {
       "version": "0.136.0",

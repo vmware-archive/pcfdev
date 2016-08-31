@@ -24,8 +24,15 @@ for script in /var/vcap/jobs/*/bin/pre-start; do
   $script
 done
 start_services consul_agent garden etcd uaa
+
+while [[ ! /var/vcap/jobs/uaa/bin/dns_health_check ]]; do
+  sleep 1
+done
+
 >&3 echo "nameserver 127.0.0.1" >/etc/resolv.conf
-start_services routing-api
+
+start_services bbs
+
 start_remaining
 
 total=$(total_services)
@@ -38,10 +45,6 @@ done
 >&3 echo "$total out of $total running"
 
 while [[ $(cc_status_code "$domain") != 200 ]]; do
-  sleep 1
-done
-
-while [[ $(uaa_response "$domain") != "ok" ]]; do
   sleep 1
 done
 
