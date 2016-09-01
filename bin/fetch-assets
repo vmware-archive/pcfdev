@@ -36,7 +36,6 @@ output_dir=$2
 assets_dir=$output_dir/assets
 releases_dir=$(cd "$output_dir" && cd .. && pwd)/releases
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
-bosh_gopath=$pcfdev_dir/bosh
 
 mkdir -p "$assets_dir"/{releases,extras,versions}
 mkdir -p "$releases_dir"
@@ -44,8 +43,8 @@ mkdir -p "$releases_dir"
 GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
   go build -a -o "$assets_dir/scripts/provision" pcfdev
 
-cp -r "$bosh_gopath/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
-GOOS=linux GOARCH=amd64 GOPATH=$bosh_gopath \
+cp -r "$pcfdev_dir/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
+GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
   go build -a -o "$assets_dir/bosh-provisioner" github.com/cppforlife/bosh-provisioner/main
 
 versions=$(cat "$versions_json_path")

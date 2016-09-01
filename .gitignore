@@ -5,8 +5,13 @@
 /bosh/bin
 /bosh/pkg
 
-/bin/ginkgo
 /output
 /pkg
 /releases
 /src/pcfdev/pcfdev
+
+/bin
+!/bin/build
+!/bin/compile-release
+!/bin/fetch-assets
+!/setup-packer

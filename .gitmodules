@@ -7,3 +7,9 @@
 [submodule "src/gopkg.in/yaml.v2"]
 	path = src/gopkg.in/yaml.v2
 	url = https://gopkg.in/yaml.v2
+[submodule "src/github.com/cppforlife/bosh-provisioner"]
+	path = src/github.com/cppforlife/bosh-provisioner
+	url = https://github.com/pcfdev-forks/bosh-provisioner
+[submodule "src/github.com/cppforlife/packer-bosh"]
+	path = src/github.com/cppforlife/packer-bosh
+	url = https://github.com/cppforlife/packer-bosh

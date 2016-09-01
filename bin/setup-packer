@@ -12,10 +12,10 @@ set -x
 
 packer_bosh=$1
 
-bosh_gopath=$(cd `dirname $0` && cd .. && pwd)/bosh
-packer_bosh_gopath=$bosh_gopath/src/github.com/cppforlife/packer-bosh/Godeps/_workspace
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+packer_bosh_gopath=$pcfdev_dir/src/github.com/cppforlife/packer-bosh/Godeps/_workspace
 
-GOPATH=$packer_bosh_gopath:$bosh_gopath \
+GOPATH=$packer_bosh_gopath:$pcfdev_dir \
   go build -a -o $packer_bosh github.com/cppforlife/packer-bosh/main
 
 chmod +x $packer_bosh
