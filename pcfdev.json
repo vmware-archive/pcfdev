@@ -6,7 +6,10 @@
         "memory": "4096",
         "disk_size": "60",
         "dev": "false",
-        "eula_url": ""
+        "eula_url": "",
+        "security_group_id": "",
+        "subnet_id": "",
+        "vpc_id": ""
     },
     "builders": [
         {
@@ -16,6 +19,10 @@
             "instance_type": "c4.2xlarge",
             "ami_name": "{{user `distro`}}-v{{user `version`}}",
             "ami_description": "{{user `eula_url`}}",
+            "associate_public_ip_address": false,
+            "security_group_id": "{{user `security_group_id`}}",
+            "subnet_id": "{{user `subnet_id`}}",
+            "vpc_id": "{{user `vpc_id`}}",
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
