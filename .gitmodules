@@ -1,9 +1,3 @@
-[submodule "bosh/src/github.com/cppforlife/packer-bosh"]
-	path = bosh/src/github.com/cppforlife/packer-bosh
-	url = https://github.com/cppforlife/packer-bosh
-[submodule "bosh/src/github.com/cppforlife/bosh-provisioner"]
-	path = bosh/src/github.com/cppforlife/bosh-provisioner
-	url = https://github.com/pcfdev-forks/bosh-provisioner
 [submodule "src/github.com/onsi/ginkgo"]
 	path = src/github.com/onsi/ginkgo
 	url = https://github.com/onsi/ginkgo
