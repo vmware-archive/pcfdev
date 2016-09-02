@@ -9,7 +9,9 @@
         "eula_url": "",
         "security_group_id": "",
         "subnet_id": "",
-        "vpc_id": ""
+        "vpc_id": "",
+        "ssh_keypair_name": "",
+        "ssh_private_key_file": ""
     },
     "builders": [
         {
@@ -23,6 +25,8 @@
             "security_group_id": "{{user `security_group_id`}}",
             "subnet_id": "{{user `subnet_id`}}",
             "vpc_id": "{{user `vpc_id`}}",
+            "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
+            "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
             "ami_block_device_mappings": [{
               "device_name": "/dev/sda1",
               "volume_type": "gp2",
