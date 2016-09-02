@@ -14,4 +14,4 @@
 !/bin/build
 !/bin/compile-release
 !/bin/fetch-assets
-!/setup-packer
+!/bin/setup-packer
