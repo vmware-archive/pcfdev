@@ -1,10 +1,10 @@
 package main_test
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -13,42 +13,46 @@ import (
 )
 
 var (
+	dockerID   string
+	pwd        string
 	binaryPath string
 )
 
 var _ = BeforeSuite(func() {
-	tempDir, err := ioutil.TempDir("", "")
+	var err error
+	pwd, err = os.Getwd()
 	Expect(err).NotTo(HaveOccurred())
 
-	Expect(
-		ioutil.WriteFile(
-			filepath.Join(tempDir, "provision_script"),
-			[]byte("#!/bin/bash\necho 'Waiting for services to start...'\necho $@"),
-			0755),
-	).To(Succeed())
+	output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "golang:1.6", "sleep", "1000").Output()
+	Expect(err).NotTo(HaveOccurred())
+	dockerID = strings.TrimSpace(string(output))
 
-	binaryPath, err = gexec.Build(
-		"pcfdev",
-		"-ldflags",
-		"-X main.provisionScriptPath="+filepath.Join(tempDir, "provision_script"),
-	)
+	err = exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()
+	Expect(err).NotTo(HaveOccurred())
+
+	err = exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()
+	Expect(err).NotTo(HaveOccurred())
+
+	err = exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()
 	Expect(err).NotTo(HaveOccurred())
 })
 
 var _ = AfterSuite(func() {
-	os.RemoveAll(binaryPath)
+	os.RemoveAll(filepath.Join(pwd, "pcfdev"))
+	os.RemoveAll(filepath.Join(pwd, "provision-script"))
+	Expect(exec.Command("docker", "rm", dockerID, "-f").Run()).To(Succeed())
 })
 
 var _ = Describe("PCF Dev provision", func() {
 	It("should provision PCF Dev", func() {
-		session, err := gexec.Start(exec.Command(binaryPath), GinkgoWriter, GinkgoWriter)
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
 	})
 
 	It("should pass arguments along", func() {
-		session, err := gexec.Start(exec.Command(binaryPath, "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
@@ -56,29 +60,13 @@ var _ = Describe("PCF Dev provision", func() {
 	})
 
 	Context("when provisioning fails", func() {
-		var failingBinaryPath string
-
 		BeforeEach(func() {
-			tempDir, err := ioutil.TempDir("", "")
-			Expect(err).NotTo(HaveOccurred())
-
-			Expect(
-				ioutil.WriteFile(
-					filepath.Join(tempDir, "provision_script"),
-					[]byte("#!/bin/bash\nexit 42"),
-					0755),
-			).To(Succeed())
-
-			failingBinaryPath, err = gexec.Build(
-				"pcfdev",
-				"-ldflags",
-				"-X main.provisionScriptPath="+filepath.Join(tempDir, "provision_script"),
-			)
+			err := exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()
 			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("should exit with the exit status of the provision script", func() {
-			session, _ := gexec.Start(exec.Command(failingBinaryPath), GinkgoWriter, GinkgoWriter)
+			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev"), GinkgoWriter, GinkgoWriter)
 			Eventually(session).Should(gexec.Exit(42))
 		})
 	})
