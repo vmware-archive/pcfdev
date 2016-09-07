@@ -30,17 +30,31 @@ fi
 rm -f /var/vcap/bosh/agent_state.json
 
 # Generate SSL certificate that matches the system domain
+rm -f /var/pcfdev/openssl/index.txt*
+touch /var/pcfdev/openssl/index.txt
 cp /etc/ssl/openssl.cnf /var/pcfdev/openssl.cnf
+sed -i 's,^dir\s*=\s*.*$,dir = /var/pcfdev/openssl,' /var/pcfdev/openssl.cnf
 echo "[ subject_alt_name ]" >> /var/pcfdev/openssl.cnf
 echo "subjectAltName = DNS:*.$domain, DNS:*.login.$domain, DNS:*.uaa.$domain" >> /var/pcfdev/openssl.cnf
-openssl req -x509 -nodes -newkey rsa:2048 \
-  -config /var/pcfdev/openssl.cnf \
-  -extensions subject_alt_name \
-  -keyout /var/pcfdev/pcfdev.key \
-  -out /var/pcfdev/pcfdev.crt \
+
+openssl genrsa -out /var/pcfdev/openssl/private/pcfdev.key 2048
+openssl req \
+  -new \
+  -key /var/pcfdev/openssl/private/pcfdev.key \
+  -out /var/pcfdev/openssl/pcfdev.csr \
   -subj "/C=US/ST=New York/L=New York/O=Pivotal/OU=Cloud Foundry/CN=*.$domain/emailAddress=pcfdev-eng@pivotal.io"
-cp /var/pcfdev/pcfdev.key /var/vcap/jobs/gorouter/config/key.pem
-cp /var/pcfdev/pcfdev.crt /var/vcap/jobs/gorouter/config/cert.pem
+
+start_date=$(date +%Y%m%d%H%M%SZ --date="@$(($(date +%s) - 86400))")
+openssl ca \
+  -config /var/pcfdev/openssl.cnf \
+  -batch \
+  -out /var/pcfdev/openssl/certs/pcfdev.pem \
+  -in /var/pcfdev/openssl/pcfdev.csr \
+  -extensions subject_alt_name \
+  -startdate $start_date
+
+cp /var/pcfdev/openssl/private/pcfdev.key /var/vcap/jobs/gorouter/config/key.pem
+cp /var/pcfdev/openssl/certs/pcfdev.pem /var/vcap/jobs/gorouter/config/cert.pem
 
 # Add self-signed cert to existing trusted certs
 if [[ ! -f /var/pcfdev/trusted_ca.crt ]]; then
