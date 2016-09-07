@@ -13,3 +13,6 @@
 [submodule "src/github.com/cppforlife/packer-bosh"]
 	path = src/github.com/cppforlife/packer-bosh
 	url = https://github.com/cppforlife/packer-bosh
+[submodule "src/pcfdev/vendor/github.com/golang/mock"]
+	path = src/pcfdev/vendor/github.com/golang/mock
+	url = https://github.com/pcfdev-forks/mock
