@@ -1,6 +1,5 @@
 .DS_Store
 *.box
-.vagrant
 
 /bosh/bin
 /bosh/pkg

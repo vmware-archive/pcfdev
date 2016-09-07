@@ -58,6 +58,20 @@ To stage a simple app on PCF Dev, `cd` into the app directory and run `cf push <
 
 See cf documentation for information on [deploying apps](http://docs.cloudfoundry.org/devguide/deploy-apps/) and [attaching services](http://docs.cloudfoundry.org/devguide/services/).
 
+### Using a customized PCF Dev OVA
+
+Specify the path to the custom built OVA with the `-o flag` to the `cf dev start` command.
+
+```
+$ cf dev start -o /path/to/custom/ova
+Importing VM...
+Starting VM...
+Provisioning VM..
+...
+```
+
+To build a custom PCF Dev OVA, please see our [DEVELOP](./DEVELOP.md) Documentation.
+
 ## Uninstall
 
 To temporarily stop PCF Dev run `cf dev stop`.
