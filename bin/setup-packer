@@ -23,6 +23,10 @@ chmod +x $packer_bosh
 if [[ -f $PACKER_CONFIG ]]; then
   packer_config=$(cat $PACKER_CONFIG)
   echo "Updating existing ~/.packerconfig to point to downloaded packer-bosh."
+else
+	echo "No Packer Config variable found using ~/.packerconfig"
+	PACKER_CONFIG=$HOME"/.packerconfig"
+  packer_config=$(cat $PACKER_CONFIG)
 fi
 filter='. + {"provisioners": (.provisioners + {"packer-bosh": "'$packer_bosh'"})}'
 echo ${packer_config:-'{}'} | jq "$filter" >$PACKER_CONFIG
