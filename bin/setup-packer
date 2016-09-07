@@ -11,22 +11,19 @@ fi
 set -x
 
 packer_bosh=$1
+packer_config_path=${PACKER_CONFIG:-"$HOME/.packerconfig"}
 
 pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
 packer_bosh_gopath=$pcfdev_dir/src/github.com/cppforlife/packer-bosh/Godeps/_workspace
 
 GOPATH=$packer_bosh_gopath:$pcfdev_dir \
-  go build -a -o $packer_bosh github.com/cppforlife/packer-bosh/main
+  go build -a -o "$packer_bosh" github.com/cppforlife/packer-bosh/main
 
-chmod +x $packer_bosh
+chmod +x "$packer_bosh"
 
-if [[ -f $PACKER_CONFIG ]]; then
-  packer_config=$(cat $PACKER_CONFIG)
+if [[ -f "$packer_config_path" ]]; then
+  packer_config=$(cat $packer_config_path)
   echo "Updating existing ~/.packerconfig to point to downloaded packer-bosh."
-else
-	echo "No Packer Config variable found using ~/.packerconfig"
-	PACKER_CONFIG=$HOME"/.packerconfig"
-  packer_config=$(cat $PACKER_CONFIG)
 fi
 filter='. + {"provisioners": (.provisioners + {"packer-bosh": "'$packer_bosh'"})}'
-echo ${packer_config:-'{}'} | jq "$filter" >$PACKER_CONFIG
+echo ${packer_config:-'{}'} | jq "$filter" >$packer_config_path
