@@ -210,7 +210,7 @@
                 "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
-                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json",
+                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json --no-ri --no-rdoc",
                 "/var/pcfdev/start local.pcfdev.io",
                 "/var/pcfdev/stop"
             ]
@@ -244,9 +244,16 @@
     ],
     "post-processors": [
         {
-            "type": "vagrant",
-            "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box",
+            "type": "shell-local",
+            "only": ["virtualbox-iso"],
+            "inline": ["ls $PWD/*/*.ova"],
             "keep_input_artifact": true
+        },
+        {
+             "type": "vagrant",
+             "only": ["amazon-ebs"],
+             "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box",
+             "keep_input_artifact": true
         }
     ]
 }
