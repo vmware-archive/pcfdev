@@ -156,13 +156,6 @@
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "sed \"s/placeholder-ip/$(cat /var/pcfdev/ip)/\" /tmp/manifest.yml > /var/pcfdev/manifest.yml",
 
-                "mkdir -p /var/pcfdev/openssl/certs /var/pcfdev/openssl/crl /var/pcfdev/openssl/newcerts /var/pcfdev/openssl/private",
-                "chmod 700 /var/pcfdev/openssl/private",
-                "echo 1000 > /var/pcfdev/openssl/serial",
-                "openssl genrsa -out /var/pcfdev/openssl/private/cakey.pem 4096",
-                "chmod 400/var/pcfdev/openssl/private/cakey.pem",
-                "openssl req -key /var/pcfdev/openssl/private/cakey.pem -new -x509 -days 7300 -sha256 -extensions v3_ca -subj \"/C=US/ST=New York/L=New York/O=Pivotal/OU=Cloud Foundry/CN=*.local.pcfdev.io/emailAddress=pcfdev-eng@pivotal.io\" -out /var/pcfdev/openssl/cacert.pem",
-
                 "mkdir -p /var/vcap/store",
 
                 "resolvconf --disable-updates",
