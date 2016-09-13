@@ -86,7 +86,8 @@ if [[ $(echo "$versions" | jq -r 'has("extras")') == 'true' ]]; then
   extras=$(echo "$versions" | jq -r '.extras | keys[]')
   for name in $extras; do
     url=$(echo "$versions" | jq ".extras.\"$name\".url" -r)
-    aws s3 cp "$url" "$assets_dir/extras/$name.tgz"
+    extension=${url##*.}
+    aws s3 cp "$url" "$assets_dir/extras/$name.$extension"
   done
 fi
 
