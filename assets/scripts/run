@@ -200,5 +200,3 @@ touch /run/pcfdev-healthcheck
 
 set +x
 exec 1>&3 2>&4
-
-/var/pcfdev/help-text "$domain"

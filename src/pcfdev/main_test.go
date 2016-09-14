@@ -45,18 +45,12 @@ var _ = AfterSuite(func() {
 
 var _ = Describe("PCF Dev provision", func() {
 	It("should provision PCF Dev", func() {
-		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev"), GinkgoWriter, GinkgoWriter)
-		Expect(err).NotTo(HaveOccurred())
-		Eventually(session).Should(gexec.Exit(0))
-		Expect(session).To(gbytes.Say("Waiting for services to start..."))
-	})
-
-	It("should pass arguments along", func() {
 		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
-		Expect(session).To(gbytes.Say("local.pcfdev.io"))
+		Expect(session).To(gbytes.Say("To begin using PCF Dev, please run:"))
+		Expect(session).To(gbytes.Say("cf login -a https://api.local.pcfdev.io --skip-ssl-validation"))
 	})
 
 	Context("when provisioning fails", func() {

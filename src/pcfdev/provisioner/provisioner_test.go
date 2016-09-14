@@ -17,14 +17,17 @@ var _ = Describe("Provisioner", func() {
 			p             *provisioner.Provisioner
 			mockCtrl      *gomock.Controller
 			mockCmdRunner *mocks.MockCmdRunner
+			mockUI        *mocks.MockUI
 		)
 
 		BeforeEach(func() {
 			mockCtrl = gomock.NewController(GinkgoT())
 			mockCmdRunner = mocks.NewMockCmdRunner(mockCtrl)
+			mockUI = mocks.NewMockUI(mockCtrl)
 
 			p = &provisioner.Provisioner{
 				CmdRunner: mockCmdRunner,
+				UI:        mockUI,
 			}
 		})
 
@@ -33,16 +36,30 @@ var _ = Describe("Provisioner", func() {
 		})
 
 		It("should provision a VM", func() {
-			mockCmdRunner.EXPECT().Run("some-path", "some-arg")
+			gomock.InOrder(
+				mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+				mockUI.EXPECT().PrintHelpText("some-domain"),
+			)
 
-			Expect(p.Provision("some-path", "some-arg")).To(Succeed())
+			Expect(p.Provision("some-provision-script-path", "some-domain")).To(Succeed())
 		})
 
 		Context("when there is an error running the provision script", func() {
 			It("should return the error", func() {
-				mockCmdRunner.EXPECT().Run("some-path", "some-arg").Return(errors.New("some-error"))
+				mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain").Return(errors.New("some-error"))
 
-				Expect(p.Provision("some-path", "some-arg")).To(MatchError("some-error"))
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
+			})
+		})
+
+		Context("when there is an error printing help text", func() {
+			It("should return the error", func() {
+				gomock.InOrder(
+					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+					mockUI.EXPECT().PrintHelpText("some-domain").Return(errors.New("some-error")),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
 			})
 		})
 	})

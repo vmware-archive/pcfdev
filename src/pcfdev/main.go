@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"pcfdev/provisioner"
+	"pcfdev/ui"
 	"syscall"
 )
 
@@ -14,6 +15,9 @@ func main() {
 		CmdRunner: &provisioner.ConcreteCmdRunner{
 			Stdout: os.Stdout,
 			Stderr: os.Stderr,
+		},
+		UI: &ui.UI{
+			Stdout: os.Stdout,
 		},
 	}
 
