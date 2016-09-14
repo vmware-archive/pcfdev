@@ -492,7 +492,7 @@ properties:
     shared_secret: loggregator-secret
   uaa:
     url: "https://uaa.local.pcfdev.io"
-    catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=72m -XX:MaxMetaspaceSize=72m
+    catalina_opts: -Xms160m -Xmx160m -Xss1m -XX:MetaspaceSize=144m -XX:MaxMetaspaceSize=144m
     port: 8085
     tls_port: 8443
     ssl:
