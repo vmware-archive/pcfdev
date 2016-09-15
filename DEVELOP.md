@@ -40,7 +40,7 @@ Our build tool has the ability to build compiled releases or releases from sourc
 {
   "releases": {
     "cf" : {
-      "path": /Users/pivotal/[path-to-release-folder]
+      "path": "/Users/pivotal/[path-to-release-folder]"
     },
     "diego" : {
       "version": "v0.1480.0",
