@@ -27,14 +27,9 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	dockerID = strings.TrimSpace(string(output))
 
-	err = exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()
-	Expect(err).NotTo(HaveOccurred())
-
-	err = exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()
-	Expect(err).NotTo(HaveOccurred())
-
-	err = exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()
-	Expect(err).NotTo(HaveOccurred())
+	Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()).To(Succeed())
+	Expect(exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()).To(Succeed())
+	Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()).To(Succeed())
 })
 
 var _ = AfterSuite(func() {
@@ -55,13 +50,13 @@ var _ = Describe("PCF Dev provision", func() {
 
 	Context("when provisioning fails", func() {
 		BeforeEach(func() {
-			err := exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()
-			Expect(err).NotTo(HaveOccurred())
+			Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()).To(Succeed())
 		})
 
-		It("should exit with the exit status of the provision script", func() {
-			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev"), GinkgoWriter, GinkgoWriter)
+		It("should print the error and exit with the exit status of the provision script", func() {
+			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 			Eventually(session).Should(gexec.Exit(42))
+			Expect(session).To(gbytes.Say("Error: exit status 42"))
 		})
 	})
 })

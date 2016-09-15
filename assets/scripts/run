@@ -29,48 +29,6 @@ fi
 
 rm -f /var/vcap/bosh/agent_state.json
 
-# Generate SSL certificate that matches the system domain
-rm -rf /var/pcfdev/openssl
-mkdir -p /var/pcfdev/openssl/{certs,crl,newcerts,private}
-chmod 700 /var/pcfdev/openssl/private
-echo 1000 > /var/pcfdev/openssl/serial
-openssl genrsa -out /var/pcfdev/openssl/private/cakey.pem 4096
-chmod 400 /var/pcfdev/openssl/private/cakey.pem
-openssl req \
-  -new \
-  -x509 \
-  -days 7300 \
-  -sha256 \
-  -extensions v3_ca \
-  -key /var/pcfdev/openssl/private/cakey.pem \
-  -out /var/pcfdev/openssl/cacert.pem \
-  -subj "/C=US/ST=New York/L=New York/O=Pivotal/OU=Cloud Foundry/CN=$domain/CN=*.$domain/emailAddress=pcfdev-eng@pivotal.io"
-
-touch /var/pcfdev/openssl/index.txt
-cp /etc/ssl/openssl.cnf /var/pcfdev/openssl.cnf
-sed -i 's,^dir\s*=\s*.*$,dir = /var/pcfdev/openssl,' /var/pcfdev/openssl.cnf
-echo "[ subject_alt_name ]" >> /var/pcfdev/openssl.cnf
-echo "subjectAltName = DNS:$domain, DNS:*.$domain, DNS:*.login.$domain, DNS:*.uaa.$domain" >> /var/pcfdev/openssl.cnf
-
-openssl genrsa -out /var/pcfdev/openssl/private/pcfdev.key 2048
-openssl req \
-  -new \
-  -key /var/pcfdev/openssl/private/pcfdev.key \
-  -out /var/pcfdev/openssl/pcfdev.csr \
-  -subj "/C=US/ST=New York/L=New York/O=Pivotal/OU=Cloud Foundry/CN=$domain/CN=*.$domain/emailAddress=pcfdev-eng@pivotal.io"
-
-start_date=$(date +%Y%m%d%H%M%SZ --date="@$(($(date +%s) - 86400))")
-openssl ca \
-  -config /var/pcfdev/openssl.cnf \
-  -batch \
-  -out /var/pcfdev/openssl/certs/pcfdev.pem \
-  -in /var/pcfdev/openssl/pcfdev.csr \
-  -extensions subject_alt_name \
-  -startdate $start_date
-
-cp /var/pcfdev/openssl/private/pcfdev.key /var/vcap/jobs/gorouter/config/key.pem
-cp /var/pcfdev/openssl/certs/pcfdev.pem /var/vcap/jobs/gorouter/config/cert.pem
-
 # Add self-signed cert to existing trusted certs
 if [[ ! -f /var/pcfdev/trusted_ca.crt ]]; then
   cp /var/vcap/jobs/cflinuxfs2-rootfs-setup/config/certs/trusted_ca.crt /var/pcfdev/trusted_ca.crt
