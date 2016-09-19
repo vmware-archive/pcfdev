@@ -28,14 +28,16 @@ func (_m *MockCert) EXPECT() *_MockCertRecorder {
 	return _m.recorder
 }
 
-func (_m *MockCert) GenerateCert(_param0 string) ([]byte, []byte, error) {
-	ret := _m.ctrl.Call(_m, "GenerateCert", _param0)
+func (_m *MockCert) GenerateCerts(_param0 string) ([]byte, []byte, []byte, []byte, error) {
+	ret := _m.ctrl.Call(_m, "GenerateCerts", _param0)
 	ret0, _ := ret[0].([]byte)
 	ret1, _ := ret[1].([]byte)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret2, _ := ret[2].([]byte)
+	ret3, _ := ret[3].([]byte)
+	ret4, _ := ret[4].(error)
+	return ret0, ret1, ret2, ret3, ret4
 }
 
-func (_mr *_MockCertRecorder) GenerateCert(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "GenerateCert", arg0)
+func (_mr *_MockCertRecorder) GenerateCerts(arg0 interface{}) *gomock.Call {
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "GenerateCerts", arg0)
 }

@@ -23,7 +23,7 @@ var _ = BeforeSuite(func() {
 	pwd, err = os.Getwd()
 	Expect(err).NotTo(HaveOccurred())
 
-	output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "golang:1.6", "sleep", "1000").Output()
+	output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "pcfdev/provision", "sleep", "1000").Output()
 	Expect(err).NotTo(HaveOccurred())
 	dockerID = strings.TrimSpace(string(output))
 
@@ -48,15 +48,32 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(session).To(gbytes.Say("cf login -a https://api.local.pcfdev.io --skip-ssl-validation"))
 	})
 
+	It("should create certificates", func() {
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 127.0.0.1 local.pcfdev.io >> /etc/hosts"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "service", "nginx", "start"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "curl", "--cacert", "/var/pcfdev/openssl/ca_cert.pem", "https://local.pcfdev.io:443"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+	})
+
 	Context("when provisioning fails", func() {
 		BeforeEach(func() {
 			Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()).To(Succeed())
 		})
 
-		It("should print the error and exit with the exit status of the provision script", func() {
+		It("should exit with the exit status of the provision script", func() {
 			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 			Eventually(session).Should(gexec.Exit(42))
-			Expect(session).To(gbytes.Say("Error: exit status 42"))
 		})
 	})
 })

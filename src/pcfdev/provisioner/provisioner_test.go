@@ -44,10 +44,12 @@ var _ = Describe("Provisioner", func() {
 
 		It("should provision a VM", func() {
 			gomock.InOrder(
-				mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+				mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 				mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
 				mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
 				mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+				mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+				mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
 				mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
 				mockUI.EXPECT().PrintHelpText("some-domain"),
 			)
@@ -57,7 +59,7 @@ var _ = Describe("Provisioner", func() {
 
 		Context("when there is an error generating certificate", func() {
 			It("should return the error", func() {
-				mockCert.EXPECT().GenerateCert("some-domain").Return(nil, nil, errors.New("some-error"))
+				mockCert.EXPECT().GenerateCerts("some-domain").Return(nil, nil, nil, nil, errors.New("some-error"))
 
 				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
 			})
@@ -66,7 +68,7 @@ var _ = Describe("Provisioner", func() {
 		Context("when there is an error creating the gorouter config directory", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
-					mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config").Return(errors.New("some-error")),
 				)
 
@@ -77,7 +79,7 @@ var _ = Describe("Provisioner", func() {
 		Context("when there is an error writing the certificate", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
-					mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))).Return(errors.New("some-error")),
 				)
@@ -89,7 +91,7 @@ var _ = Describe("Provisioner", func() {
 		Context("when there is an error writing the private key", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
-					mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))).Return(errors.New("some-error")),
@@ -99,13 +101,44 @@ var _ = Describe("Provisioner", func() {
 			})
 		})
 
-		Context("when there is an error running the provision script", func() {
+		Context("when there is an error creating the openssl directory", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
-					mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl").Return(errors.New("some-error")),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
+			})
+		})
+
+		Context("when there is an error writing the CA certificate", func() {
+			It("should return the error", func() {
+				gomock.InOrder(
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
+					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))).Return(errors.New("some-error")),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
+			})
+		})
+
+		Context("when there is an error running the provision script", func() {
+			It("should return the error", func() {
+				gomock.InOrder(
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
+					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain").Return(errors.New("some-error")),
 				)
 
@@ -116,10 +149,12 @@ var _ = Describe("Provisioner", func() {
 		Context("when there is an error printing help text", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
-					mockCert.EXPECT().GenerateCert("some-domain").Return([]byte("some-cert"), []byte("some-key"), nil),
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
 					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
 					mockUI.EXPECT().PrintHelpText("some-domain").Return(errors.New("some-error")),
 				)

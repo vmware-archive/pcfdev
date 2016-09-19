@@ -19,14 +19,15 @@ var _ = Describe("Cert", func() {
 			c = &cert.Cert{}
 		})
 
-		It("should generate a self-signed certificate and private key", func() {
-			certificateBytes, privateKeyBytes, err := c.GenerateCert("some-domain")
+		It("should generate a certificate and private key signed by the CA", func() {
+			certificateBytes, privateKeyBytes, caCertificateBytes, caPrivateKeyBytes, err := c.GenerateCerts("some-domain")
 			Expect(err).NotTo(HaveOccurred())
 
 			yesterday := time.Now().Add(-24 * time.Hour)
 			tenYearsFromYesterday := yesterday.Add(10 * 365 * 24 * time.Hour)
 
 			certificate := parseCertificate(certificateBytes, privateKeyBytes)
+			caCertificate := parseCertificate(caCertificateBytes, caPrivateKeyBytes)
 
 			Expect(certificate.DNSNames).To(Equal([]string{
 				"some-domain",
@@ -35,7 +36,7 @@ var _ = Describe("Cert", func() {
 				"*.uaa.some-domain",
 			}))
 			Expect(certificate.EmailAddresses).To(Equal([]string{"pcfdev-eng@pivotal.io"}))
-			Expect(certificate.Issuer).To(Equal(certificate.Subject))
+			Expect(certificate.Issuer).To(Equal(caCertificate.Subject))
 			Expect(certificate.NotBefore).To(BeTemporally("~", yesterday, time.Minute))
 			Expect(certificate.NotAfter).To(BeTemporally("~", tenYearsFromYesterday, time.Minute))
 			Expect(certificate.SerialNumber).To(Equal(big.NewInt(1)))
@@ -45,7 +46,17 @@ var _ = Describe("Cert", func() {
 			Expect(certificate.Subject.Organization).To(Equal([]string{"Cloud Foundry"}))
 			Expect(certificate.Subject.OrganizationalUnit).To(Equal([]string{"PCF Dev"}))
 			Expect(certificate.Subject.Province).To(Equal([]string{"New York"}))
-			Expect(certificate.IsCA).To(BeTrue())
+			Expect(certificate.IsCA).To(BeFalse())
+		})
+
+		Context("CA Cert", func() {
+			It("should be a CA Cert", func() {
+				_, _, caCertificateBytes, caPrivateKeyBytes, err := c.GenerateCerts("some-domain")
+				Expect(err).NotTo(HaveOccurred())
+
+				certificate := parseCertificate(caCertificateBytes, caPrivateKeyBytes)
+				Expect(certificate.IsCA).To(BeTrue())
+			})
 		})
 	})
 })
