@@ -61,9 +61,5 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	if err := p.CmdRunner.Run(provisionScriptPath, args...); err != nil {
-		return err
-	}
-
-	return p.UI.PrintHelpText(domain)
+	return p.CmdRunner.Run(provisionScriptPath, args...)
 }

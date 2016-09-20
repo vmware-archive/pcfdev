@@ -40,7 +40,7 @@ var _ = Describe("Cert", func() {
 			Expect(certificate.NotBefore).To(BeTemporally("~", yesterday, time.Minute))
 			Expect(certificate.NotAfter).To(BeTemporally("~", tenYearsFromYesterday, time.Minute))
 			Expect(certificate.SerialNumber).To(Equal(big.NewInt(1)))
-			Expect(certificate.Subject.CommonName).To(Equal("some-domain"))
+			Expect(certificate.Subject.CommonName).To(ContainSubstring("some-domain"))
 			Expect(certificate.Subject.Country).To(Equal([]string{"US"}))
 			Expect(certificate.Subject.Locality).To(Equal([]string{"New York"}))
 			Expect(certificate.Subject.Organization).To(Equal([]string{"Cloud Foundry"}))

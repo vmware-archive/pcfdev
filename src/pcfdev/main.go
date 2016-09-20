@@ -6,7 +6,6 @@ import (
 	"pcfdev/cert"
 	"pcfdev/fs"
 	"pcfdev/provisioner"
-	"pcfdev/ui"
 	"syscall"
 )
 
@@ -20,9 +19,6 @@ func main() {
 			Stderr: os.Stderr,
 		},
 		FS: &fs.FS{},
-		UI: &ui.UI{
-			Stdout: os.Stdout,
-		},
 	}
 
 	if err := p.Provision(provisionScriptPath, os.Args[1:]...); err != nil {

@@ -44,8 +44,6 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
-		Expect(session).To(gbytes.Say("To begin using PCF Dev, please run:"))
-		Expect(session).To(gbytes.Say("cf login -a https://api.local.pcfdev.io --skip-ssl-validation"))
 	})
 
 	It("should create certificates", func() {
