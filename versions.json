@@ -9,7 +9,7 @@
     "routing" : {
       "version": "0.136.0",
       "sha1": "8a4445c5cd7cad39600c95a8132cf242d8066762",
-      "source_location": "https://github.com/cloudfoundry/diego-release",
+      "source_location": "https://github.com/cloudfoundry-incubator/routing-release",
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0.tgz"
     },
     "diego" : {
