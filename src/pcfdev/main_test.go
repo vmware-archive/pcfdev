@@ -97,7 +97,7 @@ var _ = Describe("PCF Dev provision", func() {
 			session, err := gexec.Start(exec.Command("docker", "exec", failingDockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, "3s").Should(gexec.Exit(1))
-			Expect(session).To(gbytes.Say("Error: timeout error."))
+			Expect(session).To(gbytes.Say("Timed out after 2 seconds."))
 		})
 	})
 })

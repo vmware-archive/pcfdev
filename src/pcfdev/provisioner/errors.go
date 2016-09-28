@@ -1,7 +1,7 @@
 package provisioner
 
-type timeoutError struct{}
+type TimeoutError struct{}
 
-func (t *timeoutError) Error() string {
+func (t *TimeoutError) Error() string {
 	return "timeout error"
 }

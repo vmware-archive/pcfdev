@@ -35,14 +35,19 @@ func main() {
 	}
 
 	if err := p.Provision(provisionScriptPath, os.Args[1:]...); err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
-				os.Exit(status.ExitStatus())
-			} else {
-				os.Exit(1)
+		switch err.(type) {
+		case *exec.ExitError:
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
+					os.Exit(status.ExitStatus())
+				} else {
+					os.Exit(1)
+				}
 			}
-		} else {
-			fmt.Printf("Error: %s.", err)
+		case *provisioner.TimeoutError:
+			fmt.Printf("Timed out after %s seconds.\n", timeoutInSeconds)
+			os.Exit(1)
+		default:
 			os.Exit(1)
 		}
 	}

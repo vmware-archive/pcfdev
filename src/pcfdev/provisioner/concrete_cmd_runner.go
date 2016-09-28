@@ -32,7 +32,7 @@ func (r *ConcreteCmdRunner) Run(command string, args ...string) error {
 	err := cmd.Wait()
 
 	if !timer.Stop() {
-		return &timeoutError{}
+		return &TimeoutError{}
 	}
 
 	return err
