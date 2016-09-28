@@ -1,16 +1,16 @@
 {
   "releases": {
     "cf" : {
-      "version": "v239-3-ge49c376",
-      "sha1": "42be8aaff994045bc47ee96a0dd12934117de2e9",
+      "version": "v239-4-g556ae9e",
+      "sha1": "d8cea1a7ae7e0f37281a04b8a62ab91f38cef64e",
       "source_location": "https://github.com/cloudfoundry/cf-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-3-ge49c376.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-4-g556ae9e.tgz"
     },
     "routing" : {
-      "version": "0.136.0",
-      "sha1": "8a4445c5cd7cad39600c95a8132cf242d8066762",
+      "version": "0.136.0-1-g34a5e8c",
+      "sha1": "d02cd61ec797b82ff68b9d945062db790272a545",
       "source_location": "https://github.com/cloudfoundry-incubator/routing-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0-1-g34a5e8c.tgz"
     },
     "diego" : {
       "version": "v0.1480.0-1-g54b8349",
