@@ -2,6 +2,7 @@ package provisioner_test
 
 import (
 	"pcfdev/provisioner"
+	"time"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -21,8 +22,9 @@ var _ = Describe("ConcreteCmdRunner", func() {
 			stderr = gbytes.NewBuffer()
 
 			r = &provisioner.ConcreteCmdRunner{
-				Stdout: stdout,
-				Stderr: stderr,
+				Stdout:  stdout,
+				Stderr:  stderr,
+				Timeout: 2 * time.Second,
 			}
 		})
 
@@ -32,6 +34,10 @@ var _ = Describe("ConcreteCmdRunner", func() {
 
 			Expect(r.Run("bash", "-c", ">&2 echo -n some output")).To(Succeed())
 			Eventually(stderr).Should(gbytes.Say("some output"))
+		})
+
+		It("should respects timeouts", func() {
+			Expect(r.Run("bash", "-c", "sleep 5")).To(MatchError("timeout error"))
 		})
 
 		Context("when there is an error", func() {

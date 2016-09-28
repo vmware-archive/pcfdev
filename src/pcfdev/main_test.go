@@ -74,4 +74,30 @@ var _ = Describe("PCF Dev provision", func() {
 			Eventually(session).Should(gexec.Exit(42))
 		})
 	})
+
+	Context("when provisioning takes too long", func() {
+		var failingDockerID string
+
+		BeforeEach(func() {
+			output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "pcfdev/provision", "sleep", "1000").Output()
+			Expect(err).NotTo(HaveOccurred())
+
+			failingDockerID = strings.TrimSpace(string(output))
+
+			Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\nsleep 20\" > "+pwd+"/provision-script").Run()).To(Succeed())
+			Expect(exec.Command("docker", "exec", failingDockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()).To(Succeed())
+			Expect(exec.Command("docker", "exec", failingDockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script -X main.timeoutInSeconds=2", "pcfdev").Run()).To(Succeed())
+		})
+
+		AfterEach(func() {
+			Expect(exec.Command("docker", "rm", failingDockerID, "-f").Run()).To(Succeed())
+		})
+
+		It("exit with an exit status of 1 and tell why it is exiting...", func() {
+			session, err := gexec.Start(exec.Command("docker", "exec", failingDockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session, "3s").Should(gexec.Exit(1))
+			Expect(session).To(gbytes.Say("Error: timeout error."))
+		})
+	})
 })
