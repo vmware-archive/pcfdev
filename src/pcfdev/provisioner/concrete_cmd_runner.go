@@ -1,7 +1,6 @@
 package provisioner
 
 import (
-	"fmt"
 	"io"
 	"os/exec"
 	"syscall"
@@ -15,8 +14,6 @@ type ConcreteCmdRunner struct {
 }
 
 func (r *ConcreteCmdRunner) Run(command string, args ...string) error {
-	fmt.Fprintln(r.Stdout, fmt.Sprintf("timeout duration is %+v\n", r.Timeout))
-
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = r.Stdout
 	cmd.Stderr = r.Stderr
