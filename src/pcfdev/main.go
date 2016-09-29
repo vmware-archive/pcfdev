@@ -14,7 +14,7 @@ import (
 
 var (
 	provisionScriptPath = "/var/pcfdev/run"
-	timeoutInSeconds    = "1800"
+	timeoutInSeconds    = "3600"
 )
 
 func main() {
