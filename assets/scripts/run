@@ -60,7 +60,7 @@ echo "listen-address=$ip" > /etc/dnsmasq.d/interface
 sed -i "s,#resolv-file=.*$,resolv-file=/var/pcfdev/external-resolv.conf,g" /etc/dnsmasq.conf
 
 # Save external namservers if /etc/resolv.conf is not already pointing to consul
-if [[ $(grep /etc/resolv.conf nameserver) != "nameserver 127.0.0.1" ]]; then
+if [[ $(grep nameserver /etc/resolv.conf) != "nameserver 127.0.0.1" ]]; then
   external_ns=$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep nameserver || true)
   echo $external_ns >/etc/resolv.conf
   cp /etc/resolv.conf /var/pcfdev/external-resolv.conf

@@ -461,17 +461,87 @@ properties:
       izb0yvD8f628ImPg5I2QK5Veo/MFNK5i9egoWCtluGyfjABmongS/V1F7w==
       -----END CERTIFICATE-----
     encrypt_keys: ["consul-passphrase"]
+    ttl_in_seconds: "300"
     agent:
       domain: cf.internal
       mode: server
-      bind_addr: placeholder-ip
       services:
-        etcd: {}
-        gorouter: {}
-        uaa: {}
-        cloud_controller_ng: {}
-        blobstore: {}
-        routing-api: {}
+        auctioneer:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        bbs:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        blobstore:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        cc-uploader:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        cloud_controller_ng:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        consul:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        etcd:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        file-server:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        gorouter:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        nsync:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        routing-api:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        ssh-proxy:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        stager:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        tps:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+        uaa:
+          check:
+            name: dns_health_check
+            script: /bin/true
+            interval: 10s
+
       servers:
         lan: [placeholder-ip]
   doppler:

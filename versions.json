@@ -1,10 +1,10 @@
 {
   "releases": {
     "cf" : {
-      "version": "v239-4-g556ae9e",
-      "sha1": "d8cea1a7ae7e0f37281a04b8a62ab91f38cef64e",
+      "version": "v239-9-gf4b0236",
+      "sha1": "0147b207c656c47534fefcaa996ad5fab3b8c4e9",
       "source_location": "https://github.com/cloudfoundry/cf-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-4-g556ae9e.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-9-gf4b0236.tgz"
     },
     "routing" : {
       "version": "0.136.0-1-g34a5e8c",
@@ -13,10 +13,10 @@
       "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0-1-g34a5e8c.tgz"
     },
     "diego" : {
-      "version": "v0.1480.0-1-g54b8349",
-      "sha1": "b4ad6886ff4ace8868675f10168e49bc0daac87e",
+      "version": "v0.1480.0-6-g4ff99b3",
+      "sha1": "31028b62255fc296a05d043384e9e7600d491683",
       "source_location": "https://github.com/cloudfoundry/diego-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1480.0-1-g54b8349.tgz"
+      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1480.0-6-g4ff99b3.tgz"
     },
     "garden-linux" : {
       "version": "v0.339.0",
