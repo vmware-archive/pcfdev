@@ -26,11 +26,18 @@ type UI interface {
 	PrintHelpText(domain string) error
 }
 
+//go:generate mockgen -package mocks -destination mocks/command.go pcfdev/provisioner Command
+type Command interface {
+	Run() error
+}
+
 type Provisioner struct {
 	Cert      Cert
 	CmdRunner CmdRunner
 	FS        FS
 	UI        UI
+
+	DisableUAAHSTS Command
 }
 
 func (p *Provisioner) Provision(provisionScriptPath string, args ...string) error {
@@ -58,6 +65,10 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 	}
 
 	if err := p.FS.Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader(caCert)); err != nil {
+		return err
+	}
+
+	if err := p.DisableUAAHSTS.Run(); err != nil {
 		return err
 	}
 

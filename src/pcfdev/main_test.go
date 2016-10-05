@@ -12,33 +12,32 @@ import (
 	"github.com/onsi/gomega/gexec"
 )
 
-var (
-	dockerID   string
-	pwd        string
-	binaryPath string
-)
-
-var _ = BeforeSuite(func() {
-	var err error
-	pwd, err = os.Getwd()
-	Expect(err).NotTo(HaveOccurred())
-
-	output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "pcfdev/provision", "sleep", "1000").Output()
-	Expect(err).NotTo(HaveOccurred())
-	dockerID = strings.TrimSpace(string(output))
-
-	Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()).To(Succeed())
-	Expect(exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()).To(Succeed())
-	Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()).To(Succeed())
-})
-
-var _ = AfterSuite(func() {
-	os.RemoveAll(filepath.Join(pwd, "pcfdev"))
-	os.RemoveAll(filepath.Join(pwd, "provision-script"))
-	Expect(exec.Command("docker", "rm", dockerID, "-f").Run()).To(Succeed())
-})
-
 var _ = Describe("PCF Dev provision", func() {
+	var (
+		dockerID string
+		pwd      string
+	)
+
+	BeforeEach(func() {
+		var err error
+		pwd, err = os.Getwd()
+		Expect(err).NotTo(HaveOccurred())
+
+		output, err := exec.Command("docker", "run", "-d", "-w", "/go/src/pcfdev", "-v", pwd+":/go/src/pcfdev", "pcfdev/provision", "sleep", "1000").Output()
+		Expect(err).NotTo(HaveOccurred())
+		dockerID = strings.TrimSpace(string(output))
+
+		Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()).To(Succeed())
+		Expect(exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/pcfdev/provision-script").Run()).To(Succeed())
+		Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()).To(Succeed())
+	})
+
+	AfterEach(func() {
+		os.RemoveAll(filepath.Join(pwd, "pcfdev"))
+		os.RemoveAll(filepath.Join(pwd, "provision-script"))
+		Expect(exec.Command("docker", "rm", dockerID, "-f").Run()).To(Succeed())
+	})
+
 	It("should provision PCF Dev", func() {
 		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
@@ -55,13 +54,24 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 
-		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "service", "nginx", "start"), GinkgoWriter, GinkgoWriter)
+		session, err = gexec.Start(exec.Command("docker", "exec", "-d", dockerID, "service", "nginx", "start"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 
 		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "curl", "--cacert", "/var/pcfdev/openssl/ca_cert.pem", "https://local.pcfdev.io:443"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
+	})
+
+	It("should disable HSTS in UAA", func() {
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "grep", "-A", "1", "<param-name>hstsEnabled</param-name>", "/var/vcap/packages/uaa/tomcat/conf/web.xml"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		Eventually(session).Should(gbytes.Say("<param-value>false</param-value>"))
 	})
 
 	Context("when provisioning fails", func() {

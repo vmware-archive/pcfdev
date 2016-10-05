@@ -16,3 +16,9 @@
 [submodule "src/pcfdev/vendor/github.com/golang/mock"]
 	path = src/pcfdev/vendor/github.com/golang/mock
 	url = https://github.com/pcfdev-forks/mock
+[submodule "src/pcfdev/vendor/golang.org/x/net"]
+	path = src/pcfdev/vendor/golang.org/x/net
+	url = https://github.com/golang/net
+[submodule "src/pcfdev/vendor/golang.org/x/text"]
+	path = src/pcfdev/vendor/golang.org/x/text
+	url = https://github.com/golang/text

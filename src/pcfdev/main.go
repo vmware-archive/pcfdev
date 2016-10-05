@@ -7,6 +7,7 @@ import (
 	"pcfdev/cert"
 	"pcfdev/fs"
 	"pcfdev/provisioner"
+	"pcfdev/provisioner/commands"
 	"strconv"
 	"syscall"
 	"time"
@@ -32,6 +33,9 @@ func main() {
 			Timeout: time.Duration(provisionTimeout) * time.Second,
 		},
 		FS: &fs.FS{},
+		DisableUAAHSTS: &commands.DisableUAAHSTS{
+			WebXMLPath: "/var/vcap/packages/uaa/tomcat/conf/web.xml",
+		},
 	}
 
 	if err := p.Provision(provisionScriptPath, os.Args[1:]...); err != nil {
