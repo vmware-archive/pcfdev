@@ -32,12 +32,13 @@ type Command interface {
 }
 
 type Provisioner struct {
-	Cert      Cert
-	CmdRunner CmdRunner
-	FS        FS
-	UI        UI
-
+	Cert           Cert
+	CmdRunner      CmdRunner
+	FS             FS
+	UI             UI
 	DisableUAAHSTS Command
+
+	Distro string
 }
 
 func (p *Provisioner) Provision(provisionScriptPath string, args ...string) error {
@@ -68,8 +69,10 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	if err := p.DisableUAAHSTS.Run(); err != nil {
-		return err
+	if p.Distro == "pcf" {
+		if err := p.DisableUAAHSTS.Run(); err != nil {
+			return err
+		}
 	}
 
 	return p.CmdRunner.Run(provisionScriptPath, args...)

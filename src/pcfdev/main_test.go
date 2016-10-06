@@ -74,6 +74,22 @@ var _ = Describe("PCF Dev provision", func() {
 		Eventually(session).Should(gbytes.Say("<param-value>false</param-value>"))
 	})
 
+	Context("when the distribution is not 'pcf'", func() {
+		BeforeEach(func() {
+			Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.distro=oss -X main.provisionScriptPath=/go/src/pcfdev/provision-script", "pcfdev").Run()).To(Succeed())
+		})
+
+		It("should not disable HSTS in UAA", func() {
+			session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session).Should(gexec.Exit(0))
+
+			session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "grep", "<param-name>hstsEnabled</param-name>", "/var/vcap/packages/uaa/tomcat/conf/web.xml"), GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session).Should(gexec.Exit(1))
+		})
+	})
+
 	Context("when provisioning fails", func() {
 		BeforeEach(func() {
 			Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()).To(Succeed())
@@ -81,7 +97,7 @@ var _ = Describe("PCF Dev provision", func() {
 
 		It("should exit with the exit status of the provision script", func() {
 			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
-			Eventually(session).Should(gexec.Exit(42))
+			Eventually(session, "5s").Should(gexec.Exit(42))
 		})
 	})
 

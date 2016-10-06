@@ -9,7 +9,7 @@ rm -rf "$output_dir"
 mkdir "$output_dir"
 
 "$pcfdev_dir/bin/setup-packer" "$output_dir/packer-bosh"
-"$pcfdev_dir/bin/fetch-assets" "$pcfdev_dir/versions.json" "$output_dir"
+"$pcfdev_dir/bin/fetch-assets" "$pcfdev_dir/versions.json" "$output_dir" 'oss'
 
 spiff merge \
   "$pcfdev_dir/manifest.yml" \

@@ -33,12 +33,13 @@ var _ = Describe("Provisioner", func() {
 			mockDisableUAAHSTS = mocks.NewMockCommand(mockCtrl)
 
 			p = &provisioner.Provisioner{
-				Cert:      mockCert,
-				CmdRunner: mockCmdRunner,
-				FS:        mockFS,
-				UI:        mockUI,
-
+				Cert:           mockCert,
+				CmdRunner:      mockCmdRunner,
+				FS:             mockFS,
+				UI:             mockUI,
 				DisableUAAHSTS: mockDisableUAAHSTS,
+
+				Distro: "pcf",
 			}
 		})
 
@@ -59,6 +60,26 @@ var _ = Describe("Provisioner", func() {
 			)
 
 			Expect(p.Provision("some-provision-script-path", "some-domain")).To(Succeed())
+		})
+
+		Context("when the distribution is not 'pcf'", func() {
+			BeforeEach(func() {
+				p.Distro = "oss"
+			})
+
+			It("should provision a vm without disabling UAAHSTS", func() {
+				gomock.InOrder(
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
+					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
+					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(Succeed())
+			})
 		})
 
 		Context("when there is an error generating certificate", func() {

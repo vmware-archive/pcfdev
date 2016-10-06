@@ -16,6 +16,7 @@ import (
 var (
 	provisionScriptPath = "/var/pcfdev/run"
 	timeoutInSeconds    = "3600"
+	distro              = "pcf"
 )
 
 func main() {
@@ -36,6 +37,8 @@ func main() {
 		DisableUAAHSTS: &commands.DisableUAAHSTS{
 			WebXMLPath: "/var/vcap/packages/uaa/tomcat/conf/web.xml",
 		},
+
+		Distro: distro,
 	}
 
 	if err := p.Provision(provisionScriptPath, os.Args[1:]...); err != nil {

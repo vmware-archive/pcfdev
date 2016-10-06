@@ -9,9 +9,9 @@ if [[ -z $(which jq) ]]; then
     exit 1
 fi
 
-if [[ -z $1 ]] || [[ -z $2 ]] || [[ ! -d $(dirname "$2") ]]; then
+if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]] || [[ ! -d $(dirname "$2") ]]; then
   >&2 echo "Usage:"
-  >&2 echo -e "\t$0 /path/to/versions.json /path/to/pcfdev-workspace"
+  >&2 echo -e "\t$0 /path/to/versions.json /path/to/pcfdev-workspace distribution"
   exit 1
 fi
 
@@ -32,6 +32,7 @@ shasum_matches() {
 
 versions_json_path=$1
 output_dir=$2
+distro=$3
 
 assets_dir=$output_dir/assets
 releases_dir=$(cd "$output_dir" && cd .. && pwd)/releases
@@ -41,7 +42,7 @@ mkdir -p "$assets_dir"/{releases,extras,versions}
 mkdir -p "$releases_dir"
 
 GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
-  go build -a -o "$assets_dir/scripts/provision" pcfdev
+  go build -a -ldflags "-X main.distro=${distro}" -o "$assets_dir/scripts/provision" pcfdev
 
 cp -r "$pcfdev_dir/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
 GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
