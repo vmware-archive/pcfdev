@@ -33,9 +33,9 @@ move_monit_control_files() {
 
   for file in $(ls /var/vcap/jobs/*/monit)
   do
-    dirname=$(dirname $file)
-    jobname=$(basename $dirname)
-    destination_path="/var/vcap/monit/job/$(next_monit_index)-${jobname}.monitrc"
+    local dirname=$(dirname $file)
+    local jobname=$(basename $dirname)
+    local destination_path="/var/vcap/monit/job/$(next_monit_index)-${jobname}.monitrc"
     cp $file $destination_path
     sed -i '/group vcap/a\ \ mode manual' $destination_path
   done
@@ -54,29 +54,29 @@ next_monit_index(){
 }
 
 restart_service() {
-  service=$1
+  local service=$1
   $monit restart $service
   while ! monit_summary | grep $service | grep -v pending | grep -q running; do sleep 1; done;
 }
 
 update_service_broker() {
-  broker_name=$1
-  broker_url=$2
+  local broker_name=$1
+  local broker_url=$2
   echo "Service broker already exists - updating broker"
   cf update-service-broker ${broker_name} admin admin ${broker_url}
 }
 
 create_service_broker() {
-  broker_name=$1
-  broker_url=$2
+  local broker_name=$1
+  local broker_url=$2
   echo "Service broker does not exist - creating broker"
   cf create-service-broker ${broker_name} admin admin ${broker_url}
 }
 
 setup_service_broker() {
-  broker_name=$1
-  broker_url=$2
-  service_name=$3
+  local broker_name=$1
+  local broker_url=$2
+  local service_name=$3
   if started_services | grep ${service_name}; then
     while [[ $(curl -s -o /dev/null -u admin:admin -w %{http_code} ${broker_url}/v2/catalog) != 200 ]]; do
       sleep 1
