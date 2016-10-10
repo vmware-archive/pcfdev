@@ -17,5 +17,5 @@ spiff merge \
   > "$output_dir/manifest.yml"
 
 pushd "$output_dir" >/dev/null
-  packer build $@ -var 'distro=oss' "$pcfdev_dir/pcfdev.json"
+  packer build "$@" -var 'distro=oss' "$pcfdev_dir/pcfdev.json"
 popd >/dev/null
