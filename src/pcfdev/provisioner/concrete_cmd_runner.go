@@ -37,3 +37,7 @@ func (r *ConcreteCmdRunner) Run(command string, args ...string) error {
 
 	return err
 }
+
+func (r *ConcreteCmdRunner) Output(command string, args ...string) ([]byte, error) {
+	return exec.Command(command, args...).CombinedOutput()
+}

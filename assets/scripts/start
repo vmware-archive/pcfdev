@@ -34,8 +34,6 @@ while [[ ! /var/vcap/jobs/uaa/bin/dns_health_check ]]; do
   sleep 1
 done
 
->&3 echo "nameserver 127.0.0.1" >/etc/resolv.conf
-
 start_services bbs
 
 start_remaining

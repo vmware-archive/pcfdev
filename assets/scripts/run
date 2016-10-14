@@ -52,25 +52,6 @@ old_domain=$(cat /var/pcfdev/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo "$domain" > /var/pcfdev/domain
 
-# Setup dnsmasq
-resolvconf --disable-updates
-service dnsmasq stop
-echo "address=/.$domain/$public_ip" > /etc/dnsmasq.d/domain
-echo "listen-address=$ip" > /etc/dnsmasq.d/interface
-sed -i "s,#resolv-file=.*$,resolv-file=/var/pcfdev/external-resolv.conf,g" /etc/dnsmasq.conf
-
-# Save external namservers if /etc/resolv.conf is not already pointing to consul
-if [[ $(grep nameserver /etc/resolv.conf) != "nameserver 127.0.0.1" ]]; then
-  external_ns=$(grep -v "nameserver \($ip\|$old_ip\|127.0.0.1\)" /etc/resolv.conf | grep nameserver || true)
-  echo $external_ns >/etc/resolv.conf
-  cp /etc/resolv.conf /var/pcfdev/external-resolv.conf
-fi
-
-# Start dnsmasq and point consul at it
-service dnsmasq start
-echo "nameserver $ip" > /etc/resolv.conf
-sed -i "s/\(^[ ]*\)\${recursors}/\1-recursor=$ip/" /var/vcap/jobs/consul_agent/bin/agent_ctl
-
 sed -i '/\/proc\/sys\/net\/ipv4\/ip_local_port_range/d' /var/vcap/jobs/gorouter/bin/gorouter_ctl
 
 # Point garden at HTTP_PROXY and HTTPS_PROXY

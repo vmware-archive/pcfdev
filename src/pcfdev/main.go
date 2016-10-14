@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"pcfdev/cert"
@@ -36,6 +37,16 @@ func main() {
 		FS: &fs.FS{},
 		DisableUAAHSTS: &commands.DisableUAAHSTS{
 			WebXMLPath: "/var/vcap/packages/uaa/tomcat/conf/web.xml",
+		},
+		ConfigureDnsmasq: &commands.ConfigureDnsmasq{
+			Domain:     os.Args[1],
+			ExternalIP: os.Args[2],
+			FS:         &fs.FS{},
+			CmdRunner: &provisioner.ConcreteCmdRunner{
+				Stdout:  ioutil.Discard,
+				Stderr:  ioutil.Discard,
+				Timeout: time.Duration(provisionTimeout) * time.Second,
+			},
 		},
 
 		Distro: distro,

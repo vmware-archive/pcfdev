@@ -63,7 +63,7 @@ var _ = Describe("FS", func() {
 
 		Context("when file exists already", func() {
 			BeforeEach(func() {
-				Expect(f.Write(filepath.Join(tempDir, "some-file"), ioutil.NopCloser(strings.NewReader("some-contents")))).To(Succeed())
+				Expect(f.Write(filepath.Join(tempDir, "some-file"), ioutil.NopCloser(strings.NewReader("some-content-that-is-really-long")))).To(Succeed())
 			})
 
 			It("should overwrite the file", func() {
@@ -79,6 +79,34 @@ var _ = Describe("FS", func() {
 		Context("when path is invalid", func() {
 			It("should return an error", func() {
 				Expect(f.Write(filepath.Join("some-bad-dir", "some-other-file"), nil)).To(MatchError(ContainSubstring("failed to open file:")))
+			})
+		})
+	})
+
+	Describe("#Read", func() {
+		Context("when the file exists", func() {
+			It("should return the contents the file", func() {
+				Expect(ioutil.WriteFile(filepath.Join(tempDir, "some-file"), []byte("some-contents"), 0644)).To(Succeed())
+				Expect(f.Read(filepath.Join(tempDir, "some-file"))).To(Equal([]byte("some-contents")))
+			})
+		})
+	})
+
+	Describe("#Exists", func() {
+		Context("when the file exists", func() {
+			BeforeEach(func() {
+				_, err := os.Create(filepath.Join(tempDir, "some-file"))
+				Expect(err).NotTo(HaveOccurred())
+			})
+
+			It("should return true", func() {
+				Expect(f.Exists(filepath.Join(tempDir, "some-file"))).To(BeTrue())
+			})
+		})
+
+		Context("when the file does not exist", func() {
+			It("should return false", func() {
+				Expect(f.Exists(filepath.Join(tempDir, "some-bad-file"))).To(BeFalse())
 			})
 		})
 	})

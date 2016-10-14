@@ -15,13 +15,14 @@ import (
 var _ = Describe("Provisioner", func() {
 	Describe("#Provision", func() {
 		var (
-			p                  *provisioner.Provisioner
-			mockCtrl           *gomock.Controller
-			mockCert           *mocks.MockCert
-			mockCmdRunner      *mocks.MockCmdRunner
-			mockFS             *mocks.MockFS
-			mockUI             *mocks.MockUI
-			mockDisableUAAHSTS *mocks.MockCommand
+			p                    *provisioner.Provisioner
+			mockCtrl             *gomock.Controller
+			mockCert             *mocks.MockCert
+			mockCmdRunner        *mocks.MockCmdRunner
+			mockFS               *mocks.MockFS
+			mockUI               *mocks.MockUI
+			mockDisableUAAHSTS   *mocks.MockCommand
+			mockConfigureDnsmasq *mocks.MockCommand
 		)
 
 		BeforeEach(func() {
@@ -31,13 +32,15 @@ var _ = Describe("Provisioner", func() {
 			mockFS = mocks.NewMockFS(mockCtrl)
 			mockUI = mocks.NewMockUI(mockCtrl)
 			mockDisableUAAHSTS = mocks.NewMockCommand(mockCtrl)
+			mockConfigureDnsmasq = mocks.NewMockCommand(mockCtrl)
 
 			p = &provisioner.Provisioner{
-				Cert:           mockCert,
-				CmdRunner:      mockCmdRunner,
-				FS:             mockFS,
-				UI:             mockUI,
-				DisableUAAHSTS: mockDisableUAAHSTS,
+				Cert:             mockCert,
+				CmdRunner:        mockCmdRunner,
+				FS:               mockFS,
+				UI:               mockUI,
+				DisableUAAHSTS:   mockDisableUAAHSTS,
+				ConfigureDnsmasq: mockConfigureDnsmasq,
 
 				Distro: "pcf",
 			}
@@ -56,6 +59,7 @@ var _ = Describe("Provisioner", func() {
 				mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
 				mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
 				mockDisableUAAHSTS.EXPECT().Run(),
+				mockConfigureDnsmasq.EXPECT().Run(),
 				mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
 			)
 
@@ -75,6 +79,7 @@ var _ = Describe("Provisioner", func() {
 					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
 					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
 					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
+					mockConfigureDnsmasq.EXPECT().Run(),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
 				)
 
@@ -171,6 +176,23 @@ var _ = Describe("Provisioner", func() {
 			})
 		})
 
+		Context("when there is an error configuring Dnsmasq", func() {
+			It("should return the error", func() {
+				gomock.InOrder(
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
+					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
+					mockDisableUAAHSTS.EXPECT().Run(),
+					mockConfigureDnsmasq.EXPECT().Run().Return(errors.New("some-error")),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
+			})
+		})
+
 		Context("when there is an error running the provision script", func() {
 			It("should return the error", func() {
 				gomock.InOrder(
@@ -181,6 +203,7 @@ var _ = Describe("Provisioner", func() {
 					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
 					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
 					mockDisableUAAHSTS.EXPECT().Run(),
+					mockConfigureDnsmasq.EXPECT().Run(),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain").Return(errors.New("some-error")),
 				)
 

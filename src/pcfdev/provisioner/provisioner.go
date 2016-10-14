@@ -13,12 +13,15 @@ type Cert interface {
 //go:generate mockgen -package mocks -destination mocks/cmd_runner.go pcfdev/provisioner CmdRunner
 type CmdRunner interface {
 	Run(command string, args ...string) error
+	Output(command string, args ...string) (output []byte, err error)
 }
 
 //go:generate mockgen -package mocks -destination mocks/fs.go pcfdev/provisioner FS
 type FS interface {
 	Mkdir(directory string) error
 	Write(path string, contents io.Reader) error
+	Read(path string) (contents []byte, err error)
+	Exists(path string) (bool, error)
 }
 
 //go:generate mockgen -package mocks -destination mocks/ui.go pcfdev/provisioner UI
@@ -32,11 +35,12 @@ type Command interface {
 }
 
 type Provisioner struct {
-	Cert           Cert
-	CmdRunner      CmdRunner
-	FS             FS
-	UI             UI
-	DisableUAAHSTS Command
+	Cert             Cert
+	CmdRunner        CmdRunner
+	FS               FS
+	UI               UI
+	DisableUAAHSTS   Command
+	ConfigureDnsmasq Command
 
 	Distro string
 }
@@ -73,6 +77,10 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		if err := p.DisableUAAHSTS.Run(); err != nil {
 			return err
 		}
+	}
+
+	if err := p.ConfigureDnsmasq.Run(); err != nil {
+		return err
 	}
 
 	return p.CmdRunner.Run(provisionScriptPath, args...)

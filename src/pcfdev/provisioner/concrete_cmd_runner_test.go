@@ -10,9 +10,9 @@ import (
 )
 
 var _ = Describe("ConcreteCmdRunner", func() {
+	var r *provisioner.ConcreteCmdRunner
 	Describe("#Run", func() {
 		var (
-			r      *provisioner.ConcreteCmdRunner
 			stdout *gbytes.Buffer
 			stderr *gbytes.Buffer
 		)
@@ -43,6 +43,27 @@ var _ = Describe("ConcreteCmdRunner", func() {
 		Context("when there is an error", func() {
 			It("should return the error and the output", func() {
 				Expect(r.Run("/some/bad/binary")).To(MatchError(ContainSubstring("no such file or directory")))
+			})
+		})
+	})
+
+	Describe("#Output", func() {
+		BeforeEach(func() {
+			r = &provisioner.ConcreteCmdRunner{
+				Timeout: 2 * time.Second,
+			}
+		})
+
+		It("should run commands and return combined output", func() {
+			output, err := r.Output("bash", "-c", "echo some-output; >&2 echo -n some-more-output")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(output).To(Equal([]byte("some-output\nsome-more-output")))
+		})
+
+		Context("when there is an error", func() {
+			It("should return the error and the output", func() {
+				_, err := r.Output("/some/bad/binary")
+				Expect(err).To(MatchError(ContainSubstring("no such file or directory")))
 			})
 		})
 	})
