@@ -40,6 +40,10 @@ func (c *ConfigureDnsmasq) Run() error {
 		return err
 	}
 
+	if err := c.FS.Write("/etc/dnsmasq.d/interface", strings.NewReader(fmt.Sprintf("listen-address=%s", internalIP))); err != nil {
+		return err
+	}
+
 	if err := c.FS.Write("/etc/dnsmasq.conf", strings.NewReader("resolv-file=/var/pcfdev/external-resolv.conf")); err != nil {
 		return err
 	}
