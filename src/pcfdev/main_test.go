@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -36,7 +35,6 @@ var _ = Describe("PCF Dev provision", func() {
 	AfterEach(func() {
 		os.RemoveAll(filepath.Join(pwd, "pcfdev"))
 		os.RemoveAll(filepath.Join(pwd, "provision-script"))
-		fmt.Println(dockerID)
 		Expect(exec.Command("docker", "rm", dockerID, "-f").Run()).To(Succeed())
 	})
 
