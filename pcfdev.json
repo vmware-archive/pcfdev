@@ -89,6 +89,15 @@
         },
         {
             "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "apt-get -y update",
+                "apt-get -y --force-yes dist-upgrade",
+                "apt-get -y update"
+            ]
+        },
+        {
+            "type": "shell",
             "only": ["virtualbox-iso"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -131,9 +140,6 @@
                 "add-apt-repository -y ppa:brightbox/ruby-ng",
                 "echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list",
                 "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
-                "apt-get -y update",
-                "apt-get -y --force-yes dist-upgrade",
-                "apt-get -y update",
                 "apt-get -y install curl unzip zip jq sysstat vim",
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
