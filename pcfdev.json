@@ -11,8 +11,7 @@
         "subnet_id": "",
         "vpc_id": "",
         "ssh_keypair_name": "",
-        "ssh_private_key_file": "",
-        "ova_public_key": null
+        "ssh_private_key_file": ""
     },
     "builders": [
         {
@@ -123,6 +122,12 @@
         },
         {
             "type": "file",
+            "only": ["virtualbox-iso"],
+            "source": "assets/keys/key.pem",
+            "destination": "/tmp/key.pem"
+        },
+        {
+            "type": "file",
             "source": "manifest.yml",
             "destination": "/tmp/manifest.yml"
         },
@@ -133,7 +138,7 @@
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "mkdir -p /home/vcap/.ssh",
-                "echo -n \"{{user `ova_public_key`}}\" > /home/vcap/.ssh/authorized_keys"
+                "cp /tmp/key.pem /home/vcap/.ssh/authorized_keys"
             ]
         },
         {

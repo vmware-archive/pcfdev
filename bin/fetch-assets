@@ -105,4 +105,5 @@ fi
 
 cp "$versions_json_path" "$assets_dir/versions"
 cp -a "$pcfdev_dir"/preseed "$output_dir"
+cp -a "$pcfdev_dir"/assets/keys "$assets_dir"
 cp -a "$pcfdev_dir"/assets/scripts "$assets_dir"
