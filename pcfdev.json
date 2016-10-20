@@ -12,7 +12,7 @@
         "vpc_id": "",
         "ssh_keypair_name": "",
         "ssh_private_key_file": "",
-        "ova_public_key": ""
+        "ova_public_key": null
     },
     "builders": [
         {
@@ -115,6 +115,16 @@
         },
         {
             "type": "shell",
+            "only": ["virtualbox-iso"],
+            "remote_path": "/home/vcap/add_key.sh",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "mkdir -p /home/vcap/.ssh",
+                "echo -n \"{{user `ova_public_key`}}\" > /home/vcap/.ssh/authorized_keys"
+            ]
+        },
+        {
+            "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "apt-get -y install software-properties-common",
@@ -171,16 +181,6 @@
             "type": "packer-bosh",
             "assets_dir": "assets",
             "remote_manifest_path": "/var/pcfdev/manifest.yml"
-        },
-        {
-            "type": "shell",
-            "only": ["virtualbox-iso"],
-            "remote_path": "/home/vcap/add_key.sh",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "mkdir -p /home/vcap/.ssh",
-                "echo -n \"{{user `ova_public_key`}}\" > /home/vcap/.ssh/authorized_keys"
-            ]
         },
         {
             "type": "shell",
