@@ -221,6 +221,8 @@ properties:
     ssl:
       skip_cert_verify: true
     auctioneer:
+      listen_addr: placeholder-ip:9016
+      debug_addr: placeholder-ip:17001
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -228,6 +230,8 @@ properties:
         client_key: ""
         require_ssl: false
     bbs:
+      listen_addr: placeholder-ip:8889
+      debug_addr: placeholder-ip:17017
       active_key_label: key1
       encryption_keys:
       - label: key1
@@ -246,12 +250,16 @@ properties:
         client_cert: ""
         client_key: ""
     converger:
+      debug_addr: placeholder-ip:17002
       bbs:
         api_location: bbs.service.cf.internal:8889
         require_ssl: false
         ca_cert: ""
         client_cert: ""
         client_key: ""
+    file_server:
+      listen_addr: placeholder-ip:8080
+      debug_addr: placeholder-ip:17005
     route_emitter:
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -264,6 +272,8 @@ properties:
         user: nats
         password: nats
     ssh_proxy:
+      listen_addr: placeholder-ip:2222
+      debug_addr: placeholder-ip:17016
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -302,6 +312,8 @@ properties:
       uaa_token_url: "https://login.local.pcfdev.io/oauth/token"
       uaa_secret: ssh-proxy-secret
     rep:
+      listen_addr: placeholder-ip:1800
+      debug_addr: placeholder-ip:17008
       zone: z1
       bbs:
         api_location: bbs.service.cf.internal:8889
