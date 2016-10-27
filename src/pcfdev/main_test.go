@@ -10,6 +10,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
+	"regexp"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -72,6 +73,22 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Eventually(session).Should(gbytes.Say("<param-value>false</param-value>"))
+	})
+
+	It("should directly insert the internal-ip into the dns_server flag of garden", func() {
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session, "10s").Should(gexec.Exit(0))
+
+		output, err := exec.Command("docker", "exec", dockerID, "ip", "route", "get", "1").Output()
+		Expect(err).NotTo(HaveOccurred())
+		regex := regexp.MustCompile(`\s{2}src\s(.*)`)
+		internalIP := regex.FindStringSubmatch(string(output))[1]
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "grep", internalIP, "/var/vcap/jobs/garden/bin/garden_ctl"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		Eventually(session).Should(gbytes.Say("-dnsServer=" + internalIP))
 	})
 
 	It("should resolve *.cf.internal to the internal IP using Dnsmasq", func() {

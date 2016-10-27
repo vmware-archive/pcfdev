@@ -50,6 +50,10 @@ func main() {
 				FS:         &fs.FS{},
 				CmdRunner: silentCommandRunner,
 			},
+			&commands.ConfigureGardenDNS{
+				FS: &fs.FS{},
+				CmdRunner: silentCommandRunner,
+			},
 		},
 
 		Distro: distro,
