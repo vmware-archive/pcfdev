@@ -9,16 +9,16 @@ import (
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-)
-
-var (
-	mockCtrl      *gomock.Controller
-	mockFS        *mocks.MockFS
-	mockCmdRunner *mocks.MockCmdRunner
-	cDnsmasq      *commands.ConfigureDnsmasq
+	"pcfdev/provisioner"
 )
 
 var _ = Describe("ConfigureDnsmasq", func() {
+	var (
+		mockCtrl      *gomock.Controller
+		mockFS        *mocks.MockFS
+		mockCmdRunner *mocks.MockCmdRunner
+		cDnsmasq      *commands.ConfigureDnsmasq
+	)
 
 	BeforeEach(func() {
 		mockCtrl = gomock.NewController(GinkgoT())
@@ -30,6 +30,10 @@ var _ = Describe("ConfigureDnsmasq", func() {
 			Domain:     "some-domain",
 			ExternalIP: "some-external-ip",
 		}
+	})
+
+	AfterEach(func() {
+		mockCtrl.Finish()
 	})
 
 	Describe("#Run", func() {
@@ -264,6 +268,12 @@ var _ = Describe("ConfigureDnsmasq", func() {
 
 				Expect(cDnsmasq.Run()).To(MatchError("some-error"))
 			})
+		})
+	})
+
+	Describe("#Distro", func() {
+		It("should return 'oss", func() {
+			Expect(cDnsmasq.Distro()).To(Equal(provisioner.DistributionOSS))
 		})
 	})
 })

@@ -11,6 +11,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"golang.org/x/net/html/charset"
+	"pcfdev/provisioner"
 )
 
 var (
@@ -28,7 +29,6 @@ var _ = Describe("DisableUAAHSTS", func() {
 			tempDir, err = ioutil.TempDir("", "pcfdev-commands")
 			Expect(err).NotTo(HaveOccurred())
 		})
-
 		AfterEach(func() {
 			os.RemoveAll(tempDir)
 		})
@@ -124,6 +124,12 @@ var _ = Describe("DisableUAAHSTS", func() {
 			It("should return an error", func() {
 				Expect(cmd.Run()).To(MatchError(ContainSubstring("EOF")))
 			})
+		})
+	})
+
+	Describe("#Distro", func() {
+		It("should return 'pcf'", func() {
+			Expect(cmd.Distro()).To(Equal(provisioner.DistributionPCF))
 		})
 	})
 })

@@ -78,3 +78,7 @@ func (c *ConfigureDnsmasq) Run() error {
 
 	return c.FS.Write("/etc/resolv.conf", strings.NewReader(fmt.Sprintf("nameserver %s", internalIP)))
 }
+
+func (*ConfigureDnsmasq) Distro() string {
+	return provisioner.DistributionOSS
+}

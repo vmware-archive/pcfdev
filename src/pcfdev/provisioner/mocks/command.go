@@ -28,6 +28,16 @@ func (_m *MockCommand) EXPECT() *_MockCommandRecorder {
 	return _m.recorder
 }
 
+func (_m *MockCommand) Distro() string {
+	ret := _m.ctrl.Call(_m, "Distro")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+func (_mr *_MockCommandRecorder) Distro() *gomock.Call {
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Distro")
+}
+
 func (_m *MockCommand) Run() error {
 	ret := _m.ctrl.Call(_m, "Run")
 	ret0, _ := ret[0].(error)

@@ -32,6 +32,7 @@ type UI interface {
 //go:generate mockgen -package mocks -destination mocks/command.go pcfdev/provisioner Command
 type Command interface {
 	Run() error
+	Distro() string
 }
 
 type Provisioner struct {
@@ -41,9 +42,15 @@ type Provisioner struct {
 	UI               UI
 	DisableUAAHSTS   Command
 	ConfigureDnsmasq Command
+	Commands         []Command
 
 	Distro string
 }
+
+const (
+	DistributionOSS = "oss"
+	DistributionPCF = "pcf"
+)
 
 func (p *Provisioner) Provision(provisionScriptPath string, args ...string) error {
 	domain := args[0]
@@ -73,14 +80,13 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	if p.Distro == "pcf" {
-		if err := p.DisableUAAHSTS.Run(); err != nil {
+	for _, command := range p.Commands {
+		if p.Distro == DistributionOSS && command.Distro() == DistributionPCF {
+			continue
+		}
+		if err := command.Run(); err != nil {
 			return err
 		}
-	}
-
-	if err := p.ConfigureDnsmasq.Run(); err != nil {
-		return err
 	}
 
 	return p.CmdRunner.Run(provisionScriptPath, args...)

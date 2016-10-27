@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/html/charset"
+	"pcfdev/provisioner"
 )
 
 type DisableUAAHSTS struct {
@@ -65,6 +66,10 @@ func (d *DisableUAAHSTS) Run() error {
 	}
 
 	return nil
+}
+
+func (*DisableUAAHSTS) Distro() string {
+	return provisioner.DistributionPCF
 }
 
 type WebApp struct {
