@@ -48,11 +48,15 @@ func main() {
 				Domain:     os.Args[1],
 				ExternalIP: os.Args[2],
 				FS:         &fs.FS{},
-				CmdRunner: silentCommandRunner,
+				CmdRunner:  silentCommandRunner,
 			},
 			&commands.ConfigureGardenDNS{
-				FS: &fs.FS{},
+				FS:        &fs.FS{},
 				CmdRunner: silentCommandRunner,
+			},
+			&commands.ClosePort{
+				CmdRunner: silentCommandRunner,
+				Port:      "4568",
 			},
 		},
 

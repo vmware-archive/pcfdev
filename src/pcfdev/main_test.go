@@ -6,11 +6,12 @@ import (
 	"path/filepath"
 	"strings"
 
+	"regexp"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
-	"regexp"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -100,6 +101,16 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		Eventually(session).Should(gbytes.Say(`bbs.service.cf.internal has address [0-9]+\.[0-9]+\.[0-9]+\.[0-9]`))
+	})
+
+	It("should block external access to mysql on port 4568", func() {
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session, "10s").Should(gexec.Exit(0))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "4568", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
 	})
 
 	Context("when the distribution is not 'pcf'", func() {
