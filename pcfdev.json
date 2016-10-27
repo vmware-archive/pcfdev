@@ -84,11 +84,6 @@
         {
             "type": "shell",
             "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline": [ "echo 'vcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers" ]
-        },
-        {
-            "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
                 "apt-get -y install software-properties-common",
                 "add-apt-repository -y ppa:brightbox/ruby-ng",
@@ -96,7 +91,9 @@
                 "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
                 "apt-get -y update",
                 "apt-get -y --force-yes dist-upgrade",
-                "apt-get -y update"
+                "apt-get -y update",
+                "apt-get -y upgrade sudo",
+                "echo 'vcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
             ]
         },
         {
