@@ -201,7 +201,13 @@
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
                 "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
                 "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json --no-ri --no-rdoc",
-                "/var/pcfdev/provision local.pcfdev.io $(cat /var/pcfdev/ip)",
+
+                "case '{{build_type}}' in",
+                "amazon-ebs) PROVIDER_TYPE=aws ;;",
+                "*) PROVIDER_TYPE=virtualbox ;;",
+                "esac",
+
+                "/var/pcfdev/provision local.pcfdev.io $(cat /var/pcfdev/ip) redis,rabbitmq,spring-cloud-services '' $PROVIDER_TYPE",
                 "/var/pcfdev/stop"
             ]
         },
