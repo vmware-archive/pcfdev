@@ -19,6 +19,11 @@ var (
 	timeoutInSeconds    = "3600"
 	distro              = "pcf"
 )
+const (
+	mysqlPort = "4568"
+	rabbitBrokerPort = "4567"
+	rabbitClusterDaemonPort = "25672"
+)
 
 func main() {
 	provisionTimeout, err := strconv.Atoi(timeoutInSeconds)
@@ -56,7 +61,15 @@ func main() {
 			},
 			&commands.ClosePort{
 				CmdRunner: silentCommandRunner,
-				Port:      "4568",
+				Port:      mysqlPort,
+			},
+			&commands.ClosePort{
+				CmdRunner: silentCommandRunner,
+				Port:      rabbitBrokerPort,
+			},
+			&commands.ClosePort{
+				CmdRunner: silentCommandRunner,
+				Port:      rabbitClusterDaemonPort,
 			},
 		},
 

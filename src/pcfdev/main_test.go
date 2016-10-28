@@ -103,12 +103,18 @@ var _ = Describe("PCF Dev provision", func() {
 		Eventually(session).Should(gbytes.Say(`bbs.service.cf.internal has address 127.0.0.1`))
 	})
 
-	It("should block external access to mysql on port 4568", func() {
+	It("should block external access to mysql and rabbit", func() {
 		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, "10s").Should(gexec.Exit(0))
 
 		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "4568", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "4567", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "25672", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 	})
