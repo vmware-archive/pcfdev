@@ -14,3 +14,5 @@
 !/bin/compile-release
 !/bin/fetch-assets
 !/bin/setup-packer
+
+NERD_tree_*

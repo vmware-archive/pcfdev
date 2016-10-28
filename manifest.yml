@@ -26,7 +26,7 @@ releases:
 
 networks:
 - name: default
-  type: dynamic
+  type: local
 
 update:
   update_watch_time: 60000 - 1200000
@@ -144,7 +144,13 @@ properties:
   skip_ssl_validation: true
 
   capi:
+    cc_uploader:
+      listen_addr: 127.0.0.1:9090
+      debug_addr: 127.0.0.1:17018
     nsync:
+      listen_addr: 127.0.0.1:8787
+      listener_debug_addr: 127.0.0.1:17006
+      bulker_debug_addr: 127.0.0.1:17007
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -156,7 +162,8 @@ properties:
         basic_auth_password: internal-api-password
       diego_privileged_containers: true
     stager:
-      listen_addr: 0.0.0.0:8890
+      listen_addr: 127.0.0.1:8890
+      debug_addr: 127.0.0.1:17011
       staging_task_callback_url: http://stager.service.cf.internal:8890
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -177,12 +184,13 @@ properties:
       cc:
         basic_auth_password: internal-api-password
       watcher:
-        debug_addr: 0.0.0.0:17020
+        debug_addr: 127.0.0.1:17020
       listener:
-        debug_addr: 0.0.0.0:17021
+        listen_addr: 127.0.0.1:1518
+        debug_addr: 127.0.0.1:17021
       traffic_controller_url: wss://doppler.local.pcfdev.io:443
   cf:
-    api_url: http://localhost:9022
+    api_url: http://api.local.pcfdev.io
     skip_ssl_validation: true
     nats:
       machines: (( properties.nats.machines ))
@@ -195,9 +203,11 @@ properties:
     ca_cert: ""
     require_ssl: false
   haproxy:
+    health_check_ip: 127.0.0.1
     health_check_port: 8088
   routing_api:
-    debug_address: 0.0.0.0:17103
+    listen_ip: 127.0.0.1
+    debug_address: 127.0.0.1:17103
     enabled: true
     system_domain: local.pcfdev.io
     etcd:
@@ -207,10 +217,10 @@ properties:
       reservable_ports: 61001-61100
       type: tcp
   router_configurer:
-    debug_address: 0.0.0.0:17104
+    debug_address: 127.0.0.1:17104
     oauth_secret: tcp-router-secret
   tcp_emitter:
-    debug_address: 0.0.0.0:17105
+    debug_address: 127.0.0.1:17105
     oauth_secret: tcp-emitter-secret
     bbs:
       client_cert: ""
@@ -218,11 +228,13 @@ properties:
 
   # For Diego:
   diego:
+    file_server:
+      listen_addr: 127.0.0.1:8080
     ssl:
       skip_cert_verify: true
     auctioneer:
-      listen_addr: placeholder-ip:9016
-      debug_addr: placeholder-ip:17001
+      listen_addr: 127.0.0.1:9016
+      debug_addr: 127.0.0.1:17001
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -230,8 +242,8 @@ properties:
         client_key: ""
         require_ssl: false
     bbs:
-      listen_addr: placeholder-ip:8889
-      debug_addr: placeholder-ip:17017
+      listen_addr: 127.0.0.1:8889
+      debug_addr: 127.0.0.1:17017
       active_key_label: key1
       encryption_keys:
       - label: key1
@@ -250,7 +262,7 @@ properties:
         client_cert: ""
         client_key: ""
     converger:
-      debug_addr: placeholder-ip:17002
+      debug_addr: 127.0.0.1:17002
       bbs:
         api_location: bbs.service.cf.internal:8889
         require_ssl: false
@@ -258,9 +270,10 @@ properties:
         client_cert: ""
         client_key: ""
     file_server:
-      listen_addr: placeholder-ip:8080
-      debug_addr: placeholder-ip:17005
+      listen_addr: 127.0.0.1:8080
+      debug_addr: 127.0.0.1:17005
     route_emitter:
+      debug_addr: 127.0.0.1:17009
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -268,12 +281,12 @@ properties:
         client_key: ""
         require_ssl: false
       nats:
-        machines: [placeholder-ip]
+        machines: [127.0.0.1]
         user: nats
         password: nats
     ssh_proxy:
-      listen_addr: placeholder-ip:2222
-      debug_addr: placeholder-ip:17016
+      listen_addr: 127.0.0.1:2222
+      debug_addr: 127.0.0.1:17016
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""
@@ -312,8 +325,8 @@ properties:
       uaa_token_url: "https://login.local.pcfdev.io/oauth/token"
       uaa_secret: ssh-proxy-secret
     rep:
-      listen_addr: placeholder-ip:1800
-      debug_addr: placeholder-ip:17008
+      listen_addr: 127.0.0.1:1800
+      debug_addr: 127.0.0.1:17008
       zone: z1
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -326,7 +339,7 @@ properties:
 
   # For CF:
   nats:
-    machines: [placeholder-ip]
+    machines: [127.0.0.1]
     user: nats
     password: nats
     port: 4222
@@ -486,15 +499,19 @@ properties:
         routing-api: {}
 
       servers:
-        lan: [placeholder-ip]
+        lan: [127.0.0.1]
   doppler:
     zone: z1
+    outgoing_ip: 127.0.0.1
     outgoing_port: 8083
+    dropsonde_incoming_port: 3460
+    websocket_host: 127.0.0.1
   doppler_endpoint:
     shared_secret: loggregator-secret
   traffic_controller:
     zone: z1
     outgoing_port: 8084
+    pprof_port: 6062
   loggregator:
     doppler_port: 8083
     etcd:
@@ -704,6 +721,8 @@ properties:
     srv_api_uri: http://api.local.pcfdev.io
     bulk_api_password: bulk-api-password
     internal_api_password: internal-api-password
+    nginx:
+      ip: 127.0.0.1
     db_encryption_key: db-encryption-key
     db_logging_level: info
     quota_definitions:
@@ -793,7 +812,7 @@ properties:
     url: "some-url"
 
   router:
-    debug_address: 0.0.0.0:17003
+    debug_address: 127.0.0.1:17003
     enable_ssl: true
     ssl_cert: |
       -----BEGIN CERTIFICATE-----
@@ -878,9 +897,11 @@ properties:
     route_services_secret: route-services-secret
     route_services_recommend_https: false
   blobstore:
-    port: 8086
+    internal_access_rules:
+    - "allow 127.0.0.1;"
+    port: 127.0.0.1:8086
     tls:
-      port: 4043
+      port: 127.0.0.1:4043
       cert: |
         -----BEGIN CERTIFICATE-----
         MIIC0TCCAjoCCQDRLH9gxoogFzANBgkqhkiG9w0BAQUFADCBrDELMAkGA1UEBhMC
@@ -924,15 +945,15 @@ properties:
 
   # For Garden:
   garden:
+    debug_listen_address: 127.0.0.1:17013
     allow_host_access: true
     graph_cleanup_threshold_in_mb: 15000
     deny_networks:
     - 0.0.0.0/0
-    dns_servers: [placeholder-ip]
 
   # For ETCd:
   etcd:
-    machines: [placeholder-ip]
+    machines: [127.0.0.1]
     require_ssl: false
     ca_cert: ""
     server_cert: ""
@@ -947,12 +968,16 @@ properties:
       - name: database_z1
         instances: 1
     advertise_urls_dns_suffix: etcd.service.cf.internal
+    peer_ip: 127.0.0.1
+    client_ip: 127.0.0.1
+  etcd_proxy:
+    ip: 127.0.0.1
 
   cf_mysql:
     host: mysql-broker.local.pcfdev.io
     external_host: mysql-broker.local.pcfdev.io
     mysql:
-      cluster_ips: [placeholder-ip]
+      cluster_ips: [127.0.0.1]
       cluster_health:
         password: admin
       admin_password: admin
@@ -964,6 +989,7 @@ properties:
         endpoint_username: admin
         endpoint_password: admin
         db_password: admin
+        ip: 127.0.0.1
       seeded_databases:
       - name: uaadb
         username: uaaadmin
@@ -1003,4 +1029,5 @@ properties:
           max_storage_mb: 1024
           max_user_connections: 20
       nginx:
+        ip: 127.0.0.1
         port: 19284

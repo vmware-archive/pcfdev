@@ -36,7 +36,7 @@ func (c *ConfigureDnsmasq) Run() error {
 		return fmt.Errorf("internal ip could not be parsed from output: %s", string(output))
 	}
 
-	if err := c.FS.Write("/etc/dnsmasq.d/domain", strings.NewReader(fmt.Sprintf("address=/.%s/%s\naddress=/.cf.internal/%s", c.Domain, c.ExternalIP, internalIP))); err != nil {
+	if err := c.FS.Write("/etc/dnsmasq.d/domain", strings.NewReader(fmt.Sprintf("address=/.%s/%s\naddress=/.cf.internal/127.0.0.1", c.Domain, c.ExternalIP))); err != nil {
 		return err
 	}
 

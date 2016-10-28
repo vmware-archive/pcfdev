@@ -167,7 +167,7 @@
                 "mkdir -p /var/pcfdev",
                 "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
                 "echo local.pcfdev.io > /var/pcfdev/domain",
-                "sed \"s/placeholder-ip/$(cat /var/pcfdev/ip)/\" /tmp/manifest.yml > /var/pcfdev/manifest.yml",
+                "mv /tmp/manifest.yml /var/pcfdev/manifest.yml",
 
                 "mkdir -p /var/vcap/store",
 

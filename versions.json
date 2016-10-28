@@ -1,47 +1,46 @@
 {
   "releases": {
     "cf" : {
-      "version": "v239-9-gf4b0236",
-      "sha1": "0147b207c656c47534fefcaa996ad5fab3b8c4e9",
+      "version": "v239-13-g613bc6c",
+      "sha1": "33ee4ca63652905bf44409ed21378163a71b081a",
       "source_location": "https://github.com/cloudfoundry/cf-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-9-gf4b0236.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v239-13-g613bc6c.tgz"
     },
     "routing" : {
-      "version": "0.136.0-1-g34a5e8c",
-      "sha1": "d02cd61ec797b82ff68b9d945062db790272a545",
+      "version": "0.136.0-4-g21a8b92",
+      "sha1": "f026da2cbd2400fb228b6d2e4f2077b2b897b290",
       "source_location": "https://github.com/cloudfoundry-incubator/routing-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0-1-g34a5e8c.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.136.0-4-g21a8b92.tgz"
     },
     "diego" : {
-      "version": "v0.1480.0-6-g4ff99b3",
-      "sha1": "31028b62255fc296a05d043384e9e7600d491683",
+      "version": "v0.1480.0-7-gf9ad0d8",
+      "sha1": "a5a44d2fcb0d7c64f13c3a5efb26962643023548",
       "source_location": "https://github.com/cloudfoundry/diego-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1480.0-6-g4ff99b3.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1480.0-7-gf9ad0d8.tgz"
     },
     "garden-linux" : {
       "version": "v0.339.0",
       "sha1": "eed5beec961b569caa6fccb2e09d17f89d6a27fe",
       "source_location": "https://github.com/cloudfoundry-incubator/garden-linux-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-linux-5403371d92e0347d7a355d9838c4a07e90965e29.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-linux-5403371d92e0347d7a355d9838c4a07e90965e29.tgz"
     },
     "etcd" : {
-      "version": "v60",
-      "sha1": "140b29ba7913b84fe8c0d670d4c4091a66b59a05",
+      "version": "v60-2-g954498f",
+      "sha1": "e68392f4e6d482cb2439c41decc99c38f0a15e0b",
       "source_location": "https://github.com/cloudfoundry-incubator/etcd-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-1607014c30644ff12d9f9f469332e6b1b8050067.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v60-2-g954498f.tgz"
     },
     "cf-mysql" : {
-      "name" : "cf-mysql",
-      "version": "v26.3-2-g58975fd",
-      "sha1": "0037e6ead3ab122b6da89164696b0f8874e355f3",
+      "version": "v26.3-3-g89357b0",
+      "sha1": "6853c1884de5ea16c542430784a0923f47a13929",
       "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-58975fdde19eaa8438375ca102f295e5febb5696.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v26.3-3-g89357b0.tgz"
     },
     "cflinuxfs2" : {
       "version": "v1.18.0",
       "sha1": "42803a72a299c2c57c9696204871653b9b31a02b",
       "source_location": "https://github.com/cloudfoundry/cflinuxfs2-rootfs-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-b9bba1caed543aa4142eed068bef6afcecfa149e.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-b9bba1caed543aa4142eed068bef6afcecfa149e.tgz"
     }
   }
 }

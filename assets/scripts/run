@@ -40,14 +40,6 @@ cat /var/pcfdev/trusted_ca.crt /var/vcap/jobs/gorouter/config/cert.pem > /var/vc
 
 config_files=$(find /var/vcap/jobs/*/ /var/vcap/monit/job -type f)
 
-ip=$(ip route get 1 | awk '{print $NF;exit}')
-old_ip=$(cat /var/pcfdev/ip)
-ip_with_commas=$(echo $ip | tr '.' ',')
-old_ip_with_commas=$(echo $old_ip | tr '.' ',')
-perl -p -i -e "s/\\Q$old_ip\\E/$ip/g" $config_files
-perl -p -i -e "s/\\Q$old_ip_with_commas\\E/$ip_with_commas/g" $config_files
-echo "$ip" > /var/pcfdev/ip
-
 old_domain=$(cat /var/pcfdev/domain)
 perl -p -i -e "s/\\Q$old_domain\\E/$domain/g" $config_files
 echo "$domain" > /var/pcfdev/domain
