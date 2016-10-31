@@ -23,6 +23,9 @@ releases:
 - name: routing
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/routing-0.tgz
+- name: local-volume
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/local-volume-0.tgz
 
 networks:
 - name: default
@@ -130,6 +133,13 @@ jobs:
     release: cf
   - name: java-offline-buildpack
     release: cf
+
+  - name: localdriver
+    release: local-volume
+
+  - name: localbroker
+    release: local-volume
+
 
 properties:
   <<: (( merge ))
@@ -335,6 +345,14 @@ properties:
         require_ssl: false
       ping_timeout_in_seconds: 600
       preloaded_rootfses: ["cflinuxfs2:/var/vcap/packages/cflinuxfs2/rootfs"]
+
+  localbroker:
+    service-id: local-volume
+    service-name: local-volume
+    plan-name: free-local-disk
+    plan-id: free
+    plan-desc: free local filesystem for bosh-lite
+    localdriver-url: http://localhost:9089
 
   # For CF:
   nats:
@@ -703,6 +721,13 @@ properties:
       registration_interval: 20s
       uris:
       - blobstore.local.pcfdev.io
+    - name: localbroker
+      port: 8999
+      registration_interval: 20s
+      tags:
+        component: localbroker
+      uris:
+      - localbroker.local.pcfdev.io
   uaadb:
     address: 127.0.0.1
     databases:
