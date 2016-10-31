@@ -165,7 +165,6 @@
                 "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
 
                 "mkdir -p /var/pcfdev",
-                "ip route get 1 | awk '{print $NF;exit}' > /var/pcfdev/ip",
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "mv /tmp/manifest.yml /var/pcfdev/manifest.yml",
 
@@ -207,7 +206,7 @@
                 "*) PROVIDER_TYPE=virtualbox ;;",
                 "esac",
 
-                "/var/pcfdev/provision local.pcfdev.io $(cat /var/pcfdev/ip) redis,rabbitmq,spring-cloud-services '' $PROVIDER_TYPE",
+                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq,spring-cloud-services '' $PROVIDER_TYPE",
                 "/var/pcfdev/stop"
             ]
         },
