@@ -818,6 +818,7 @@ properties:
         password: admin
         public_endpoint: http://blobstore.local.pcfdev.io
         private_endpoint: https://blobstore.service.cf.internal:4043
+    volume_services_enabled: true
   ccdb:
     address: 127.0.0.1
     databases:
