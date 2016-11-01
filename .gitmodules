@@ -22,3 +22,6 @@
 [submodule "src/pcfdev/vendor/golang.org/x/text"]
 	path = src/pcfdev/vendor/golang.org/x/text
 	url = https://github.com/golang/text
+[submodule "src/pcfdev-api/vendor/gopkg.in/yaml.v2"]
+	path = src/pcfdev-api/vendor/gopkg.in/yaml.v2
+	url = https://github.com/go-yaml/yaml
