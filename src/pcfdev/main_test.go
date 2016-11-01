@@ -3,7 +3,6 @@ package main_test
 import (
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	"regexp"
@@ -12,6 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
+	"path/filepath"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -45,6 +45,22 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, "10s").Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
+	})
+
+	It("should set up the monitrc files for an HTTP server running on the box", func() {
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+
+		curl, err := gexec.Start(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/monit/job/1001_pcfdev_api.monitrc"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(curl).Should(gexec.Exit(0))
+		Expect(curl).To(gbytes.Say("check process pcfdev-api"))
+		Expect(curl).To(gbytes.Say("with pidfile /var/pcfdev/api/api.pid"))
+		Expect(curl).To(gbytes.Say(`start program "/var/pcfdev/api/api_ctl start"`))
+		Expect(curl).To(gbytes.Say(`stop program "/var/pcfdev/api/api_ctl stop"`))
+		Expect(curl).To(gbytes.Say("group vcap"))
+		Expect(curl).To(gbytes.Say("mode manual"))
 	})
 
 	It("should create certificates", func() {

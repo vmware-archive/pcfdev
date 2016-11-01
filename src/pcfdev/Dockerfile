@@ -1,12 +1,12 @@
-FROM golang:1.6
-
 RUN apt-get update
 RUN apt-get install -y \
     dnsmasq \
     host \
     iptables \
     nginx \
-    vim
+    vim \
+    lsof \
+    netcat
 
 RUN echo "server {\n listen              443 ssl;\n ssl_certificate     /var/vcap/jobs/gorouter/config/cert.pem;\n ssl_certificate_key /var/vcap/jobs/gorouter/config/key.pem;\n}" > /etc/nginx/conf.d/pcfdev.conf
 RUN mkdir -p /var/vcap/packages/uaa/tomcat/conf
