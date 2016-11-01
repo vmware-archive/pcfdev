@@ -89,5 +89,9 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		}
 	}
 
-	return p.CmdRunner.Run(provisionScriptPath, args...)
+	if err := p.CmdRunner.Run(provisionScriptPath, args...); err != nil {
+		return err
+	}
+
+	return p.FS.Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte("")))
 }

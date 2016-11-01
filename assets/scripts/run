@@ -127,7 +127,5 @@ if [[ -x /var/pcfdev/post-run ]]; then
   /var/pcfdev/post-run "$domain" "$services"
 fi
 
-touch /run/pcfdev-healthcheck
-
 set +x
 exec 1>&3 2>&4

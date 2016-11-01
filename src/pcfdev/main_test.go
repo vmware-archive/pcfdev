@@ -45,10 +45,15 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session, "10s").Should(gexec.Exit(0))
 		Expect(session).To(gbytes.Say("Waiting for services to start..."))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "file", "/run/pcfdev-healthcheck"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		Expect(session).NotTo(gbytes.Say("No such file or directory"))
 	})
 
 	It("should set up the monitrc files for an HTTP server running on the box", func() {
-		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io"), GinkgoWriter, GinkgoWriter)
+		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/pcfdev/pcfdev", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 

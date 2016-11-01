@@ -63,6 +63,7 @@ var _ = Describe("Provisioner", func() {
 				firstCommand.EXPECT().Run(),
 				secondCommand.EXPECT().Run(),
 				mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+				mockFS.EXPECT().Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte(""))),
 			)
 
 			Expect(p.Provision("some-provision-script-path", "some-domain")).To(Succeed())
@@ -83,6 +84,7 @@ var _ = Describe("Provisioner", func() {
 					secondCommand.EXPECT().Distro().Return(provisioner.DistributionOSS),
 					secondCommand.EXPECT().Run(),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+					mockFS.EXPECT().Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte(""))),
 				)
 
 				Expect(p.Provision("some-provision-script-path", "some-domain")).To(Succeed())
@@ -190,6 +192,25 @@ var _ = Describe("Provisioner", func() {
 					firstCommand.EXPECT().Run(),
 					secondCommand.EXPECT().Run(),
 					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain").Return(errors.New("some-error")),
+				)
+
+				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
+			})
+		})
+
+		Context("when there is an error writing the healthcheck file", func() {
+			It("should return the error", func() {
+				gomock.InOrder(
+					mockCert.EXPECT().GenerateCerts("some-domain").Return([]byte("some-cert"), []byte("some-key"), []byte("some-ca-cert"), []byte("some-ca-key"), nil),
+					mockFS.EXPECT().Mkdir("/var/vcap/jobs/gorouter/config"),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader([]byte("some-cert"))),
+					mockFS.EXPECT().Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader([]byte("some-key"))),
+					mockFS.EXPECT().Mkdir("/var/pcfdev/openssl"),
+					mockFS.EXPECT().Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader([]byte("some-ca-cert"))),
+					firstCommand.EXPECT().Run(),
+					secondCommand.EXPECT().Run(),
+					mockCmdRunner.EXPECT().Run("some-provision-script-path", "some-domain"),
+					mockFS.EXPECT().Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte(""))).Return(errors.New("some-error")),
 				)
 
 				Expect(p.Provision("some-provision-script-path", "some-domain")).To(MatchError("some-error"))
