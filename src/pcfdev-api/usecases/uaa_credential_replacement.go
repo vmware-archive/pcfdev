@@ -1,10 +1,10 @@
 package usecases
 
 import (
+	"errors"
+	"fmt"
 	"gopkg.in/yaml.v2"
 	"regexp"
-	"fmt"
-	"errors"
 	"strings"
 )
 
@@ -25,15 +25,12 @@ func (u *UaaCredentialReplacement) ReplaceUaaConfigAdminCredentials(uaaConfig st
 	return "", errors.New("failed to parse UAA config file")
 }
 
-
-
-
 type interfaceMap map[interface{}]interface{}
 
 func recoverFromInterfaceConversion(recovered interface{}) error {
 	if recovered != nil {
 		errorMessage := recovered.(error).Error()
-		if strings.Contains(errorMessage, "interface conversion")  {
+		if strings.Contains(errorMessage, "interface conversion") {
 			return errors.New("failed to parse yaml")
 		} else {
 			panic(recovered)
@@ -78,5 +75,3 @@ func findArray(contents string, path string) (_ []interface{}, err error) {
 
 	return currentNode.([]interface{}), nil
 }
-
-

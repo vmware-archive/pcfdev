@@ -7,8 +7,8 @@ import (
 	"github.com/onsi/gomega/gexec"
 	"os"
 	"os/exec"
-	"strings"
 	"path/filepath"
+	"strings"
 )
 
 var _ = Describe("PCF Dev Api provision", func() {

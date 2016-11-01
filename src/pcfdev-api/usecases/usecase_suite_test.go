@@ -11,4 +11,3 @@ func TestUsecase(t *testing.T) {
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Usecase Suite")
 }
-

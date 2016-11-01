@@ -41,7 +41,6 @@ func handlerStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func replaceSecrets(w http.ResponseWriter, r *http.Request) {
 	uaaFilePath := "/var/vcap/jobs/uaa/config/uaa.yml"
 	uaaCredentialReplacement := &usecases.UaaCredentialReplacement{}
@@ -76,8 +75,6 @@ func replaceSecrets(w http.ResponseWriter, r *http.Request) {
 
 	ioutil.WriteFile(uaaFilePath, []byte(secureConfig), 0644)
 }
-
-
 
 func main() {
 	http.HandleFunc("/replace-secrets", replaceSecrets)
