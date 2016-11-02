@@ -11,7 +11,11 @@
         "subnet_id": "",
         "vpc_id": "",
         "ssh_keypair_name": "",
-        "ssh_private_key_file": ""
+        "ssh_private_key_file": "",
+        "http_proxy": "",
+        "https_proxy": "",
+        "ftp_proxy": "",
+        "no_proxy": ""
     },
     "builders": [
         {
@@ -81,6 +85,23 @@
     ],
 
     "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "inline": [
+                "echo \"HTTP_PROXY={{user `http_proxy`}}\" >> /etc/environment",
+                "echo \"http_proxy={{user `http_proxy`}}\" >> /etc/environment",
+                "echo \"HTTPS_PROXY={{user `https_proxy`}}\" >> /etc/environment",
+                "echo \"https_proxy={{user `https_proxy`}}\" >> /etc/environment",
+                "echo \"FTP_PROXY={{user `ftp_proxy`}}\" >> /etc/environment",
+                "echo \"ftp_proxy={{user `ftp_proxy`}}\" >> /etc/environment",
+                "echo \"NO_PROXY={{user `no_proxy`}}\" >> /etc/environment",
+                "echo \"no_proxy={{user `no_proxy`}}\" >> /etc/environment",
+                ". /etc/environment",
+                "echo 'Acquire::http::proxy \"http://proxy:8080/\";\nAcquire::ftp::proxy \"http://proxy:8080/\";\nAcquire::https::proxy \"http://proxy:8080/\";' >>/etc/apt/apt.conf.d/95proxies",
+                "apt-get -y update"
+             ]
+        },
         {
             "type": "shell",
             "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
