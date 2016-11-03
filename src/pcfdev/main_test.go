@@ -7,11 +7,12 @@ import (
 
 	"regexp"
 
+	"path/filepath"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
-	"path/filepath"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -136,6 +137,9 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "25672", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "iptables", "-C", "INPUT", "-i", "eth1", "-p", "tcp", "--dport", "15672", "-j", "REJECT"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 	})

@@ -285,7 +285,6 @@ properties:
         user: nats
         password: nats
     ssh_proxy:
-      listen_addr: 127.0.0.1:2222
       debug_addr: 127.0.0.1:17016
       bbs:
         api_location: bbs.service.cf.internal:8889
@@ -524,9 +523,11 @@ properties:
     url: "https://uaa.local.pcfdev.io"
     catalina_opts: -Xms200m -Xmx200m -Xss1m -XX:MetaspaceSize=144m -XX:MaxMetaspaceSize=144m
     port: 8085
+    host: 127.0.0.1
     tls_port: 8443
     ssl:
       port: 8443
+      host: 127.0.0.1
     sslCertificate: |
       -----BEGIN CERTIFICATE-----
       MIIDdjCCAl4CCQDutDq0s9mZ7zANBgkqhkiG9w0BAQsFADB9MQswCQYDVQQGEwJV

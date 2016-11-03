@@ -19,10 +19,12 @@ var (
 	timeoutInSeconds    = "3600"
 	distro              = "pcf"
 )
+
 const (
-	mysqlPort = "4568"
-	rabbitBrokerPort = "4567"
-	rabbitClusterDaemonPort = "25672"
+	mysqlPort                   = "4568"
+	rabbitBrokerPort            = "4567"
+	rabbitManagementConsolePort = "15672"
+	rabbitClusterDaemonPort     = "25672"
 )
 
 func main() {
@@ -71,9 +73,9 @@ func main() {
 				CmdRunner: silentCommandRunner,
 				Port:      rabbitClusterDaemonPort,
 			},
-			&commands.SetupApi{
+			&commands.ClosePort{
 				CmdRunner: silentCommandRunner,
-				FS:	&fs.FS{},
+				Port:      rabbitManagementConsolePort,
 			},
 		},
 

@@ -218,6 +218,7 @@
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
+                "rm -f /var/pcfdev/external-resolv.conf",
                 "tar czf /var/pcfdev/packer-syslogs.tgz /var/vcap/sys/log",
                 "rm -f /var/vcap/sys/log/*/*.log",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
