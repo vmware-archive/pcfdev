@@ -5,6 +5,7 @@ import (
 	"provisioner/provisioner"
 	"regexp"
 	"strings"
+	"provisioner/fs"
 )
 
 type ConfigureGardenDNS struct {
@@ -39,8 +40,8 @@ func (c *ConfigureGardenDNS) Run() error {
 		}
 	}
 
-	dnsInsertString := strings.Replace(strings.Join(cleanedGardenCtl, "\n"), `1>>$LOG_DIR/garden.stdout.log \`, fmt.Sprintf("-dnsServer=%s \\\n  1>>$LOG_DIR/garden.stdout.log \\", internalIP), 1)
-	return c.FS.Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader(dnsInsertString))
+	dnsInsertString := strings.Replace(strings.Join(cleanedGardenCtl, "\n"), `1>>$LOG_DIR/garden.stdout.log \`, fmt.Sprintf("-dnsServer=%s \\\n  1>>$LOG_DIR/garden.stdout.log \\", internalIP), fs.FileModeRootReadWrite)
+	return c.FS.Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader(dnsInsertString), fs.FileModeRootReadWrite)
 }
 
 func (*ConfigureGardenDNS) Distro() string {

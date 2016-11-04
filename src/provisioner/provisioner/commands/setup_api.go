@@ -3,6 +3,7 @@ package commands
 import (
 	"provisioner/provisioner"
 	"strings"
+	"provisioner/fs"
 )
 
 type SetupApi struct {
@@ -12,7 +13,7 @@ type SetupApi struct {
 
 func (s *SetupApi) Run() error {
 	monitrcContents := `check process pcfdev-api
-  with pidfile /var/pcfdev/api/api.pid
+  with pidfile /var/vcap/sys/run/pcfdev-api/api.pid
   start program "/var/pcfdev/api/api_ctl start"
   stop program "/var/pcfdev/api/api_ctl stop"
   group vcap
@@ -21,13 +22,13 @@ func (s *SetupApi) Run() error {
 	apiCtlContents := `#!/bin/bash
 set -ex
 
-case $1 in
+PIDFILE=/var/vcap/sys/run/pcfdev-api/api.pid
 
-  PIDFILE=/var/vcap/sys/run/pcfdev-api/api.pid
+case $1 in
 
   start)
     mkdir -p /var/vcap/sys/run/pcfdev-api
-    sleep 999999999 &
+    /var/pcfdev/api/api &
     echo $! > ${PIDFILE}
 
     ;;
@@ -43,16 +44,12 @@ case $1 in
 
 esac`
 
-	err := s.FS.Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", strings.NewReader(monitrcContents))
+	err := s.FS.Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", strings.NewReader(monitrcContents), fs.FileModeRootReadWrite)
 	if err != nil {
 		return err
 	}
 
-	if err := s.FS.Mkdir("/var/pcfdev/api"); err !=nil {
-		return err
-	}
-
-	return s.FS.Write("/var/pcfdev/api/api_ctl", strings.NewReader(apiCtlContents))
+	return s.FS.Write("/var/pcfdev/api/api_ctl", strings.NewReader(apiCtlContents), fs.FileModeRootReadWriteExecutable)
 }
 
 func(s *SetupApi) Distro() string {

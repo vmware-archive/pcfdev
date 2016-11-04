@@ -10,6 +10,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"provisioner/provisioner"
+	"os"
+	"provisioner/fs"
 )
 
 var _ = Describe("ConfigureGardenDNS", func() {
@@ -40,7 +42,7 @@ var _ = Describe("ConfigureGardenDNS", func() {
 				gomock.InOrder(
 					mockCmdRunner.EXPECT().Output("ip", "route", "get", "1").Return([]byte("some-ip via some-other-ip dev eth0  src some-internal-ip\n cache"), nil),
 					mockFS.EXPECT().Read("/var/vcap/jobs/garden/bin/garden_ctl").Return([]byte("some-executable \\\n  -someProperty=some-value \\\n  1>>$LOG_DIR/garden.stdout.log \\"), nil),
-					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\")),
+					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\"), os.FileMode(fs.FileModeRootReadWrite)),
 				)
 
 				Expect(cmd.Run()).To(Succeed())
@@ -52,7 +54,7 @@ var _ = Describe("ConfigureGardenDNS", func() {
 				gomock.InOrder(
 					mockCmdRunner.EXPECT().Output("ip", "route", "get", "1").Return([]byte("some-ip via some-other-ip dev eth0  src some-internal-ip\n cache"), nil),
 					mockFS.EXPECT().Read("/var/vcap/jobs/garden/bin/garden_ctl").Return([]byte("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-ip \\\n  -dnsServer=some-other-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\"), nil),
-					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\")),
+					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\"), os.FileMode(fs.FileModeRootReadWrite)),
 				)
 
 				Expect(cmd.Run()).To(Succeed())
@@ -91,7 +93,7 @@ var _ = Describe("ConfigureGardenDNS", func() {
 				gomock.InOrder(
 					mockCmdRunner.EXPECT().Output("ip", "route", "get", "1").Return([]byte("some-ip via some-other-ip dev eth0  src some-internal-ip\n cache"), nil),
 					mockFS.EXPECT().Read("/var/vcap/jobs/garden/bin/garden_ctl").Return([]byte("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-ip \\\n  -dnsServer=some-other-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\"), nil),
-					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\")).Return(errors.New("some-error")),
+					mockFS.EXPECT().Write("/var/vcap/jobs/garden/bin/garden_ctl", strings.NewReader("some-executable \\\n  -someProperty=some-value \\\n  -dnsServer=some-internal-ip \\\n  1>>$LOG_DIR/garden.stdout.log \\"), os.FileMode(fs.FileModeRootReadWrite)).Return(errors.New("some-error")),
 				)
 
 				Expect(cmd.Run()).To(MatchError("some-error"))

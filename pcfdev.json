@@ -164,7 +164,7 @@
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
                 "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
 
-                "mkdir -p /var/pcfdev",
+                "mkdir -p /var/pcfdev/api",
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "mv /tmp/manifest.yml /var/pcfdev/manifest.yml",
 

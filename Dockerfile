@@ -14,6 +14,7 @@ RUN apt-get install -y \
 RUN echo "server {\n listen              443 ssl;\n ssl_certificate     /var/vcap/jobs/gorouter/config/cert.pem;\n ssl_certificate_key /var/vcap/jobs/gorouter/config/key.pem;\n}" > /etc/nginx/conf.d/pcfdev.conf
 RUN mkdir -p /var/vcap/packages/uaa/tomcat/conf
 RUN echo "<web-app></web-app>" > /var/vcap/packages/uaa/tomcat/conf/web.xml
+RUN mkdir -p /var/pcfdev/api
 RUN mkdir -p /var/vcap/monit/job
 RUN mkdir -p /var/vcap/jobs/garden/bin
 RUN mkdir -p /var/vcap/jobs/uaa/config

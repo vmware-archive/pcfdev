@@ -54,7 +54,7 @@ var _ = Describe("FS", func() {
 		Context("when path is valid", func() {
 			It("should create a file with path and writes contents", func() {
 				readCloser := ioutil.NopCloser(strings.NewReader("some-contents"))
-				Expect(f.Write(filepath.Join(tempDir, "some-file"), readCloser)).To(Succeed())
+				Expect(f.Write(filepath.Join(tempDir, "some-file"), readCloser, os.FileMode(fs.FileModeRootReadWrite))).To(Succeed())
 				data, err := ioutil.ReadFile(filepath.Join(tempDir, "some-file"))
 				Expect(err).NotTo(HaveOccurred())
 				Expect(string(data)).To(Equal("some-contents"))
@@ -63,12 +63,12 @@ var _ = Describe("FS", func() {
 
 		Context("when file exists already", func() {
 			BeforeEach(func() {
-				Expect(f.Write(filepath.Join(tempDir, "some-file"), ioutil.NopCloser(strings.NewReader("some-content-that-is-really-long")))).To(Succeed())
+				Expect(f.Write(filepath.Join(tempDir, "some-file"), ioutil.NopCloser(strings.NewReader("some-content-that-is-really-long")), os.FileMode(fs.FileModeRootReadWrite))).To(Succeed())
 			})
 
 			It("should overwrite the file", func() {
 				readCloser := ioutil.NopCloser(strings.NewReader("some-other-contents"))
-				Expect(f.Write(filepath.Join(tempDir, "some-file"), readCloser)).To(Succeed())
+				Expect(f.Write(filepath.Join(tempDir, "some-file"), readCloser, os.FileMode(fs.FileModeRootReadWrite))).To(Succeed())
 				data, err := ioutil.ReadFile(filepath.Join(tempDir, "some-file"))
 				Expect(err).NotTo(HaveOccurred())
 
@@ -78,7 +78,7 @@ var _ = Describe("FS", func() {
 
 		Context("when path is invalid", func() {
 			It("should return an error", func() {
-				Expect(f.Write(filepath.Join("some-bad-dir", "some-other-file"), nil)).To(MatchError(ContainSubstring("failed to open file:")))
+				Expect(f.Write(filepath.Join("some-bad-dir", "some-other-file"), nil, os.FileMode(fs.FileModeRootReadWrite))).To(MatchError(ContainSubstring("failed to open file:")))
 			})
 		})
 	})

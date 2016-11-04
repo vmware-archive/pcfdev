@@ -77,6 +77,10 @@ func main() {
 				CmdRunner: silentCommandRunner,
 				Port:      rabbitManagementConsolePort,
 			},
+			&commands.SetupApi{
+				CmdRunner: silentCommandRunner,
+				FS:        &fs.FS{},
+			},
 		},
 
 		Distro: distro,

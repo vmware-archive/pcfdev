@@ -53,20 +53,25 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(session).NotTo(gbytes.Say("No such file or directory"))
 	})
 
-	It("should set up the monitrc files for an HTTP server running on the box", func() {
+	It("should set up the monitrc files for an HTTP server and an root executable _ctl script running on the box", func() {
 		session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(session).Should(gexec.Exit(0))
 
-		curl, err := gexec.Start(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/monit/job/1001_pcfdev_api.monitrc"), GinkgoWriter, GinkgoWriter)
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/monit/job/1001_pcfdev_api.monitrc"), GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
-		Eventually(curl).Should(gexec.Exit(0))
-		Expect(curl).To(gbytes.Say("check process pcfdev-api"))
-		Expect(curl).To(gbytes.Say("with pidfile /var/pcfdev/api/api.pid"))
-		Expect(curl).To(gbytes.Say(`start program "/var/pcfdev/api/api_ctl start"`))
-		Expect(curl).To(gbytes.Say(`stop program "/var/pcfdev/api/api_ctl stop"`))
-		Expect(curl).To(gbytes.Say("group vcap"))
-		Expect(curl).To(gbytes.Say("mode manual"))
+		Eventually(session).Should(gexec.Exit(0))
+		Expect(session).To(gbytes.Say("check process pcfdev-api"))
+		Expect(session).To(gbytes.Say("with pidfile /var/vcap/sys/run/pcfdev-api/api.pid"))
+		Expect(session).To(gbytes.Say(`start program "/var/pcfdev/api/api_ctl start"`))
+		Expect(session).To(gbytes.Say(`stop program "/var/pcfdev/api/api_ctl stop"`))
+		Expect(session).To(gbytes.Say("group vcap"))
+		Expect(session).To(gbytes.Say("mode manual"))
+
+		session, err = gexec.Start(exec.Command("docker", "exec", dockerID, "ls", "-l", "/var/pcfdev/api/api_ctl"), GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
+		Eventually(session).Should(gexec.Exit(0))
+		Expect(session).To(gbytes.Say("-rwxr--r--"))
 	})
 
 	It("should create certificates", func() {

@@ -5,6 +5,7 @@ import (
 	"provisioner/provisioner"
 	"regexp"
 	"strings"
+	"provisioner/fs"
 )
 
 type ConfigureDnsmasq struct {
@@ -36,15 +37,15 @@ func (c *ConfigureDnsmasq) Run() error {
 		return fmt.Errorf("internal ip could not be parsed from output: %s", string(output))
 	}
 
-	if err := c.FS.Write("/etc/dnsmasq.d/domain", strings.NewReader(fmt.Sprintf("address=/.%s/%s\naddress=/.cf.internal/127.0.0.1", c.Domain, c.ExternalIP))); err != nil {
+	if err := c.FS.Write("/etc/dnsmasq.d/domain", strings.NewReader(fmt.Sprintf("address=/.%s/%s\naddress=/.cf.internal/127.0.0.1", c.Domain, c.ExternalIP)), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
-	if err := c.FS.Write("/etc/dnsmasq.d/interface", strings.NewReader(fmt.Sprintf("listen-address=%s", internalIP))); err != nil {
+	if err := c.FS.Write("/etc/dnsmasq.d/interface", strings.NewReader(fmt.Sprintf("listen-address=%s", internalIP)), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
-	if err := c.FS.Write("/etc/dnsmasq.conf", strings.NewReader("resolv-file=/var/pcfdev/external-resolv.conf")); err != nil {
+	if err := c.FS.Write("/etc/dnsmasq.conf", strings.NewReader("resolv-file=/var/pcfdev/external-resolv.conf"), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
@@ -66,7 +67,7 @@ func (c *ConfigureDnsmasq) Run() error {
 			}
 		}
 
-		if err := c.FS.Write("/var/pcfdev/external-resolv.conf", strings.NewReader(strings.Join(nameservers, "\n"))); err != nil {
+		if err := c.FS.Write("/var/pcfdev/external-resolv.conf", strings.NewReader(strings.Join(nameservers, "\n")), fs.FileModeRootReadWrite); err != nil {
 			return err
 		}
 
@@ -76,7 +77,7 @@ func (c *ConfigureDnsmasq) Run() error {
 		return err
 	}
 
-	return c.FS.Write("/etc/resolv.conf", strings.NewReader(fmt.Sprintf("nameserver %s", internalIP)))
+	return c.FS.Write("/etc/resolv.conf", strings.NewReader(fmt.Sprintf("nameserver %s", internalIP)), fs.FileModeRootReadWrite)
 }
 
 func (*ConfigureDnsmasq) Distro() string {

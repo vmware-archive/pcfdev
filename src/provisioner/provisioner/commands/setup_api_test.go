@@ -11,6 +11,8 @@ import (
 	"provisioner/provisioner/commands"
 	"provisioner/provisioner"
 	"errors"
+	"provisioner/fs"
+	"os"
 )
 
 var _ = Describe("SetupApi", func() {
@@ -38,27 +40,15 @@ var _ = Describe("SetupApi", func() {
 	Describe("#Run", func() {
 		Context("When the file system is in a bad state", func() {
 			It("returns the error from failing to write the monitrc", func() {
-				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", gomock.Any()).AnyTimes()
-				mockFS.EXPECT().Mkdir("/var/pcfdev/api").AnyTimes()
-				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", gomock.Any()).Return(errors.New("some-error"))
+				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", gomock.Any(), os.FileMode(fs.FileModeRootReadWriteExecutable)).AnyTimes()
+				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", gomock.Any(), os.FileMode(fs.FileModeRootReadWrite)).Return(errors.New("some-error"))
 
 				Expect(cmd.Run()).To(MatchError("some-error"))
 			})
 
 			It("returns the error from failing to write the api_ctl", func() {
-				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", gomock.Any()).AnyTimes()
-				mockFS.EXPECT().Mkdir("/var/pcfdev/api").AnyTimes()
-				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", gomock.Any()).Return(errors.New("some-error"))
-
-				Expect(cmd.Run()).To(MatchError("some-error"))
-			})
-		})
-
-		Context("When mkdir fails", func() {
-			It("returns error", func() {
-				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", gomock.Any()).AnyTimes()
-				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", gomock.Any()).AnyTimes()
-				mockFS.EXPECT().Mkdir("/var/pcfdev/api").Return(errors.New("some-error"))
+				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", gomock.Any(), os.FileMode(fs.FileModeRootReadWrite)).AnyTimes()
+				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", gomock.Any(), os.FileMode(fs.FileModeRootReadWriteExecutable)).Return(errors.New("some-error"))
 
 				Expect(cmd.Run()).To(MatchError("some-error"))
 			})
@@ -66,7 +56,7 @@ var _ = Describe("SetupApi", func() {
 
 		It("write a monit file to the /var/vcap/monit/job", func() {
 			monitrc := `check process pcfdev-api
-  with pidfile /var/pcfdev/api/api.pid
+  with pidfile /var/vcap/sys/run/pcfdev-api/api.pid
   start program "/var/pcfdev/api/api_ctl start"
   stop program "/var/pcfdev/api/api_ctl stop"
   group vcap
@@ -75,13 +65,13 @@ var _ = Describe("SetupApi", func() {
 			monit_ctl := `#!/bin/bash
 set -ex
 
-case $1 in
+PIDFILE=/var/vcap/sys/run/pcfdev-api/api.pid
 
-  PIDFILE=/var/vcap/sys/run/pcfdev-api/api.pid
+case $1 in
 
   start)
     mkdir -p /var/vcap/sys/run/pcfdev-api
-    sleep 999999999 &
+    /var/pcfdev/api/api &
     echo $! > ${PIDFILE}
 
     ;;
@@ -98,9 +88,8 @@ case $1 in
 esac`
 
 			gomock.InOrder(
-				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", strings.NewReader(monitrc)),
-				mockFS.EXPECT().Mkdir("/var/pcfdev/api"),
-				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", strings.NewReader(monit_ctl)),
+				mockFS.EXPECT().Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", strings.NewReader(monitrc), os.FileMode(fs.FileModeRootReadWrite)),
+				mockFS.EXPECT().Write("/var/pcfdev/api/api_ctl", strings.NewReader(monit_ctl), os.FileMode(fs.FileModeRootReadWriteExecutable)),
 			)
 
 			Expect(cmd.Run()).To(Succeed())

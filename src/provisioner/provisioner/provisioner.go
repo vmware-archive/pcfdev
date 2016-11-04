@@ -3,6 +3,8 @@ package provisioner
 import (
 	"bytes"
 	"io"
+	"os"
+	"provisioner/fs"
 )
 
 //go:generate mockgen -package mocks -destination mocks/cert.go provisioner/provisioner Cert
@@ -19,7 +21,7 @@ type CmdRunner interface {
 //go:generate mockgen -package mocks -destination mocks/fs.go provisioner/provisioner FS
 type FS interface {
 	Mkdir(directory string) error
-	Write(path string, contents io.Reader) error
+	Write(path string, contents io.Reader, perm os.FileMode) error
 	Read(path string) (contents []byte, err error)
 	Exists(path string) (bool, error)
 }
@@ -64,11 +66,11 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	if err := p.FS.Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader(cert)); err != nil {
+	if err := p.FS.Write("/var/vcap/jobs/gorouter/config/cert.pem", bytes.NewReader(cert), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
-	if err := p.FS.Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader(key)); err != nil {
+	if err := p.FS.Write("/var/vcap/jobs/gorouter/config/key.pem", bytes.NewReader(key), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
@@ -76,7 +78,7 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	if err := p.FS.Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader(caCert)); err != nil {
+	if err := p.FS.Write("/var/pcfdev/openssl/ca_cert.pem", bytes.NewReader(caCert), fs.FileModeRootReadWrite); err != nil {
 		return err
 	}
 
@@ -93,5 +95,5 @@ func (p *Provisioner) Provision(provisionScriptPath string, args ...string) erro
 		return err
 	}
 
-	return p.FS.Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte("")))
+	return p.FS.Write("/run/pcfdev-healthcheck", bytes.NewReader([]byte("")), fs.FileModeRootReadWrite)
 }

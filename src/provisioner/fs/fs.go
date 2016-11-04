@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+const (
+	FileModeRootReadWrite           = 0644
+	FileModeRootReadWriteExecutable = 0744
+)
+
 type FS struct{}
 
 func (fs *FS) Exists(path string) (bool, error) {
@@ -31,8 +36,8 @@ func (f *FS) Mkdir(path string) error {
 	return nil
 }
 
-func (f *FS) Write(path string, contents io.Reader) error {
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+func (f *FS) Write(path string, contents io.Reader, perm os.FileMode) error {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
 	if err != nil {
 		return fmt.Errorf("failed to open file: %s", err)
 	}
