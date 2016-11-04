@@ -23,10 +23,11 @@ set -ex
 
 case $1 in
 
-  PIDFILE=/var/pcfdev/api/api.pid
+  PIDFILE=/var/vcap/sys/run/pcfdev-api/api.pid
 
   start)
-    /var/pcfdev/api/api &
+    mkdir -p /var/vcap/sys/run/pcfdev-api
+    sleep 999999999 &
     echo $! > ${PIDFILE}
 
     ;;
@@ -44,6 +45,10 @@ esac`
 
 	err := s.FS.Write("/var/vcap/monit/job/1001_pcfdev_api.monitrc", strings.NewReader(monitrcContents))
 	if err != nil {
+		return err
+	}
+
+	if err := s.FS.Mkdir("/var/pcfdev/api"); err !=nil {
 		return err
 	}
 
