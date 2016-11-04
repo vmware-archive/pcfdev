@@ -1,0 +1,10 @@
+#!/bin/bash
+
+pcfdev_dir=$(cd `dirname $0` && cd .. && pwd)
+mocks_dirs=$(go list -f '{{.Dir}}' provisioner/... | grep -v /vendor/ | grep '/mocks$')
+if [[ -n "$mocks_dirs" ]]; then
+  find $mocks_dirs -name "*.go" -exec rm {} \;
+fi
+
+go install provisioner/vendor/github.com/golang/mock/mockgen
+go generate $(go list provisioner/... | grep -v /vendor/)

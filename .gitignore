@@ -7,7 +7,7 @@
 /output
 /pkg
 /releases
-/src/pcfdev/pcfdev
+/src/provisioner/provision
 
 /bin
 !/bin/build

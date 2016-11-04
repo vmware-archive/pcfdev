@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dir=$(cd `dirname $0` && cd .. && pwd)
+
+go get github.com/onsi/ginkgo/ginkgo
+go get github.com/onsi/gomega
+ginkgo "$@" -r $dir
