@@ -206,7 +206,7 @@
                 "*) PROVIDER_TYPE=virtualbox ;;",
                 "esac",
 
-                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq,spring-cloud-services '' $PROVIDER_TYPE",
+                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq '' $PROVIDER_TYPE",
                 "/var/pcfdev/stop"
             ]
         },
