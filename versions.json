@@ -40,10 +40,13 @@
       "version": "v1.18.0",
       "sha1": "42803a72a299c2c57c9696204871653b9b31a02b",
       "source_location": "https://github.com/cloudfoundry/cflinuxfs2-rootfs-release",
-      "compiled_release_url" : "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-b9bba1caed543aa4142eed068bef6afcecfa149e.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-b9bba1caed543aa4142eed068bef6afcecfa149e.tgz"
     },
     "local-volume" : {
-      "path": "/Users/pivotal/workspace/local-volume-release"
+      "version": "brokerapi2.9-51-g621e237",
+      "sha1": "733536bdd3c3bfaef936c964d610686d81ecc483",
+      "source_location": "https://github.com/cloudfoundry-incubator/local-volume-release",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-51-g621e237.tgz"
     }
   }
 }
