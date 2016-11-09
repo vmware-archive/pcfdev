@@ -15,8 +15,6 @@ if [[ -z $1 ]] || [[ -z $2 ]] || [[ -z $3 ]] || [[ ! -d $(dirname "$2") ]]; then
   exit 1
 fi
 
-set -x
-
 shasum_matches() {
   path=$1
   checksum=$2

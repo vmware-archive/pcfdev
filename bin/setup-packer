@@ -8,8 +8,6 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
-set -x
-
 packer_bosh=$1
 packer_config_path=${PACKER_CONFIG:-"$HOME/.packerconfig"}
 
