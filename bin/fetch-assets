@@ -77,9 +77,9 @@ for name in $releases; do
     fi
 
     if [[ ${url:0:5} == "s3://" ]]; then
-      aws s3 cp "$url" "$output_path"
+      aws s3 cp --quiet "$url" "$output_path"
     elif [[ ${url:0:7} == "http://" ]] || [[ ${url:0:8} == "https://" ]]; then
-      curl -o "$output_path" -L "$url"
+      curl -s -o "$output_path" -L "$url"
     else
       echo "Invalid scheme for url: $url"
       exit 1
@@ -100,7 +100,7 @@ if [[ $(echo "$versions" | jq -r 'has("extras")') == 'true' ]]; then
   for name in $extras; do
     url=$(echo "$versions" | jq ".extras.\"$name\".url" -r)
     extension=${url##*.}
-    aws s3 cp "$url" "$assets_dir/extras/$name.$extension"
+    aws s3 cp --quiet "$url" "$assets_dir/extras/$name.$extension"
   done
 fi
 
