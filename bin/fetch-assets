@@ -86,7 +86,7 @@ for name in $releases; do
     fi
 
     if ! shasum_matches "$output_path" "$sha1"; then
-      echo "Download failed for: $url"
+      echo "Download failed (sha1 did not match) for: $url"
       exit 1
     fi
   fi
