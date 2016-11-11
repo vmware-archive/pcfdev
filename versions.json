@@ -43,10 +43,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-b9bba1caed543aa4142eed068bef6afcecfa149e.tgz"
     },
     "local-volume" : {
-      "version": "brokerapi2.9-51-g621e237",
-      "sha1": "733536bdd3c3bfaef936c964d610686d81ecc483",
+      "version": "brokerapi2.9-55-ga9a1a5b",
+      "sha1": "346f82f6b272f90b62f21925ec8809a6ed687d99",
       "source_location": "https://github.com/cloudfoundry-incubator/local-volume-release",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-51-g621e237.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-55-ga9a1a5b.tgz"
     }
   }
 }
