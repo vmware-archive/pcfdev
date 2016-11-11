@@ -122,6 +122,7 @@ while [[ $(available_buildpacks) -lt 8 ]]; do
 done
 
 setup_service_broker p-mysql http://mysql-broker.$domain mysql
+setup_service_broker local-volume http://localbroker.$domain localbroker
 
 if [[ -x /var/pcfdev/post-run ]]; then
   /var/pcfdev/post-run "$domain" "$services"
