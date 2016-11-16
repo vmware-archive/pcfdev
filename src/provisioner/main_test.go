@@ -49,6 +49,25 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(session).NotTo(gbytes.Say("No such file or directory"))
 	})
 
+	It("should remove the bosh-state json", func() {
+		session := provision(dockerID)
+		Expect(session).To(gbytes.Say("Waiting for services to start..."))
+
+		session = runSuccessfully(exec.Command("docker", "exec", dockerID, "file", "/var/vcap/bosh/agent_state.json"), "1s")
+		Expect(session).To(gbytes.Say("No such file or directory"))
+	})
+
+	FIt("should add dynamiccally made certificates to trust store and run the rootfs prestart script", func() {
+		session := provision(dockerID)
+		Expect(session).To(gbytes.Say("Waiting for services to start..."))
+
+		Expect(session).To(gbytes.Say("some-cflinuxfs2-rootfs-setup-prestart"))
+
+		session = runSuccessfully(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/jobs/cflinuxfs2-rootfs-setup/config/certs/trusted_ca.crt"), "1s")
+		Expect(session).To(gbytes.Say("some-gorouter-cert"))
+		Expect(session).To(gbytes.Say("some-pcfdev-trusted-ca"))
+	})
+
 	It("should set up the monitrc files for an HTTP server and an root executable _ctl script running on the box", func() {
 		provision(dockerID)
 

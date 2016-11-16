@@ -57,6 +57,8 @@ const (
 func (p *Provisioner) Provision(provisionScriptPath string, args ...string) error {
 	domain := args[0]
 
+	os.RemoveAll("/var/vcap/bosh/agent_state.json")
+
 	cert, key, caCert, _, err := p.Cert.GenerateCerts(domain)
 	if err != nil {
 		return err
