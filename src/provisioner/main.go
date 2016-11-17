@@ -20,13 +20,6 @@ var (
 	distro              = "pcf"
 )
 
-const (
-	mysqlPort                   = "4568"
-	rabbitBrokerPort            = "4567"
-	rabbitManagementConsolePort = "15672"
-	rabbitClusterDaemonPort     = "25672"
-)
-
 func main() {
 	provisionTimeout, err := strconv.Atoi(timeoutInSeconds)
 	if err != nil {
@@ -47,41 +40,7 @@ func main() {
 			Timeout: time.Duration(provisionTimeout) * time.Second,
 		},
 		FS: &fs.FS{},
-		Commands: []provisioner.Command{
-			&commands.DisableUAAHSTS{
-				WebXMLPath: "/var/vcap/packages/uaa/tomcat/conf/web.xml",
-			},
-			&commands.ConfigureDnsmasq{
-				Domain:     os.Args[1],
-				ExternalIP: os.Args[2],
-				FS:         &fs.FS{},
-				CmdRunner:  silentCommandRunner,
-			},
-			&commands.ConfigureGardenDNS{
-				FS:        &fs.FS{},
-				CmdRunner: silentCommandRunner,
-			},
-			&commands.ClosePort{
-				CmdRunner: silentCommandRunner,
-				Port:      mysqlPort,
-			},
-			&commands.ClosePort{
-				CmdRunner: silentCommandRunner,
-				Port:      rabbitBrokerPort,
-			},
-			&commands.ClosePort{
-				CmdRunner: silentCommandRunner,
-				Port:      rabbitClusterDaemonPort,
-			},
-			&commands.ClosePort{
-				CmdRunner: silentCommandRunner,
-				Port:      rabbitManagementConsolePort,
-			},
-			&commands.SetupApi{
-				CmdRunner: silentCommandRunner,
-				FS:        &fs.FS{},
-			},
-		},
+		Commands: buildCommands(silentCommandRunner),
 
 		Distro: distro,
 	}
@@ -103,4 +62,65 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+func buildCommands(commandRunner provisioner.CmdRunner) []provisioner.Command {
+	providerAgnostic := []provisioner.Command{
+		&commands.DisableUAAHSTS{
+			WebXMLPath: "/var/vcap/packages/uaa/tomcat/conf/web.xml",
+		},
+		&commands.ConfigureDnsmasq{
+			Domain:     os.Args[1],
+			ExternalIP: os.Args[2],
+			FS:         &fs.FS{},
+			CmdRunner:  commandRunner,
+		},
+		&commands.ConfigureGardenDNS{
+			FS:        &fs.FS{},
+			CmdRunner: commandRunner,
+		},
+		&commands.SetupApi{
+			CmdRunner: commandRunner,
+			FS:        &fs.FS{},
+		},
+	}
+
+	const (
+		httpPort     = "80"
+		httpsPort    = "443"
+		sshPort      = "22"
+		sshProxyPort = "2222"
+	)
+
+	forAwsProvider := []provisioner.Command{
+		&commands.CloseAllPorts{
+			CmdRunner: commandRunner,
+		},
+		&commands.OpenPort{
+			CmdRunner: commandRunner,
+			Port:      httpPort,
+		},
+		&commands.OpenPort{
+			CmdRunner: commandRunner,
+			Port:      httpsPort,
+		},
+		&commands.OpenPort{
+			CmdRunner: commandRunner,
+			Port:      sshPort,
+		},
+		&commands.OpenPort{
+			CmdRunner: commandRunner,
+			Port:      sshProxyPort,
+		},
+	}
+
+	if isAwsProvisioner() {
+		return append(providerAgnostic, forAwsProvider...)
+	} else {
+		return providerAgnostic
+	}
+}
+
+func isAwsProvisioner() bool {
+	return len(os.Args) > 5 && os.Args[5] == "aws"
 }
