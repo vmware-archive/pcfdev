@@ -79,5 +79,5 @@ func replaceSecrets(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/replace-secrets", replaceSecrets)
 	http.HandleFunc("/status", handlerStatus)
-	http.ListenAndServe(":8090", nil)
+	http.ListenAndServe("localhost:8090", nil)
 }
