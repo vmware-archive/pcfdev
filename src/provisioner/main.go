@@ -21,6 +21,8 @@ var (
 )
 
 func main() {
+	checkArgCount()
+
 	provisionTimeout, err := strconv.Atoi(timeoutInSeconds)
 	if err != nil {
 		fmt.Printf("Error: %s.", err)
@@ -61,6 +63,13 @@ func main() {
 		default:
 			os.Exit(1)
 		}
+	}
+}
+
+func checkArgCount() {
+	if len(os.Args) < 6 {
+		fmt.Println("Need 5 arguments, Usage: ./provision <domain> <ip> <services> <docker_registries> <provider>")
+		os.Exit(1)
 	}
 }
 
@@ -122,5 +131,5 @@ func buildCommands(commandRunner provisioner.CmdRunner) []provisioner.Command {
 }
 
 func isAwsProvisioner() bool {
-	return len(os.Args) > 5 && os.Args[5] == "aws"
+	return os.Args[5] == "aws"
 }

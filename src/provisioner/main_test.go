@@ -123,8 +123,8 @@ var _ = Describe("PCF Dev provision", func() {
 	Describe("Network access", func() {
 
 		BeforeEach(func() {
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "80").Run()).To(Succeed())
 			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "8060").Run()).To(Succeed())
+			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "80").Run()).To(Succeed())
 			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "443").Run()).To(Succeed())
 			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "22").Run()).To(Succeed())
 			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "2222").Run()).To(Succeed())
@@ -194,13 +194,19 @@ var _ = Describe("PCF Dev provision", func() {
 		})
 	})
 
+	Context("when provisioning does not have the required number of args", func() {
+		It("should exit with an error", func() {
+			runFailure(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11", "", ""), "10s")
+		})
+	})
+
 	Context("when provisioning fails", func() {
 		BeforeEach(func() {
 			Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\nexit 42\" > "+pwd+"/provision-script").Run()).To(Succeed())
 		})
 
 		It("should exit with the exit status of the provision script", func() {
-			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
+			session, _ := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11", "", "", "virtualbox"), GinkgoWriter, GinkgoWriter)
 			Eventually(session, "10s").Should(gexec.Exit(42))
 		})
 	})
@@ -212,7 +218,7 @@ var _ = Describe("PCF Dev provision", func() {
 		})
 
 		It("exit with an exit status of 1 and tell why it is exiting...", func() {
-			session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11"), GinkgoWriter, GinkgoWriter)
+			session, err := gexec.Start(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "local.pcfdev.io", "192.168.11.11", "", "", "virtualbox"), GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, "15s").Should(gexec.Exit(1))
 			Expect(session).To(gbytes.Say("Timed out after 2 seconds."))
