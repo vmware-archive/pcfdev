@@ -14,6 +14,7 @@ import (
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 	"net"
+	"time"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -121,41 +122,44 @@ var _ = Describe("PCF Dev provision", func() {
 	})
 
 	Describe("Network access", func() {
-
-		BeforeEach(func() {
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "8060").Run()).To(Succeed())
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "80").Run()).To(Succeed())
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "443").Run()).To(Succeed())
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "22").Run()).To(Succeed())
-			Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "2222").Run()).To(Succeed())
-		})
-
 		Context("on AWS", func() {
-
 			It("does not allow connections by default", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "8060").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port8060, 5*time.Second)
 				provisionForAws(dockerID)
 				runFailure(exec.Command("curl", "localhost:"+portsForwarded.Port8060), "5s")
 			})
 
 			It("allows external access to http cf router", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "80").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port80, 5*time.Second)
 				provisionForAws(dockerID)
+
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port80), "5s")
 				Expect(session).To(gbytes.Say("Response from port 80 stub server"))
 			})
 
 			It("allows external access to https cf router", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "443").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port443, 5*time.Second)
 				provisionForAws(dockerID)
+
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port443), "5s")
 				Expect(session).To(gbytes.Say("Response from port 443 stub server"))
 			})
 
 			It("allows external access to ssh", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "22").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port22, 5*time.Second)
 				provisionForAws(dockerID)
+
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port22), "5s")
 				Expect(session).To(gbytes.Say("Response from port 22 stub server"))
 			})
 
 			It("allows external access to the ssh proxy", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "2222").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port2222, 5*time.Second)
 				provisionForAws(dockerID)
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port2222), "5s")
 				Expect(session).To(gbytes.Say("Response from port 2222 stub server"))
@@ -164,7 +168,19 @@ var _ = Describe("PCF Dev provision", func() {
 
 		Context("on Virtualbox", func() {
 			It("allows connections by default", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "8060").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port8060, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "80").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port80, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "443").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port443, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "22").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port22, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "2222").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port2222, 5*time.Second)
+
 				provisionForVirtualBox(dockerID)
+
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port80), "5s")).To(gbytes.Say("Response from port 80 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port8060), "5s")).To(gbytes.Say("Response from port 8060 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port443), "5s")).To(gbytes.Say("Response from port 443 stub server"))
@@ -254,4 +270,21 @@ func randomOpenPort() string {
 	defer conn.Close()
 	address := strings.Split(conn.Addr().String(), ":")
 	return address[1]
+}
+
+func waitForServer(host string, timeout time.Duration) {
+	currentWait := 0 * time.Second
+	serverOpen := false
+
+	for !serverOpen && currentWait < timeout {
+		exec.Command("curl", host)
+		session, _ := gexec.Start(exec.Command("curl", host), GinkgoWriter, GinkgoWriter)
+		Eventually(session, "1s").Should(gexec.Exit())
+		if session.ExitCode() == 0 {
+			serverOpen = true
+		}
+		currentWait += time.Second * 1
+		time.Sleep(time.Second)
+	}
+	Expect(serverOpen).To(BeTrue())
 }
