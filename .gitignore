@@ -8,6 +8,7 @@
 /pkg
 /releases
 /src/provisioner/provision
+/src/api/api
 
 /bin
 !/bin/build
