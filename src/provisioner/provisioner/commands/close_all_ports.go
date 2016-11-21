@@ -9,7 +9,12 @@ type CloseAllPorts struct {
 }
 
 func (c *CloseAllPorts) Run() error {
-	err := c.CmdRunner.Run("iptables", "-I", "INPUT", "-p", "tcp", "-j", "DROP")
+	err := c.CmdRunner.Run("iptables", "-I", "INPUT", "-i", "eth0", "-p", "tcp", "-j", "DROP")
+	if err != nil {
+		return err
+	}
+
+	err = c.CmdRunner.Run("iptables", "-I", "INPUT", "-i", "eth1", "-p", "tcp", "-j", "DROP")
 	if err != nil {
 		return err
 	}
