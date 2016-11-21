@@ -41,7 +41,7 @@ func main() {
 			Stderr:  os.Stderr,
 			Timeout: time.Duration(provisionTimeout) * time.Second,
 		},
-		FS: &fs.FS{},
+		FS:       &fs.FS{},
 		Commands: buildCommands(silentCommandRunner),
 
 		Distro: distro,
@@ -95,10 +95,12 @@ func buildCommands(commandRunner provisioner.CmdRunner) []provisioner.Command {
 	}
 
 	const (
-		httpPort     = "80"
-		httpsPort    = "443"
-		sshPort      = "22"
-		sshProxyPort = "2222"
+		httpPort      = "80"
+		httpsPort     = "443"
+		sshPort       = "22"
+		sshProxyPort  = "2222"
+		tcpPortLower  = 61001
+		tcpPortHigher = 61100
 	)
 
 	forAwsProvider := []provisioner.Command{
@@ -121,6 +123,13 @@ func buildCommands(commandRunner provisioner.CmdRunner) []provisioner.Command {
 			CmdRunner: commandRunner,
 			Port:      sshProxyPort,
 		},
+	}
+
+	for p := tcpPortLower; p <= tcpPortHigher; p++ {
+		forAwsProvider = append(forAwsProvider, &commands.OpenPort{
+			CmdRunner: commandRunner,
+			Port:      strconv.Itoa(p),
+		})
 	}
 
 	if isAwsProvisioner() {

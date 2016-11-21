@@ -15,6 +15,8 @@ import (
 	"github.com/onsi/gomega/gexec"
 	"net"
 	"time"
+	"strconv"
+	"math/rand"
 )
 
 var _ = Describe("PCF Dev provision", func() {
@@ -22,15 +24,21 @@ var _ = Describe("PCF Dev provision", func() {
 		dockerID string
 		pwd      string
 		dockerExecTimeout string = "3s"
+		randomTcpPort string
 	)
 
 	var portsForwarded struct {
-		Port80   string
-		Port8060 string
-		Port443  string
-		Port22   string
-		Port2222 string
+		Port80        string
+		Port8060      string
+		Port443       string
+		Port22        string
+		Port2222      string
+		Port61001     string
+		Port61100     string
+		RandomTcpPort string
+
 	}
+
 
 	BeforeEach(func() {
 		portsForwarded.Port80 = randomOpenPort()
@@ -38,10 +46,15 @@ var _ = Describe("PCF Dev provision", func() {
 		portsForwarded.Port443 = randomOpenPort()
 		portsForwarded.Port22 = randomOpenPort()
 		portsForwarded.Port2222 = randomOpenPort()
+		portsForwarded.Port61001 = randomOpenPort()
+		portsForwarded.Port61100= randomOpenPort()
+		portsForwarded.RandomTcpPort = randomOpenPort()
 
 		var err error
 		pwd, err = os.Getwd()
 		Expect(err).NotTo(HaveOccurred())
+
+		randomTcpPort = randomPortInRange("61001", "61100")
 
 		output, err := exec.Command(
 			"docker", "run",
@@ -50,6 +63,9 @@ var _ = Describe("PCF Dev provision", func() {
 			"-p", portsForwarded.Port443+":443",
 			"-p", portsForwarded.Port22+":22",
 			"-p", portsForwarded.Port2222+":2222",
+			"-p", portsForwarded.Port61001+":61001",
+			"-p", portsForwarded.Port61100+":61100",
+			"-p", portsForwarded.RandomTcpPort +":"+ randomTcpPort,
 			"--privileged",
 			"-d",
 			"-v", pwd+":/go/src/provisioner",
@@ -164,6 +180,32 @@ var _ = Describe("PCF Dev provision", func() {
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port2222), "5s")
 				Expect(session).To(gbytes.Say("Response from port 2222 stub server"))
 			})
+
+			It("allow external access to tcp router port for lowest port in range", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "61001").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port61001, 5*time.Second)
+				provisionForAws(dockerID)
+				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61001), "5s")
+				Expect(session).To(gbytes.Say("Response from port 61001 stub server"))
+
+			})
+
+			It("allow external access to tcp router port for highest port in range", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "61100").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port61100, 5*time.Second)
+				provisionForAws(dockerID)
+				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61100), "5s")
+				Expect(session).To(gbytes.Say("Response from port 61100 stub server"))
+
+			})
+
+			It("allow external access to tcp router port for random port in range", func() {
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", randomTcpPort).Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.RandomTcpPort, 5*time.Second)
+				provisionForAws(dockerID)
+				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.RandomTcpPort), "5s")
+				Expect(session).To(gbytes.Say("Response from port "+ randomTcpPort + " stub server"))
+			})
 		})
 
 		Context("on Virtualbox", func() {
@@ -178,6 +220,12 @@ var _ = Describe("PCF Dev provision", func() {
 				waitForServer("localhost:"+portsForwarded.Port22, 5*time.Second)
 				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "2222").Run()).To(Succeed())
 				waitForServer("localhost:"+portsForwarded.Port2222, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "61001").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port61001, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", "61100").Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.Port61100, 5*time.Second)
+				Expect(exec.Command("docker", "exec", "-d", dockerID, "go", "run", "assets/stub_server.go", randomTcpPort).Run()).To(Succeed())
+				waitForServer("localhost:"+portsForwarded.RandomTcpPort, 5*time.Second)
 
 				provisionForVirtualBox(dockerID)
 
@@ -186,6 +234,9 @@ var _ = Describe("PCF Dev provision", func() {
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port443), "5s")).To(gbytes.Say("Response from port 443 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port22), "5s")).To(gbytes.Say("Response from port 22 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port2222), "5s")).To(gbytes.Say("Response from port 2222 stub server"))
+				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61001), "5s")).To(gbytes.Say("Response from port 61001 stub server"))
+				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61100), "5s")).To(gbytes.Say("Response from port 61100 stub server"))
+				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.RandomTcpPort), "5s")).To(gbytes.Say("Response from port "+ randomTcpPort+ " stub server"))
 			})
 		})
 	})
@@ -287,4 +338,16 @@ func waitForServer(host string, timeout time.Duration) {
 		time.Sleep(time.Second)
 	}
 	Expect(serverOpen).To(BeTrue())
+}
+
+func randomPortInRange(lowerPort string, higherPort string) string {
+
+	higherPortNumber, err := strconv.Atoi(higherPort)
+	Expect(err).NotTo(HaveOccurred())
+
+	lowerPortNumber, err := strconv.Atoi(lowerPort)
+	Expect(err).NotTo(HaveOccurred())
+
+	return strconv.Itoa(rand.Intn(higherPortNumber - lowerPortNumber) + lowerPortNumber)
+
 }
