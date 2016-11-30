@@ -1,0 +1,149 @@
+{
+    "variables": {
+        "version": "0",
+        "distro": "pcfdev",
+        "cpus": "4",
+        "memory": "4096",
+        "disk_size": "60",
+        "eula_url": "",
+        "security_group_id": "",
+        "subnet_id": "",
+        "vpc_id": "",
+        "ssh_keypair_name": "",
+        "ssh_private_key_file": ""
+    },
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "us-east-1",
+            "source_ami": "ami-6012160a",
+            "instance_type": "c4.2xlarge",
+            "ami_name": "{{user `distro`}}-v{{user `version`}}",
+            "ami_description": "{{user `eula_url`}}",
+            "associate_public_ip_address": false,
+            "security_group_id": "{{user `security_group_id`}}",
+            "subnet_id": "{{user `subnet_id`}}",
+            "vpc_id": "{{user `vpc_id`}}",
+            "ssh_keypair_name": "{{user `ssh_keypair_name`}}",
+            "ssh_private_key_file": "{{user `ssh_private_key_file`}}",
+            "ami_block_device_mappings": [{
+              "device_name": "/dev/sda1",
+              "volume_type": "gp2",
+              "volume_size": "{{user `disk_size`}}",
+              "delete_on_termination": true
+            }],
+            "launch_block_device_mappings": [{
+              "device_name": "/dev/sda1",
+              "volume_type": "io1",
+              "iops": "1800",
+              "volume_size": "{{user `disk_size`}}",
+              "delete_on_termination": true
+            }],
+            "ssh_username": "ubuntu",
+            "ssh_timeout": "20m",
+            "tags": {"Name": "v{{user `version`}}", "License":"{{user `eula_url`}}"}
+        },
+        {
+            "type": "virtualbox-iso",
+            "headless": true,
+            "vm_name": "{{user `distro`}}-v{{user `version`}}",
+            "guest_os_type": "Ubuntu_64",
+            "disk_size": "{{user `disk_size`}}000",
+            "ssh_username": "vcap",
+            "ssh_password": "vcap",
+            "iso_url": "https://pcfdev.s3.amazonaws.com/artifacts/ubuntu-14.04.4-server-amd64.iso",
+            "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+            "iso_checksum_type": "md5",
+            "http_directory": "preseed",
+            "ssh_timeout": "20m",
+            "shutdown_command": "echo vcap | sudo -S shutdown -P now",
+            "format": "ova",
+            "boot_command": [
+                "<esc><esc><enter><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname=pcfdev ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ],
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
+                [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
+                [ "modifyvm", "{{.Name}}", "--natdnshostresolver1", "on" ],
+                [ "modifyvm", "{{.Name}}", "--nic1", "nat" ],
+                [ "modifyvm", "{{.Name}}", "--paravirtprovider", "minimal" ]
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "inline": [
+                "apt-get -y install software-properties-common",
+                "add-apt-repository -y ppa:brightbox/ruby-ng",
+                "echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list",
+                "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
+                "apt-get -y update",
+                "apt-get -y --force-yes dist-upgrade",
+                "apt-get -y update",
+                "apt-get -y upgrade sudo",
+                "echo 'vcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["virtualbox-iso"],
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "apt-get install -y dkms",
+                "mount -o loop /home/vcap/VBoxGuestAdditions.iso /mnt",
+                "sh /mnt/VBoxLinuxAdditions.run --nox11",
+                "umount /mnt",
+                "apt-get install -y open-vm-tools"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["amazon-ebs"],
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
+                "ln -sf /usr/bin/mawk /usr/bin/awk"
+            ]
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "inline": [
+                "apt-get -y install curl unzip zip jq sysstat vim",
+                "apt-get -y install libruby2.1 ruby2.1",
+                "apt-get -y install linux-generic",
+                "apt-get -y install aufs-tools",
+                "apt-get -y install libgcrypt20 libgcrypt20-dev",
+                "apt-get -y install postgresql-client-9.4",
+                "apt-get -y install nginx",
+                "service nginx stop",
+                "update-rc.d -f nginx remove"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "only": ["virtualbox-iso"],
+            "inline": ["ls $PWD/*/*.ova"],
+            "keep_input_artifact": true
+        },
+        {
+             "type": "vagrant",
+             "only": ["amazon-ebs"],
+             "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box",
+             "keep_input_artifact": true
+        }
+    ]
+}
