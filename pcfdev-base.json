@@ -1,7 +1,6 @@
 {
     "variables": {
         "version": "0",
-        "distro": "pcfdev",
         "cpus": "4",
         "memory": "4096",
         "disk_size": "60",
@@ -18,7 +17,7 @@
             "region": "us-east-1",
             "source_ami": "ami-6012160a",
             "instance_type": "c4.2xlarge",
-            "ami_name": "{{user `distro`}}-v{{user `version`}}",
+            "ami_name": "pcfdev-base-v{{user `version`}}",
             "ami_description": "{{user `eula_url`}}",
             "associate_public_ip_address": false,
             "security_group_id": "{{user `security_group_id`}}",
@@ -46,7 +45,7 @@
         {
             "type": "virtualbox-iso",
             "headless": true,
-            "vm_name": "{{user `distro`}}-v{{user `version`}}",
+            "vm_name": "pcfdev-base-v{{user `version`}}",
             "guest_os_type": "Ubuntu_64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vcap",
@@ -142,7 +141,7 @@
         {
              "type": "vagrant",
              "only": ["amazon-ebs"],
-             "output": "{{user `distro`}}-{{.Provider}}-v{{user `version`}}.box",
+             "output": "pcfdev-base-{{.Provider}}-v{{user `version`}}.box",
              "keep_input_artifact": true
         }
     ]
