@@ -19,6 +19,9 @@ domain=$1
 move_monit_control_files
 start runsvdir
 wait_for_monit_to_start
+
+/var/vcap/jobs/mysql/bin/pre-start
+
 start_services mariadb_ctrl galera-healthcheck
 
 while ! nc -z 127.0.0.1 3306; do
