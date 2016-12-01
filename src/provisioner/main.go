@@ -92,6 +92,11 @@ func buildCommands(commandRunner provisioner.CmdRunner) []provisioner.Command {
 			CmdRunner: commandRunner,
 			FS:        &fs.FS{},
 		},
+		&commands.ReplaceDomain{
+			CmdRunner: commandRunner,
+			FS:        &fs.FS{},
+			NewDomain: os.Args[1],
+		},
 	}
 
 	const (

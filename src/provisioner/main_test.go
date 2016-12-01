@@ -13,18 +13,18 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
-	"net"
-	"time"
-	"strconv"
 	"math/rand"
+	"net"
+	"strconv"
+	"time"
 )
 
 var _ = Describe("PCF Dev provision", func() {
 	var (
-		dockerID string
-		pwd      string
+		dockerID          string
+		pwd               string
 		dockerExecTimeout string = "3s"
-		randomTcpPort string
+		randomTcpPort     string
 	)
 
 	var portsForwarded struct {
@@ -36,9 +36,7 @@ var _ = Describe("PCF Dev provision", func() {
 		Port61001     string
 		Port61100     string
 		RandomTcpPort string
-
 	}
-
 
 	BeforeEach(func() {
 		portsForwarded.Port80 = randomOpenPort()
@@ -47,7 +45,7 @@ var _ = Describe("PCF Dev provision", func() {
 		portsForwarded.Port22 = randomOpenPort()
 		portsForwarded.Port2222 = randomOpenPort()
 		portsForwarded.Port61001 = randomOpenPort()
-		portsForwarded.Port61100= randomOpenPort()
+		portsForwarded.Port61100 = randomOpenPort()
 		portsForwarded.RandomTcpPort = randomOpenPort()
 
 		var err error
@@ -59,13 +57,13 @@ var _ = Describe("PCF Dev provision", func() {
 		output, err := exec.Command(
 			"docker", "run",
 			"-p", portsForwarded.Port80+":80",
-			"-p", portsForwarded.Port8060 +":8060",
+			"-p", portsForwarded.Port8060+":8060",
 			"-p", portsForwarded.Port443+":443",
 			"-p", portsForwarded.Port22+":22",
 			"-p", portsForwarded.Port2222+":2222",
 			"-p", portsForwarded.Port61001+":61001",
 			"-p", portsForwarded.Port61100+":61100",
-			"-p", portsForwarded.RandomTcpPort +":"+ randomTcpPort,
+			"-p", portsForwarded.RandomTcpPort+":"+randomTcpPort,
 			"--privileged",
 			"-d",
 			"-v", pwd+":/go/src/provisioner",
@@ -79,6 +77,8 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(exec.Command("bash", "-c", "echo \"#!/bin/bash\necho 'Waiting for services to start...'\necho \\$@\" > "+pwd+"/provision-script").Run()).To(Succeed())
 		Expect(exec.Command("docker", "exec", dockerID, "chmod", "+x", "/go/src/provisioner/provision-script").Run()).To(Succeed())
 		Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/provisioner/provision-script", "-o", "provision", "provisioner").Run()).To(Succeed())
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/pcfdev"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo original-domain.pcfdev.io > /var/pcfdev/domain"), "10s")
 	})
 
 	AfterEach(func() {
@@ -204,7 +204,7 @@ var _ = Describe("PCF Dev provision", func() {
 				waitForServer("localhost:"+portsForwarded.RandomTcpPort, 5*time.Second)
 				provisionForAws(dockerID)
 				session := runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.RandomTcpPort), "5s")
-				Expect(session).To(gbytes.Say("Response from port "+ randomTcpPort + " stub server"))
+				Expect(session).To(gbytes.Say("Response from port " + randomTcpPort + " stub server"))
 			})
 		})
 
@@ -236,7 +236,7 @@ var _ = Describe("PCF Dev provision", func() {
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port2222), "5s")).To(gbytes.Say("Response from port 2222 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61001), "5s")).To(gbytes.Say("Response from port 61001 stub server"))
 				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.Port61100), "5s")).To(gbytes.Say("Response from port 61100 stub server"))
-				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.RandomTcpPort), "5s")).To(gbytes.Say("Response from port "+ randomTcpPort+ " stub server"))
+				Expect(runSuccessfully(exec.Command("curl", "localhost:"+portsForwarded.RandomTcpPort), "5s")).To(gbytes.Say("Response from port " + randomTcpPort + " stub server"))
 			})
 		})
 	})
@@ -245,6 +245,25 @@ var _ = Describe("PCF Dev provision", func() {
 		provisionForVirtualBox(dockerID)
 		session := runSuccessfully(exec.Command("docker", "exec", dockerID, "host", "bbs.service.cf.internal"), "3s")
 		Eventually(session).Should(gbytes.Say(`bbs.service.cf.internal has address 127.0.0.1`))
+	})
+
+	It("should replace the old domain with the new domain in job files recursively without following symlinks", func() {
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/vcap/jobs/some-job/config"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 'domain: original-domain.pcfdev.io' > /var/vcap/jobs/some-job/config/some-file"), "10s")
+
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/vcap/jobs/some-other-job/config/some-nested-dir"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 'api: api.original-domain.pcfdev.io:443' > /var/vcap/jobs/some-other-job/config/some-nested-dir/some-file"), "10s")
+
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/tmp/some-symlinked-dir"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 'domain: original-domain.pcfdev.io' > /tmp/some-symlinked-dir/some-file"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/vcap/jobs/some-job-with-symlink/config"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "ln", "-s", "/tmp/some-symlinked-dir", "/var/vcap/jobs/some-job-with-symlink/config"), "10s")
+
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "/go/src/provisioner/provision", "new-domain.pcfdev.io", "192.168.11.11", "", "", "virtualbox"), "100000s")
+
+		Expect(runSuccessfully(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/jobs/some-job/config/some-file"), "10s")).To(gbytes.Say("domain: new-domain.pcfdev.io"))
+		Expect(runSuccessfully(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/jobs/some-other-job/config/some-nested-dir/some-file"), "10s")).To(gbytes.Say("api: api.new-domain.pcfdev.io:443"))
+		Expect(runSuccessfully(exec.Command("docker", "exec", dockerID, "cat", "/var/vcap/jobs/some-job-with-symlink/config/some-symlinked-dir/some-file"), "10s")).To(gbytes.Say("domain: original-domain.pcfdev.io"))
 	})
 
 	Context("when the distribution is not 'pcf'", func() {
@@ -348,6 +367,6 @@ func randomPortInRange(lowerPort string, higherPort string) string {
 	lowerPortNumber, err := strconv.Atoi(lowerPort)
 	Expect(err).NotTo(HaveOccurred())
 
-	return strconv.Itoa(rand.Intn(higherPortNumber - lowerPortNumber) + lowerPortNumber)
+	return strconv.Itoa(rand.Intn(higherPortNumber-lowerPortNumber) + lowerPortNumber)
 
 }

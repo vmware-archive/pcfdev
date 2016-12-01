@@ -9,9 +9,9 @@ import (
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"provisioner/provisioner"
 	"os"
 	"provisioner/fs"
+	"provisioner/provisioner"
 )
 
 var _ = Describe("ConfigureGardenDNS", func() {

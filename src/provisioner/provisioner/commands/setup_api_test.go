@@ -7,12 +7,12 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"provisioner/provisioner/mocks"
-	"provisioner/provisioner/commands"
-	"provisioner/provisioner"
 	"errors"
-	"provisioner/fs"
 	"os"
+	"provisioner/fs"
+	"provisioner/provisioner"
+	"provisioner/provisioner/commands"
+	"provisioner/provisioner/mocks"
 )
 
 var _ = Describe("SetupApi", func() {
@@ -95,8 +95,6 @@ esac`
 			Expect(cmd.Run()).To(Succeed())
 		})
 	})
-
-
 
 	Describe("#Distro", func() {
 		It("should return 'oss'", func() {

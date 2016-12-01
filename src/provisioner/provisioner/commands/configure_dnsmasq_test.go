@@ -2,9 +2,9 @@ package commands_test
 
 import (
 	"errors"
+	"provisioner/provisioner"
 	"provisioner/provisioner/commands"
 	"provisioner/provisioner/mocks"
-	"provisioner/provisioner"
 	"strings"
 
 	"github.com/golang/mock/gomock"
