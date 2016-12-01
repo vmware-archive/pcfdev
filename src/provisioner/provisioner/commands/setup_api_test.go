@@ -99,7 +99,7 @@ esac`
 
 
 	Describe("#Distro", func() {
-		It("should return 'oss", func() {
+		It("should return 'oss'", func() {
 			Expect(cmd.Distro()).To(Equal(provisioner.DistributionOSS))
 		})
 	})

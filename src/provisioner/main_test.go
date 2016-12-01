@@ -303,15 +303,15 @@ func provisionForAws(dockerID string) *gexec.Session {
 
 func runSuccessfully(command *exec.Cmd, timeout string) *gexec.Session {
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
-	Expect(err).NotTo(HaveOccurred())
-	Eventually(session, timeout).Should(gexec.Exit(0))
+	ExpectWithOffset(1, err).NotTo(HaveOccurred())
+	EventuallyWithOffset(1, session, timeout).Should(gexec.Exit(0))
 	return session
 }
 
 func runFailure(command *exec.Cmd, timeout string) *gexec.Session {
 	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
-	Expect(err).NotTo(HaveOccurred())
-	Consistently(session, timeout).ShouldNot(gexec.Exit(0))
+	ExpectWithOffset(1, err).NotTo(HaveOccurred())
+	ConsistentlyWithOffset(1, session, timeout).ShouldNot(gexec.Exit(0))
 	return session
 }
 

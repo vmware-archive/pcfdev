@@ -274,7 +274,7 @@ var _ = Describe("ConfigureDnsmasq", func() {
 	})
 
 	Describe("#Distro", func() {
-		It("should return 'oss", func() {
+		It("should return 'oss'", func() {
 			Expect(cDnsmasq.Distro()).To(Equal(provisioner.DistributionOSS))
 		})
 	})
