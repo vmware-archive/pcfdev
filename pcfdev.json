@@ -47,7 +47,7 @@
         {
             "type": "virtualbox-iso",
             "headless": true,
-            "vm_name": "{{user `distro`}}-v{{user `version`}}",
+            "vm_name": "packer-{{user `distro`}}-v{{user `version`}}",
             "guest_os_type": "Ubuntu_64",
             "disk_size": "{{user `disk_size`}}000",
             "ssh_username": "vcap",
