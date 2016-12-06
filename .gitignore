@@ -17,3 +17,5 @@
 !/bin/setup-packer
 
 NERD_tree_*
+
+/*.iml
