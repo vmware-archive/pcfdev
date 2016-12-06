@@ -2,15 +2,51 @@
 name: pcfdev
 
 releases:
+- name: capi
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/capi-0.tgz
+- name: loggregtor
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/loggregator-0.tgz
+- name: nats
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/nats-0.tgz
+- name: uaa
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/uaa-0.tgz
+- name: consul
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/consul-0.tgz
+- name: nodejs-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/nodejs-buildpack-0.tgz
+- name: java-offline-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/java-offline-buildpack-0.tgz
+- name: php-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/php-buildpack-0.tgz
+- name: binary-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/binary-buildpack-0.tgz
+- name: go-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/go-buildpack-0.tgz
+- name: python-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/python-buildpack-0.tgz
+- name: staticfile-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/staticfile-buildpack-0.tgz
 - name: cf
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-0.tgz
 - name: etcd
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/etcd-0.tgz
-- name: garden-linux
+- name: garden-runc
   version: 0
-  url: file:///opt/bosh-provisioner/assets/releases/garden-linux-0.tgz
+  url: file:///opt/bosh-provisioner/assets/releases/garden-runc-0.tgz
 - name: diego
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/diego-0.tgz
@@ -52,7 +88,7 @@ jobs:
     release: cf-mysql
 
   - name: garden
-    release: garden-linux
+    release: garden-runc
   - name: etcd
     release: etcd
 
@@ -87,56 +123,60 @@ jobs:
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2
 
-  - name: syslog_drain_binder
-    release: cf
-  - name: consul_agent
-    release: cf
   - name: stager
-    release: cf
+    release: capi
   - name: nsync
-    release: cf
+    release: capi
   - name: tps
-    release: cf
+    release: capi
   - name: cc_uploader
-    release: cf
-  - name: blobstore
-    release: cf
-  - name: metron_agent
-    release: cf
-  - name: nats
-    release: cf
+    release: capi
   - name: cloud_controller_clock
-    release: cf
+    release: capi
   - name: cloud_controller_ng
-    release: cf
+    release: capi
   - name: cloud_controller_worker
-    release: cf
+    release: capi
+  - name: blobstore
+    release: capi
+
+  - name: nats
+    release: nats
+
   - name: uaa
-    release: cf
-  - name: doppler
-    release: cf
-  - name: loggregator_trafficcontroller
-    release: cf
-  - name: go-buildpack
-    release: cf
-  - name: binary-buildpack
-    release: cf
+    release: uaa
+
+  - name: consul_agent
+    release: consul
+
   - name: nodejs-buildpack
-    release: cf
-  - name: ruby-buildpack
-    release: cf
-  - name: php-buildpack
-    release: cf
-  - name: python-buildpack
-    release: cf
-  - name: staticfile-buildpack
-    release: cf
+    release: nodejs-buildpack
   - name: java-offline-buildpack
-    release: cf
+    release: java-offline-buildpack
+  - name: php-buildpack
+    release: php-buildpack
+  - name: binary-buildpack
+    release: binary-buildpack
+  - name: go-buildpack
+    release: go-buildpack
+  - name: python-buildpack
+    release: python-buildpack
+  - name: ruby-buildpack
+    release: ruby-buildpack
+  - name: staticfile-buildpack
+    release: staticfile-buildpack
+
+  - name: syslog_drain_binder
+    release: loggregator
+  - name: metron_agent
+    release: loggregator
+  - name: doppler
+    release: loggregator
+  - name: loggregator_trafficcontroller
+    release: loggregator
 
   - name: localdriver
     release: local-volume
-
   - name: localbroker
     release: local-volume
 
