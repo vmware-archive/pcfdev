@@ -31,10 +31,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v60-2-g954498f.tgz"
     },
     "cf-mysql" : {
-      "version": "v26.4-27-g23e436d",
-      "sha1": "c6cc99b14721fbab2c268bb6eb0ac686459676fa",
+      "version": "v26.8-3-g23e436d",
+      "sha1": "3732ddfd87ddf1688324acaa5bc84fbca4e3778d",
       "source_location": "https://github.com/pcfdev-forks/cf-mysql-release",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v26.4-27-g23e436d.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v26.8-3-g23e436d.tgz"
     },
     "cflinuxfs2" : {
       "version": "v1.18.0",
