@@ -1,5 +1,7 @@
 {
     "variables": {
+        "source_ami": "",
+        "source_ova_path": "",
         "version": "0",
         "distro": "pcfdev",
         "cpus": "4",
@@ -17,7 +19,7 @@
         {
             "type": "amazon-ebs",
             "region": "us-east-1",
-            "source_ami": "ami-6012160a",
+            "source_ami": "{{user `source_ami`}}",
             "instance_type": "c4.2xlarge",
             "ami_name": "{{user `distro`}}-v{{user `version`}}",
             "ami_description": "{{user `eula_url`}}",
@@ -45,16 +47,12 @@
             "tags": {"Name": "v{{user `version`}}", "License":"{{user `eula_url`}}"}
         },
         {
-            "type": "virtualbox-iso",
-            "headless": true,
-            "vm_name": "packer-{{user `distro`}}-v{{user `version`}}",
-            "guest_os_type": "Ubuntu_64",
-            "disk_size": "{{user `disk_size`}}000",
+            "type": "virtualbox-ovf",
+            "source_path": "{{user `source_ova_path`}}",
             "ssh_username": "vcap",
             "ssh_password": "vcap",
-            "iso_url": "https://pcfdev.s3.amazonaws.com/artifacts/ubuntu-14.04.4-server-amd64.iso",
-            "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
-            "iso_checksum_type": "md5",
+            "headless": true,
+            "vm_name": "packer-{{user `distro`}}-v{{user `version`}}",
             "http_directory": "preseed",
             "ssh_timeout": "20m",
             "shutdown_command": "echo vcap | sudo -S shutdown -P now",
@@ -83,33 +81,6 @@
     "provisioners": [
         {
             "type": "shell",
-            "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline": [
-                "apt-get -y install software-properties-common",
-                "add-apt-repository -y ppa:brightbox/ruby-ng",
-                "echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list",
-                "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -",
-                "apt-get -y update",
-                "apt-get -y --force-yes dist-upgrade",
-                "apt-get -y update",
-                "apt-get -y upgrade sudo",
-                "echo 'vcap ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
-            ]
-        },
-        {
-            "type": "shell",
-            "only": ["virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
-            "inline": [
-                "apt-get install -y dkms",
-                "mount -o loop /home/vcap/VBoxGuestAdditions.iso /mnt",
-                "sh /mnt/VBoxLinuxAdditions.run --nox11",
-                "umount /mnt",
-                "apt-get install -y open-vm-tools"
-            ]
-        },
-        {
-            "type": "shell",
             "only": ["amazon-ebs"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -119,7 +90,7 @@
         },
         {
             "type": "file",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "source": "assets/keys/key.pem",
             "destination": "/tmp/key.pem"
         },
@@ -130,7 +101,7 @@
         },
         {
             "type": "shell",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "remote_path": "/home/vcap/add_key.sh",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
@@ -142,25 +113,6 @@
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
-                "apt-get -y install curl unzip zip jq sysstat vim",
-                "apt-get -y install libruby2.1 ruby2.1",
-                "apt-get -y install linux-generic",
-                "apt-get -y install aufs-tools",
-                "apt-get -y install libgcrypt20 libgcrypt20-dev",
-                "apt-get -y install postgresql-client-9.4",
-                "apt-get -y install nginx",
-                "service nginx stop",
-                "update-rc.d -f nginx remove",
-
-                "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
-
-                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.21.1&source=github-rel' | tar -C /usr/local/bin -xz",
-                "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.6.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
-                "mv /usr/local/bin/rtr-linux-amd64 /usr/local/bin/rtr",
-                "curl -L 'https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
-                "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
-                "curl -o /usr/local/bin/veritas -L https://github.com/pivotal-cf-experimental/veritas/releases/download/latest/veritas",
-                "chmod +x /usr/local/bin/veritas",
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
                 "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
 
@@ -241,7 +193,7 @@
     "post-processors": [
         {
             "type": "shell-local",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "inline": ["ls $PWD/*/*.ova"],
             "keep_input_artifact": true
         },

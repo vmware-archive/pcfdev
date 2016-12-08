@@ -16,6 +16,26 @@ spiff merge \
   <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
   > "$output_dir/manifest.yml"
 
+source_ova_path="$TMPDIR"/pcfdev-base.ova
+if [[ ! -f $source_ova_path ]]
+then
+  wget -O "$source_ova_path" "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base.ova"
+else
+  echo "Re-using existing pcfdev-base.ova. Remove it to download the latest base ova in the next build."
+fi
+
+source_ami_path="$TMPDIR"/pcfdev-base-aws.box
+pushd "$TMPDIR" >/dev/null
+  rm -f pcfdev-base-aws.box
+  wget -O pcfdev-base-aws.box "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base-aws.box"
+  tar xzf pcfdev-base-aws.box
+  source_ami=$(cat Vagrantfile | grep -o 'ami-.*' | tr -d '"')
+popd >/dev/null
+
 pushd "$output_dir" >/dev/null
-  packer build "$@" -var 'distro=oss' "$pcfdev_dir/pcfdev.json"
+  packer build "$@" \
+    -var 'distro=oss' \
+    -var "source_ami=$source_ami" \
+    -var "source_ova_path=$source_ova_path" \
+    "$pcfdev_dir/pcfdev.json"
 popd >/dev/null
