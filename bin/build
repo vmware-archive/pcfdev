@@ -29,7 +29,7 @@ else
 fi
 
 source_ami_path=$base_ova_dir/pcfdev-base-aws.box
-pushd "$TMPDIR" >/dev/null
+pushd $base_ova_dir >/dev/null
   rm -f pcfdev-base-aws.box
   wget -O pcfdev-base-aws.box "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base-aws.box"
   tar xzf pcfdev-base-aws.box
