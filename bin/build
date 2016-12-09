@@ -28,11 +28,11 @@ else
   echo "Re-using existing pcfdev-base.ova. Remove it to download the latest base ova in the next build."
 fi
 
-source_ami_path=$base_ova_dir/pcfdev-base-aws.box
+source_ami_path=$base_ova_dir/pcfdev-base.box
 pushd $base_ova_dir >/dev/null
-  rm -f pcfdev-base-aws.box
-  wget -O pcfdev-base-aws.box "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base-aws.box"
-  tar xzf pcfdev-base-aws.box
+  rm -f pcfdev-base.box
+  wget -O pcfdev-base.box "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base.box"
+  tar xzf pcfdev-base.box
   source_ami=$(cat Vagrantfile | grep -o 'ami-.*' | tr -d '"')
 popd >/dev/null
 
