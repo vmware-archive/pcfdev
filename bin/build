@@ -16,7 +16,11 @@ spiff merge \
   <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
   > "$output_dir/manifest.yml"
 
-source_ova_path="$TMPDIR"/pcfdev-base.ova
+base_ova_dir=$pcfdev_dir/pcfdev-base
+
+mkdir -p $base_ova_dir
+
+source_ova_path=$base_ova_dir/pcfdev-base.ova
 if [[ ! -f $source_ova_path ]]
 then
   wget -O "$source_ova_path" "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base.ova"
@@ -24,7 +28,7 @@ else
   echo "Re-using existing pcfdev-base.ova. Remove it to download the latest base ova in the next build."
 fi
 
-source_ami_path="$TMPDIR"/pcfdev-base-aws.box
+source_ami_path=$base_ova_dir/pcfdev-base-aws.box
 pushd "$TMPDIR" >/dev/null
   rm -f pcfdev-base-aws.box
   wget -O pcfdev-base-aws.box "https://s3.amazonaws.com/pcfdev/ci/pcfdev-base-aws.box"
