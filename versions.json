@@ -1,70 +1,10 @@
 {
   "releases": {
-    "loggregator" : {
-      "version": "metron-perf-0.0-790-g2916663",
-      "sha1": "a3dc3bc5ca28dfe110d390f309ec66b4f2be2750",
-      "source_location": "https://github.com/cloudfoundry/loggregator.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-metron-perf-0.0-790-g2916663.tgz"
-    },
-    "consul" : {
-      "version": "v133",
-      "sha1": "e6815a743bc5df2c39cd2a5f7df87e17eea4c66e",
-      "source_location": "https://github.com/cloudfoundry-incubator/consul-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/consul-v133.tgz"
-    },
-    "nodejs-buildpack" : {
-      "version": "f210d3156a7e8a1f7911acd26a3a63af7e0122c0",
-      "sha1": "e38dd97576cd32c9e665c3b003ee88e438a85fc8",
-      "source_location": "https://github.com/cloudfoundry/nodejs-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nodejs-buildpack-f210d3156a7e8a1f7911acd26a3a63af7e0122c0.tgz"
-    },
-    "java-offline-buildpack" : {
-      "version": "39265dfe4ca7515bb98caf40bc252612b6725f73",
-      "sha1": "8d09fd9a7b9cffade36669d8f90e6acd63c5c9f8",
-      "source_location": "https://github.com/cloudfoundry/java-offline-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/java-offline-buildpack-39265dfe4ca7515bb98caf40bc252612b6725f73.tgz"
-    },
-    "php-buildpack" : {
-      "version": "522b8eeb1ec32806b71a27b7edd91347c24c461e",
-      "sha1": "8d5d5acd7bdfca44dda11f77d501632d2284cba8",
-      "source_location": "https://github.com/cloudfoundry/php-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/php-buildpack-522b8eeb1ec32806b71a27b7edd91347c24c461e.tgz"
-    },
     "binary-buildpack" : {
       "version": "ba06e4e4a15760f76d077b694f19c2b7a68be85a",
       "sha1": "9ef5532a562ede45ab0bc48c8231bd748b74786d",
       "source_location": "https://github.com/cloudfoundry/binary-buildpack-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/binary-buildpack-ba06e4e4a15760f76d077b694f19c2b7a68be85a.tgz"
-    },
-    "go-buildpack" : {
-      "version": "72f75d58195565c4cade746b86b77c5484cc7f60",
-      "sha1": "72b269d6adbda1921d09e8ddeb28afee9975b147",
-      "source_location": "https://github.com/cloudfoundry/go-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/go-buildpack-72f75d58195565c4cade746b86b77c5484cc7f60.tgz"
-    },
-    "python-buildpack" : {
-      "version": "8aed6f2d23f07383b069794a06efb7aa33f54b40",
-      "sha1": "500aa8fd3c0d0800354137f1e2e1e2fbbe0ef9fd",
-      "source_location": "https://github.com/cloudfoundry/python-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/python-buildpack-8aed6f2d23f07383b069794a06efb7aa33f54b40.tgz"
-    },
-    "ruby-buildpack" : {
-      "version": "025aca047e45c2ad8a381777ebe9a6ac6f6af7d3",
-      "sha1": "8737c95844cf5e0827e378d031d1eff5de7be8cc",
-      "source_location": "https://github.com/cloudfoundry/ruby-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/ruby-buildpack-025aca047e45c2ad8a381777ebe9a6ac6f6af7d3.tgz"
-    },
-    "staticfile-buildpack" : {
-      "version": "caf195e1eca1c2e559d8395683651563408aec4a",
-      "sha1": "5fc4c2c6ee9f00e95863872b3e9b145edc20a70e",
-      "source_location": "https://github.com/cloudfoundry/staticfile-buildpack-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/staticfile-buildpack-caf195e1eca1c2e559d8395683651563408aec4a.tgz"
-    },
-    "nats" : {
-      "version": "v14",
-      "sha1": "ecd40aed589dafffac70d08897b63f4855fa7a9b",
-      "source_location": "https://github.com/cloudfoundry/nats-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14.tgz"
     },
     "capi" : {
       "version": "1.10.0-5-gc006cc8",
@@ -72,41 +12,11 @@
       "source_location": "https://github.com/cloudfoundry/capi-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.10.0-5-gc006cc8.tgz"
     },
-    "uaa" : {
-      "version": "v20-2-gfced50c",
-      "sha1": "165faa99133a8210db420609a25de79883201f02",
-      "source_location": "https://github.com/cloudfoundry/uaa-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v20-2-gfced50c.tgz"
-    },
     "cf" : {
       "version": "v246-1-gd9c0645",
       "sha1": "36ee47eded2a5d9ac93e6737413b6b06f6668698",
       "source_location": "git@github.com:cloudfoundry/cf-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v246-1-gd9c0645.tgz"
-    },
-    "routing" : {
-      "version": "0.141.0-3-g166eddc",
-      "sha1": "d1a1a37e5c7418a0d61bf4abab5b1fc044dd4f30",
-      "source_location": "https://github.com/cloudfoundry-incubator/routing-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.141.0-3-g166eddc.tgz"
-    },
-    "diego" : {
-      "version": "v0.1487.0-6-g5ca0fac",
-      "sha1": "50339d170acf06f61301356392cc6d519bee6579",
-      "source_location": "https://github.com/cloudfoundry/diego-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1487.0-6-g5ca0fac.tgz"
-    },
-    "garden-runc" : {
-      "version": "v1.0.0",
-      "sha1": "90cf084f8040bfe06d6d58c5cc0a274453b59855",
-      "source_location": "https://github.com/cloudfoundry/garden-runc-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-runc-v1.0.0.tgz"
-    },
-    "etcd" : {
-      "version": "v78-2-gd5035ae",
-      "sha1": "800241499e08febe60a9e4f557c878ee48c42925",
-      "source_location": "https://github.com/cloudfoundry-incubator/etcd-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v78-2-gd5035ae.tgz"
     },
     "cf-mysql" : {
       "version": "v26.8-3-g23e436d",
@@ -120,11 +30,101 @@
       "source_location": "https://github.com/cloudfoundry/cflinuxfs2-rootfs-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-v1.38.0.tgz"
     },
+    "consul" : {
+      "version": "v133",
+      "sha1": "e6815a743bc5df2c39cd2a5f7df87e17eea4c66e",
+      "source_location": "https://github.com/cloudfoundry-incubator/consul-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/consul-v133.tgz"
+    },
+    "diego" : {
+      "version": "v0.1487.0-6-g5ca0fac",
+      "sha1": "50339d170acf06f61301356392cc6d519bee6579",
+      "source_location": "https://github.com/cloudfoundry/diego-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v0.1487.0-6-g5ca0fac.tgz"
+    },
+    "etcd" : {
+      "version": "v78-2-gd5035ae",
+      "sha1": "800241499e08febe60a9e4f557c878ee48c42925",
+      "source_location": "https://github.com/cloudfoundry-incubator/etcd-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v78-2-gd5035ae.tgz"
+    },
+    "garden-runc" : {
+      "version": "v1.0.0",
+      "sha1": "90cf084f8040bfe06d6d58c5cc0a274453b59855",
+      "source_location": "https://github.com/cloudfoundry/garden-runc-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-runc-v1.0.0.tgz"
+    },
+    "go-buildpack" : {
+      "version": "72f75d58195565c4cade746b86b77c5484cc7f60",
+      "sha1": "72b269d6adbda1921d09e8ddeb28afee9975b147",
+      "source_location": "https://github.com/cloudfoundry/go-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/go-buildpack-72f75d58195565c4cade746b86b77c5484cc7f60.tgz"
+    },
+    "java-offline-buildpack" : {
+      "version": "39265dfe4ca7515bb98caf40bc252612b6725f73",
+      "sha1": "8d09fd9a7b9cffade36669d8f90e6acd63c5c9f8",
+      "source_location": "https://github.com/cloudfoundry/java-offline-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/java-offline-buildpack-39265dfe4ca7515bb98caf40bc252612b6725f73.tgz"
+    },
     "local-volume" : {
       "version": "brokerapi2.9-55-ga9a1a5b",
       "sha1": "346f82f6b272f90b62f21925ec8809a6ed687d99",
       "source_location": "https://github.com/cloudfoundry-incubator/local-volume-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-55-ga9a1a5b.tgz"
+    },
+    "loggregator" : {
+      "version": "metron-perf-0.0-790-g2916663",
+      "sha1": "a3dc3bc5ca28dfe110d390f309ec66b4f2be2750",
+      "source_location": "https://github.com/cloudfoundry/loggregator.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-metron-perf-0.0-790-g2916663.tgz"
+    },
+    "nats" : {
+      "version": "v14",
+      "sha1": "ecd40aed589dafffac70d08897b63f4855fa7a9b",
+      "source_location": "https://github.com/cloudfoundry/nats-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14.tgz"
+    },
+    "nodejs-buildpack" : {
+      "version": "f210d3156a7e8a1f7911acd26a3a63af7e0122c0",
+      "sha1": "e38dd97576cd32c9e665c3b003ee88e438a85fc8",
+      "source_location": "https://github.com/cloudfoundry/nodejs-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nodejs-buildpack-f210d3156a7e8a1f7911acd26a3a63af7e0122c0.tgz"
+    },
+    "php-buildpack" : {
+      "version": "522b8eeb1ec32806b71a27b7edd91347c24c461e",
+      "sha1": "8d5d5acd7bdfca44dda11f77d501632d2284cba8",
+      "source_location": "https://github.com/cloudfoundry/php-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/php-buildpack-522b8eeb1ec32806b71a27b7edd91347c24c461e.tgz"
+    },
+    "python-buildpack" : {
+      "version": "8aed6f2d23f07383b069794a06efb7aa33f54b40",
+      "sha1": "500aa8fd3c0d0800354137f1e2e1e2fbbe0ef9fd",
+      "source_location": "https://github.com/cloudfoundry/python-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/python-buildpack-8aed6f2d23f07383b069794a06efb7aa33f54b40.tgz"
+    },
+    "routing" : {
+      "version": "0.141.0-3-g166eddc",
+      "sha1": "d1a1a37e5c7418a0d61bf4abab5b1fc044dd4f30",
+      "source_location": "https://github.com/cloudfoundry-incubator/routing-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.141.0-3-g166eddc.tgz"
+    },
+    "ruby-buildpack" : {
+      "version": "025aca047e45c2ad8a381777ebe9a6ac6f6af7d3",
+      "sha1": "8737c95844cf5e0827e378d031d1eff5de7be8cc",
+      "source_location": "https://github.com/cloudfoundry/ruby-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/ruby-buildpack-025aca047e45c2ad8a381777ebe9a6ac6f6af7d3.tgz"
+    },
+    "staticfile-buildpack" : {
+      "version": "caf195e1eca1c2e559d8395683651563408aec4a",
+      "sha1": "5fc4c2c6ee9f00e95863872b3e9b145edc20a70e",
+      "source_location": "https://github.com/cloudfoundry/staticfile-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/staticfile-buildpack-caf195e1eca1c2e559d8395683651563408aec4a.tgz"
+    },
+    "uaa" : {
+      "version": "v20-2-gfced50c",
+      "sha1": "165faa99133a8210db420609a25de79883201f02",
+      "source_location": "https://github.com/cloudfoundry/uaa-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v20-2-gfced50c.tgz"
     }
   }
 }
