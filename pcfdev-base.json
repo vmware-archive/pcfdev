@@ -99,6 +99,10 @@
             "only": ["virtualbox-iso"],
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "inline": [
+                "# vvv   TODO: instead of doing this, use (or build) a stemcell for PCF Dev   vvv",
+                "sed -i 's/^GRUB_CMDLINE_LINUX=\"\"/GRUB_CMDLINE_LINUX=\"cgroup_enable=memory swapaccount=1\"/' /etc/default/grub",
+                "# ^^^   TODO: instead of doing this, use (or build) a stemcell for PCF Dev   ^^^",
+
                 "apt-get install -y dkms",
                 "mount -o loop /home/vcap/VBoxGuestAdditions.iso /mnt",
                 "sh /mnt/VBoxLinuxAdditions.run --nox11",
