@@ -830,7 +830,7 @@ properties:
     default_staging_security_groups: [public_networks, dns, all_pcfdev]
     external_protocol: http
     install_buildpacks:
-    - {name: java_buildpack, package: buildpack_java_offline}
+    - {name: java_buildpack, package: java-offline-buildpack}
     - {name: ruby_buildpack, package: ruby-buildpack}
     - {name: nodejs_buildpack, package: nodejs-buildpack}
     - {name: go_buildpack, package: go-buildpack}
