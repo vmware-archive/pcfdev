@@ -5,7 +5,7 @@ releases:
 - name: capi
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/capi-0.tgz
-- name: loggregtor
+- name: loggregator
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/loggregator-0.tgz
 - name: nats
@@ -26,6 +26,9 @@ releases:
 - name: php-buildpack
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/php-buildpack-0.tgz
+- name: ruby-buildpack
+  version: 0
+  url: file:///opt/bosh-provisioner/assets/releases/ruby-buildpack-0.tgz
 - name: binary-buildpack
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/binary-buildpack-0.tgz
@@ -106,8 +109,6 @@ jobs:
     release: routing
 
   - name: auctioneer
-    release: diego
-  - name: converger
     release: diego
   - name: file_server
     release: diego
@@ -701,7 +702,18 @@ properties:
       user:
         override: true
       users:
-      - admin|admin|scim.write,scim.read,openid,cloud_controller.admin,clients.read,clients.write,doppler.firehose,routing.router_groups.read,routing.router_groups.write
+      - name: admin
+        password: admin
+        groups:
+        - scim.write
+        - scim.read
+        - openid
+        - cloud_controller.admin
+        - clients.read
+        - clients.write
+        - doppler.firehose
+        - routing.router_groups.read
+        - routing.router_groups.write
     require_https: true
     jwt:
       signing_key: |
