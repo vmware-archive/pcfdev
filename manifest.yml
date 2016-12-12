@@ -886,6 +886,7 @@ properties:
       redirect:
         parameter:
           disable: false
+    links: {}
   hm9000:
     port: "some-port"
     url: "some-url"

@@ -73,10 +73,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.10.0-6-g2b91541.tgz"
     },
     "uaa" : {
-      "version": "v20-1-g8e60edc",
-      "sha1": "ddf71cd7b57212769050a26dea98a739a4a15526",
+      "version": "v20-2-gfced50c",
+      "sha1": "165faa99133a8210db420609a25de79883201f02",
       "source_location": "https://github.com/cloudfoundry/uaa-release",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v20-1-g8e60edc.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v20-2-gfced50c.tgz"
     },
     "cf" : {
       "version": "v246-1-g66a442d",
