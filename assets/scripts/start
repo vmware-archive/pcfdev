@@ -28,7 +28,7 @@ while ! nc -z 127.0.0.1 3306; do
   sleep 1
 done
 
-for script in /var/vcap/jobs/*/bin/pre-start; do
+for script in $(ls /var/vcap/jobs/*/bin/pre-start |  grep -v '/mysql/'); do
   $script
 done
 start_services consul_agent garden etcd uaa
