@@ -9,7 +9,6 @@
 /releases
 /src/provisioner/provision
 /src/api/api
-/pcfdev-base
 
 /bin
 !/bin/build
