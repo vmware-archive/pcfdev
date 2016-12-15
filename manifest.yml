@@ -332,7 +332,7 @@ properties:
         client_key: ""
         require_ssl: false
       nats:
-        machines: [127.0.0.1]
+        machines: [local.pcfdev.io]
         user: nats
         password: nats
     ssh_proxy:
@@ -397,10 +397,11 @@ properties:
 
   # For CF:
   nats:
-    machines: [127.0.0.1]
+    machines: [local.pcfdev.io]
     user: nats
     password: nats
     port: 4222
+    address: local.pcfdev.io
   metron_agent:
     zone: z1
     deployment: pcfdev

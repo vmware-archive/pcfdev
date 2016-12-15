@@ -79,10 +79,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-metron-perf-0.0-790-g2916663.tgz"
     },
     "nats" : {
-      "version": "v14",
-      "sha1": "ecd40aed589dafffac70d08897b63f4855fa7a9b",
+      "version": "v14-1-gb1113b4",
+      "sha1": "f13690403655e0c2e32bb6c945a307e374b38079",
       "source_location": "https://github.com/cloudfoundry/nats-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14-1-gb1113b4-1481823295.tgz"
     },
     "nodejs-buildpack" : {
       "version": "f210d3156a7e8a1f7911acd26a3a63af7e0122c0",
