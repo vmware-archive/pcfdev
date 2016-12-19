@@ -28,10 +28,15 @@ while ! nc -z 127.0.0.1 3306; do
   sleep 1
 done
 
-for script in $(ls /var/vcap/jobs/*/bin/pre-start |  grep -v '/mysql/'); do
+/var/vcap/jobs/consul_agent/bin/pre-start
+
+start_services consul_agent
+
+for script in $(ls /var/vcap/jobs/*/bin/pre-start | grep -v '/mysql/' | grep -v '/consul_agent/'); do
   $script
 done
-start_services consul_agent garden etcd uaa
+
+start_services garden etcd uaa
 
 while [[ ! /var/vcap/jobs/uaa/bin/dns_health_check ]]; do
   sleep 1
