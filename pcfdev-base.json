@@ -81,7 +81,7 @@
     "provisioners": [
         {
             "type": "shell",
-            "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+            "execute_command": "echo vcap | {{ .Vars }} sudo -E -S sh -c '{{ .Path }}'",
             "inline": [
                 "apt-get -y install software-properties-common",
                 "add-apt-repository -y ppa:brightbox/ruby-ng",
@@ -101,7 +101,7 @@
         {
             "type": "shell",
             "only": ["virtualbox-iso"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
                 "apt-get install -y dkms",
                 "mount -o loop /home/vcap/VBoxGuestAdditions.iso /mnt",
@@ -113,7 +113,7 @@
         {
             "type": "shell",
             "only": ["amazon-ebs"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
                 "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
                 "ln -sf /usr/bin/mawk /usr/bin/awk"
@@ -121,7 +121,7 @@
         },
         {
             "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
                 "apt-get -y install curl unzip zip jq sysstat vim",
                 "apt-get -y install libruby2.1 ruby2.1",
