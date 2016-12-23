@@ -183,7 +183,7 @@
                 "echo 'vcap:vcap' | chpasswd",
                 "chown -R vcap: /var/vcap/store",
                 "chown -R vcap: /var/pcfdev",
-                "chown -R vcap /home/vcap/.ssh",
+                "chown -R vcap /home/vcap/.ssh || true",
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
                 "rm -f /EMPTY"
             ]
