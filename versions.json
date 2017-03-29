@@ -13,10 +13,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.20.0-1-ga6a2ee7-1487566993.tgz"
     },
     "cf" : {
-      "version": "v252-1-gfdd06532",
-      "sha1": "9d7faaaa7732d311df1b05db8535afc074c23936",
+      "version": "v252-2-gbba4215e",
+      "sha1": "4921db9b901e20dfff48696ca5f0d6dc29a4f39e",
       "source_location": "https://github.com/cloudfoundry/cf-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v252-1-gfdd06532-1487287219.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v252-2-gbba4215e-1490800219.tgz"
     },
     "cf-mysql" : {
       "version": "v34",

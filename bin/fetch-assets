@@ -22,7 +22,7 @@ shasum_matches() {
   if [[ ! -f "$path" ]]; then
     return 1
   fi
-  
+
   if hash shasum 2>/dev/null; then
     if [[ $(shasum -a 1 "$path" | cut -d ' ' -f 1) != "$checksum" ]]; then
         return 1
@@ -35,8 +35,6 @@ shasum_matches() {
      >&2 echo -e "\t Could not verify hash of downloaded resource, no shasum or sha1sum installed"
      exit 1
   fi
-
-  
 }
 
 versions_json_path=$1
