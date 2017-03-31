@@ -67,10 +67,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/java-offline-buildpack-10981ea7400a5cc3382d2ae415b7eeea14557cae-1487574532.tgz"
     },
     "local-volume" : {
-      "version": "brokerapi2.9-67-g01f3da3",
-      "sha1": "790af4e8e7e6c70e807b60eef4325d36434846d7",
+      "version": "brokerapi2.9-83-g4171ea2",
+      "sha1": "70113a5d68517b903ddd3849cb443f5891e3ed2d",
       "source_location": "https://github.com/cloudfoundry-incubator/local-volume-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-67-g01f3da3.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-83-g4171ea2-1490974431.tgz"
     },
     "loggregator" : {
       "version": "v76-2-gaa468a7e",
