@@ -123,7 +123,7 @@
             "type": "shell",
             "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
-                "apt-get -y install curl unzip zip jq sysstat vim",
+                "apt-get -y install curl unzip zip sysstat vim",
                 "apt-get -y install libruby2.1 ruby2.1",
                 "apt-get -y install linux-generic",
                 "apt-get -y install aufs-tools",
@@ -141,7 +141,9 @@
                 "curl -L 'https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
                 "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
                 "curl -o /usr/local/bin/veritas -L https://github.com/pivotal-cf-experimental/veritas/releases/download/latest/veritas",
-                "chmod +x /usr/local/bin/veritas"
+                "chmod +x /usr/local/bin/veritas",
+                "curl -o /usr/local/bin/jq -L https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64",
+                "chmod +x /usr/local/bin/jq"
             ]
         }
     ],
