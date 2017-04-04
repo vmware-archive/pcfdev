@@ -1046,37 +1046,38 @@ properties:
       cc-service-dashboards:
         authorities: clients.admin,clients.read,clients.write
         authorized-grant-types: client_credentials
-        scope: cloud_controller_service_permissions.read,openid
+        override: true
+        scope: cloud_controller.read,cloud_controller.write,cloud_controller_service_permissions.read,openid
         secret: cc-broker-secret
       cf:
         access-token-validity: 600
         authorities: uaa.none
-        authorized-grant-types: implicit,password,refresh_token
-        id: cf
+        authorized-grant-types: password,refresh_token
         override: true
         refresh-token-validity: 2592000
-        scope: cloud_controller.admin,cloud_controller.read,cloud_controller.write,doppler.firehose,openid,password.write,routing.router_groups.read,routing.router_groups.write,scim.read,scim.write,uaa.user
+        scope: cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.read,cloud_controller.write,doppler.firehose,network.admin,openid,password.write,routing.router_groups.read,routing.router_groups.write,scim.read,scim.write,uaa.user
       cloud_controller_username_lookup:
         authorities: scim.userids
         authorized-grant-types: client_credentials
         secret: cloud-controller-username-lookup-secret
       doppler:
         authorities: uaa.resource
-        override: true
         secret: doppler-secret
       gorouter:
-        authorities: routing.routes.read
+        authorities: clients.admin,clients.read,clients.write,routing.routes.read,routing.routes.write
         authorized-grant-types: client_credentials,refresh_token
+        scope: cloud_controller_service_permissions.read,openid
         secret: gorouter-secret
       login:
         authorities: clients.read,critical_notifications.write,emails.write,notifications.write,oauth.login,password.write,scim.userids,scim.write
-        authorized-grant-types: authorization_code,client_credentials,refresh_token
+        authorized-grant-types: client_credentials,refresh_token
+        autoapprove: true
         override: true
         redirect-uri: "https://login.local.pcfdev.io"
         scope: oauth.approvals,openid
         secret: login-secret
       notifications:
-        authorities: cloud_controller.admin,scim.read
+        authorities: cloud_controller.admin,critical_notifications.write,emails.write,notifications.write,scim.read
         authorized-grant-types: client_credentials
         secret: notifications-secret
       ssh-proxy:
@@ -1084,15 +1085,21 @@ properties:
         autoapprove: true
         override: true
         redirect-uri: /login
-        scope: cloud_controller.read,cloud_controller.write,openid
+        scope: cloud_controller.admin,cloud_controller.read,cloud_controller.write,openid
         secret: ssh-proxy-secret
       tcp_emitter:
+        access-token-validity: 1209600
         authorities: routing.router_groups.read,routing.routes.read,routing.routes.write
         authorized-grant-types: client_credentials,refresh_token
+        override: true
+        scope: routing.router_groups.read,routing.routes.read,routing.routes.write
         secret: tcp-emitter-secret
       tcp_router:
-        authorities: routing.routes.read
+        access-token-validity: 1209600
+        authorities: routing.router_groups.read,routing.routes.read
         authorized-grant-types: client_credentials,refresh_token
+        override: true
+        scope: routing.router_groups.read,routing.routes.read
         secret: tcp-router-secret
     admin:
       client_secret: admin-client-secret
