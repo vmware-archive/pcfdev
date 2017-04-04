@@ -1019,6 +1019,25 @@ properties:
       rvaEn/skAHkQTbLPPoPmuOs5qwWgYkMB6AHcSeCmBQokX7Zn7nfR
       -----END RSA PRIVATE KEY-----
     proxy_ips_regex: ".*"
+    user:
+      authorities:
+      - openid
+      - scim.me
+      - cloud_controller.read
+      - cloud_controller.write
+      - cloud_controller.user
+      - cloud_controller_service_permissions.read
+      - password.write
+      - uaa.user
+      - approvals.me
+      - oauth.approvals
+      - notification_preferences.read
+      - notification_preferences.write
+      - profile
+      - roles
+      - user_attributes
+      - uaa.offline_token
+      - actuator.read
     clients:
       ssh-proxy:
         authorized-grant-types: authorization_code
@@ -1090,6 +1109,7 @@ properties:
         - scim.read
         - openid
         - cloud_controller.admin
+        - cloud_controller.user
         - clients.read
         - clients.write
         - doppler.firehose
