@@ -70,7 +70,7 @@ if [[ -n "$registries" ]]; then
 
   insecureDockerRegistryOptions=""
   for registry in $(echo "$registries" | tr ',' '\n'); do
-    insecureDockerRegistryOptions="${insecureDockerRegistryOptions}-insecureDockerRegistry=$registry "
+    insecureDockerRegistryOptions="${insecureDockerRegistryOptions}--insecure-docker-registry=$registry "
   done
 
   if [[ -n "$insecureDockerRegistryOptions" ]]; then
