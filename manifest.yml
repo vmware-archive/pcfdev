@@ -118,6 +118,8 @@ jobs:
     release: diego
   - name: bbs
     release: diego
+  - name: cfdot
+    release: diego
 
   - name: cflinuxfs2-rootfs-setup
     release: cflinuxfs2-rootfs
@@ -401,6 +403,11 @@ properties:
         db_host: 127.0.0.1
         db_port: 3306
         db_schema: bbsdb
+    cfdot:
+      bbs:
+        ca_cert: ""
+        client_cert: ""
+        client_key: ""
     converger:
       debug_addr: 127.0.0.1:17002
       bbs:
