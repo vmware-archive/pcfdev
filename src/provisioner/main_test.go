@@ -79,6 +79,9 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(exec.Command("docker", "exec", dockerID, "go", "build", "-ldflags", "-X main.provisionScriptPath=/go/src/provisioner/provision-script", "-o", "provision", "provisioner").Run()).To(Succeed())
 		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/pcfdev"), "10s")
 		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo original-domain.pcfdev.io > /var/pcfdev/domain"), "10s")
+
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "mkdir", "-p", "/var/vcap/jobs/cfdot/bin"), "10s")
+		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 'echo setting up cfdot' > /var/vcap/jobs/cfdot/bin/setup"), "10s")
 	})
 
 	AfterEach(func() {
@@ -86,6 +89,7 @@ var _ = Describe("PCF Dev provision", func() {
 		os.RemoveAll(filepath.Join(pwd, "provision-script"))
 		Expect(exec.Command("docker", "rm", dockerID, "-f").Run()).To(Succeed())
 	})
+
 
 	It("should provision PCF Dev", func() {
 		session := provisionForVirtualBox(dockerID)
@@ -135,6 +139,14 @@ var _ = Describe("PCF Dev provision", func() {
 
 		session := runSuccessfully(exec.Command("docker", "exec", dockerID, "grep", internalIP, "/var/vcap/jobs/garden/bin/garden_ctl"), dockerExecTimeout)
 		Eventually(session).Should(gbytes.Say("-dnsServer=" + internalIP))
+	})
+
+	It("should copy cfdot setup script to /etc/profile.d", func() {
+		provisionForVirtualBox(dockerID)
+
+		output, err := exec.Command("docker", "exec", dockerID, "bash", "-c", "cat /etc/profile.d/cfdot.sh").Output()
+		Expect(err).NotTo(HaveOccurred())
+		Expect(string(output)).To(Equal("echo setting up cfdot\n"))
 	})
 
 	Describe("Network access", func() {
