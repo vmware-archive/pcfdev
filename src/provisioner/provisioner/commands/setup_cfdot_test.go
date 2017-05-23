@@ -37,10 +37,8 @@ var _ = Describe("SetupCFDot", func() {
 
 	Describe("#Run", func() {
 		It("should create a new file with content copied from /var/vcap/jobs/cfdot/bin/setup", func() {
-			gomock.InOrder(
-				mockFS.EXPECT().Read("/var/vcap/jobs/cfdot/bin/setup").Return([]byte("cf-dot-setup-stuff-here\n"), nil),
-				mockFS.EXPECT().Write("/etc/profile.d/cfdot.sh", strings.NewReader("cf-dot-setup-stuff-here\n"), os.FileMode(fs.FileModeRootReadWrite)),
-			)
+			mockFS.EXPECT().Read("/var/vcap/jobs/cfdot/bin/setup").Return([]byte("cf-dot-setup-stuff-here\n"), nil)
+			mockFS.EXPECT().Write("/etc/profile.d/cfdot.sh", strings.NewReader("cf-dot-setup-stuff-here\n"), os.FileMode(fs.FileModeRootReadWrite))
 
 			Expect(cmd.Run()).To(Succeed())
 		})

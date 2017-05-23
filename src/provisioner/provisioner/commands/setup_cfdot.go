@@ -9,7 +9,6 @@ import (
 type SetupCFDot struct {
 	CmdRunner provisioner.CmdRunner
 	FS        provisioner.FS
-	NewDomain string
 }
 
 func (s *SetupCFDot) Run() error {
