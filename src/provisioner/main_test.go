@@ -115,7 +115,7 @@ var _ = Describe("PCF Dev provision", func() {
 		Expect(session).To(gbytes.Say("-rwxr--r--"))
 	})
 
-	It("should create certificates", func() {
+	XIt("should create certificates", func() {
 		provisionForVirtualBox(dockerID)
 		runSuccessfully(exec.Command("docker", "exec", dockerID, "bash", "-c", "echo 127.0.0.1 local.pcfdev.io >> /etc/hosts"), dockerExecTimeout)
 		runSuccessfully(exec.Command("docker", "exec", "-d", dockerID, "service", "nginx", "start"), dockerExecTimeout)
