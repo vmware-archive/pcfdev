@@ -23,7 +23,7 @@ var _ = Describe("PCF Dev provision", func() {
 	var (
 		dockerID          string
 		pwd               string
-		dockerExecTimeout string = "3s"
+		dockerExecTimeout string = "5s"
 		randomTcpPort     string
 	)
 
