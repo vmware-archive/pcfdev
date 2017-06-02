@@ -56,7 +56,7 @@ releases:
 - name: cf-mysql
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cf-mysql-0.tgz
-- name: cflinuxfs2-rootfs
+- name: cflinuxfs2
   version: 0
   url: file:///opt/bosh-provisioner/assets/releases/cflinuxfs2-rootfs-0.tgz
 - name: routing
@@ -122,7 +122,7 @@ jobs:
     release: diego
 
   - name: cflinuxfs2-rootfs-setup
-    release: cflinuxfs2-rootfs
+    release: cflinuxfs2
 
   - name: stager
     release: capi
