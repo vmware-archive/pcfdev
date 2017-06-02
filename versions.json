@@ -25,10 +25,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v34-1487570971.tgz"
     },
     "cflinuxfs2-rootfs" : {
-      "version": "v1.48.0",
-      "sha1": "34a9989f37229646ef74f9f941142696e2fd619e",
+      "version": "v1.116.0",
+      "sha1": "6ef9813c0e4f38379c39a857292a693bc3897a4a",
       "source_location": "https://github.com/cloudfoundry/cflinuxfs2-rootfs-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-rootfs-v1.48.0-1487571339.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cflinuxfs2-v1.116.0-1496415967.tgz"
     },
     "consul" : {
       "version": "v152",
