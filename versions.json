@@ -79,10 +79,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-v76-2-gaa468a7e-1487575070.tgz"
     },
     "nats" : {
-      "version": "v14-1-g07c7422",
-      "sha1": "a409eb7abfd218634b97855690b97aee19847f34",
+      "version": "v14-1-gbb6a805",
+      "sha1": "8572d033a3d59d949b4b63538df0bec271da417a",
       "source_location": "https://github.com/cloudfoundry/nats-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14-1-g07c7422-1487566044.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/nats-v14-1-gbb6a805-1496421747.tgz"
     },
     "nodejs-buildpack" : {
       "version": "1.5.31",
