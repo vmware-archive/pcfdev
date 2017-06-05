@@ -43,16 +43,16 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v1.6.2-2-ge72d8e9b-1487572650.tgz"
     },
     "etcd" : {
-      "version": "v90",
-      "sha1": "d62ec1e416daa1a5b4a8555b0d79dd531693fe31",
+      "version": "v104",
+      "sha1": "c9674d2253209a607f0a0a0b6f6bef8038655ebc",
       "source_location": "https://github.com/cloudfoundry-incubator/etcd-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v90-1487599860.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/etcd-v104-1496430197.tgz"
     },
     "garden-runc" : {
-      "version": "v1.1.1",
-      "sha1": "c94aea9abeaa74f3eefe4a7f091080d9ac509322",
+      "version": "v1.5.0",
+      "sha1": "bf7136a17c2cf30a10706c3180273092763aa9ae",
       "source_location": "https://github.com/cloudfoundry/garden-runc-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-runc-v1.1.1-1487573813.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/garden-runc-v1.5.0-1496425521.tgz"
     },
     "go-buildpack" : {
       "version": "1.8.1",
