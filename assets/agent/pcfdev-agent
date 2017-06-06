@@ -1,0 +1,42 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:                 pcfdev-agent
+# Required-Start:           $local_fs
+# Required-Stop:            $local_fs
+# Short-Description:        Start and stop pcfdev agent service.
+# Description:              -
+# Date-Creation:            -
+# Date-Last-Modification:   -
+# Author:                   -
+### END INIT INFO
+
+PIDFILE=/var/pcfdev/agent.pid
+
+case "$1" in
+start)
+   /var/pcfdev/agent \
+      1>>/var/pcfdev/agent.stdout.log \
+      2>>/var/pcfdev/agent.stderr.log &
+   echo $! > ${PIDFILE}
+   ;;
+stop)
+   kill $(cat $PIDFILE)
+   rm -f ${PIDFILE}
+   ;;
+restart)
+   $0 stop
+   $0 start
+   ;;
+status)
+   if [ -e $PIDFILE ]; then
+      echo "/var/pcfdev/agent is running, pid=$(cat $PIDFILE)"
+   else
+      echo "/var/pcfdev/agent is NOT running"
+      exit 1
+   fi
+   ;;
+*)
+   echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0

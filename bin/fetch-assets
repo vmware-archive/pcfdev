@@ -49,10 +49,7 @@ mkdir -p "$assets_dir"/{releases,extras,versions}
 mkdir -p "$releases_dir"
 
 GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
-  go build -a -ldflags "-X main.distro=${distro}" -o "$assets_dir/scripts/provision" provisioner
-
-GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
-  go build -a -o "$assets_dir/scripts/api/api" api
+  go build -a -o "$assets_dir/scripts/agent" agent
 
 cp -r "$pcfdev_dir/src/github.com/cppforlife/bosh-provisioner/assets"/{monit,agent} "$assets_dir/"
 GOOS=linux GOARCH=amd64 GOPATH=$pcfdev_dir \
