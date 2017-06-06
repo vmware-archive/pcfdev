@@ -339,7 +339,16 @@ properties:
     api_location: bbs.service.cf.internal:8889
     ca_cert: ""
     require_ssl: false
+  routing:
+    host_ip: 127.0.0.1
   routing_api:
+    sqldb:
+      type: mysql
+      host: 127.0.0.1
+      port: 3306
+      schema: routingapidb
+      username: routingapiadmin
+      password: admin
     listen_ip: 127.0.0.1
     debug_address: 127.0.0.1:17103
     enabled: true
@@ -1639,6 +1648,9 @@ properties:
         password: admin
       - name: bbsdb
         username: bbsadmin
+        password: admin
+      - name: routingapidb
+        username: routingapiadmin
         password: admin
     broker:
       host: 127.0.0.1

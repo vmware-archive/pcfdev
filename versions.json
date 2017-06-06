@@ -103,10 +103,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/python-buildpack-1.5.18-1496335059.tgz"
     },
     "routing" : {
-      "version": "0.144.0-4-g5026187",
-      "sha1": "87e8d3be92a73fc78b121091fe514d724f49a95b",
+      "version": "0.152.0",
+      "sha1": "872e7fe4ddac2f74ee4c39d8940dbd3669acc608",
       "source_location": "https://github.com/cloudfoundry-incubator/routing-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.144.0-4-g5026187-1487576496.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/routing-0.152.0-1496775842.tgz"
     },
     "ruby-buildpack" : {
       "version": "1.6.37",
