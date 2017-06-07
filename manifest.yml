@@ -430,6 +430,7 @@ properties:
       debug_addr: 127.0.0.1:17005
     route_emitter:
       debug_addr: 127.0.0.1:17009
+      healthcheck_address: 127.0.0.1:17012
       bbs:
         api_location: bbs.service.cf.internal:8889
         ca_cert: ""

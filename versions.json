@@ -37,10 +37,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/consul-v152-1487572008.tgz"
     },
     "diego" : {
-      "version": "v1.6.2-2-ge72d8e9b",
-      "sha1": "772811be89e7986644a19be1217242c5b3760fbc",
+      "version": "v1.15.0-2-g7d3bef4e",
+      "sha1": "f03623fe501bcd2bc2c926dd7ca7031239b71ad2",
       "source_location": "https://github.com/cloudfoundry/diego-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v1.6.2-2-ge72d8e9b-1487572650.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/diego-v1.15.0-2-g7d3bef4e-1496863085.tgz"
     },
     "etcd" : {
       "version": "v104",
