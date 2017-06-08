@@ -7,10 +7,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/binary-buildpack-1.0.11-1496326970.tgz"
     },
     "capi" : {
-      "version": "1.20.0-1-ga6a2ee7",
-      "sha1": "7697ed73b63fbb557a05416536d53bca50a05838",
+      "version": "1.27.0-2-gbc57a11",
+      "sha1": "8d439d37b2ab90b6655a5a960d22e561fa493c1e",
       "source_location": "https://github.com/cloudfoundry/capi-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.20.0-1-ga6a2ee7-1487566993.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.27.0-2-gbc57a11-1496954599.tgz"
     },
     "cf" : {
       "version": "v252-2-gbba4215e",
