@@ -1345,6 +1345,11 @@ properties:
       registration_interval: 20s
       uris:
       - doppler.local.pcfdev.io
+    - name: cf-mysql-broker
+      port: 19284
+      registration_interval: 20s
+      uris:
+      - mysql-broker.local.pcfdev.io
     - name: loggregator
       port: 8084
       registration_interval: 20s

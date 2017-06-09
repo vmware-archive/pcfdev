@@ -19,10 +19,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v252-2-gbba4215e-1490800219.tgz"
     },
     "cf-mysql" : {
-      "version": "v34",
-      "sha1": "49f8fa6b7444c2d77723566725960fd7cea95b27",
+      "version": "v35-1-g4315584f",
+      "sha1": "bd84177079e40690d245f4fea454c54a9b6e9943",
       "source_location": "https://github.com/cloudfoundry/cf-mysql-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v34-1487570971.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v35-1-g4315584f-1496939289.tgz"
     },
     "cflinuxfs2-rootfs" : {
       "version": "v1.116.0",
