@@ -1776,6 +1776,8 @@ properties:
     debug_listen_address: 127.0.0.1:17013
     allow_host_access: true
     graph_cleanup_threshold_in_mb: 15000
+    insecure_docker_registry_list:
+    - host.pcfdev.io:5000
     deny_networks:
     - 0.0.0.0/0
 
