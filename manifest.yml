@@ -853,6 +853,9 @@ properties:
     pprof_port: 6062
   loggregator:
     doppler_port: 8083
+    uaa:
+      client_secret: loggregator-secret
+      url: "https://uaa.local.pcfdev.io"
     etcd:
       machines: [etcd.service.cf.internal]
     tls:
@@ -1252,7 +1255,10 @@ properties:
         secret: cloud-controller-username-lookup-secret
       doppler:
         authorities: uaa.resource
-        secret: doppler-secret
+        secret: loggregator-secret
+        authorized_grant_types: client_credentials
+        scope: uaa.none
+        override: true
       gorouter:
         authorities: clients.admin,clients.read,clients.write,routing.routes.read,routing.routes.write
         authorized-grant-types: client_credentials,refresh_token

@@ -67,16 +67,16 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/java-offline-buildpack-3.16-1496333097.tgz"
     },
     "local-volume" : {
-      "version": "brokerapi2.9-83-g4171ea2",
-      "sha1": "70113a5d68517b903ddd3849cb443f5891e3ed2d",
+      "version": "brokerapi2.9-95-gce727b6",
+      "sha1": "99b1c0b00e35a04599d8f7d2fefb04454b0c8aeb",
       "source_location": "https://github.com/cloudfoundry-incubator/local-volume-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-83-g4171ea2-1490974431.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/local-volume-brokerapi2.9-95-gce727b6-1496868971.tgz"
     },
     "loggregator" : {
-      "version": "v76-2-gaa468a7e",
-      "sha1": "6e9db2472fdc8a2e8ff5d43e671b48ce15a8014e",
+      "version": "v85-1-g0b3c6448",
+      "sha1": "55e4f04e527d2cbe7b489912064979d89b1a9096",
       "source_location": "https://github.com/cloudfoundry/loggregator.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-v76-2-gaa468a7e-1487575070.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/loggregator-v85-1-g0b3c6448-1497370015.tgz"
     },
     "nats" : {
       "version": "v14-1-gbb6a805",
