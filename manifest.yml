@@ -1214,23 +1214,21 @@ properties:
     proxy_ips_regex: ".*"
     user:
       authorities:
-      - actuator.read
-      - approvals.me
+      - openid
+      - scim.me
       - cloud_controller.read
-      - cloud_controller.user
       - cloud_controller.write
       - cloud_controller_service_permissions.read
+      - password.write
+      - uaa.user
+      - approvals.me
+      - oauth.approvals
       - notification_preferences.read
       - notification_preferences.write
-      - oauth.approvals
-      - openid
-      - password.write
       - profile
       - roles
-      - scim.me
-      - uaa.offline_token
-      - uaa.user
       - user_attributes
+      - uaa.offline_token
     clients:
       cc_routing:
         authorities: routing.router_groups.read
@@ -1247,6 +1245,7 @@ properties:
         authorities: uaa.none
         authorized-grant-types: password,refresh_token
         override: true
+        secret: ''
         refresh-token-validity: 2592000
         scope: cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.read,cloud_controller.write,doppler.firehose,network.admin,openid,password.write,routing.router_groups.read,routing.router_groups.write,scim.read,scim.write,uaa.user
       cloud_controller_username_lookup:
@@ -1256,7 +1255,7 @@ properties:
       doppler:
         authorities: uaa.resource
         secret: loggregator-secret
-        authorized_grant_types: client_credentials
+        authorized-grant-types: client_credentials
         scope: uaa.none
         override: true
       gorouter:

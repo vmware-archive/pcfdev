@@ -121,10 +121,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/staticfile-buildpack-1.4.5-1496335266.tgz"
     },
     "uaa" : {
-      "version": "v25-1-g935c0fa",
-      "sha1": "2dafd3758fc0c1f6793e2a7df59e254595474f43",
+      "version": "v34-1-g39fc85d",
+      "sha1": "2d9a468220492cbbf3c87ecf0ab29769970725d3",
       "source_location": "https://github.com/cloudfoundry/uaa-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v25-1-g935c0fa-1487577489.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v34-1-g39fc85d-1497559675.tgz"
     }
   }
 }
