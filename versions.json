@@ -13,10 +13,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/capi-1.27.0-2-gbc57a11-1496954599.tgz"
     },
     "cf" : {
-      "version": "v252-2-gbba4215e",
-      "sha1": "4921db9b901e20dfff48696ca5f0d6dc29a4f39e",
+      "version": "v259-1-gcfd0c08d",
+      "sha1": "8200cd2477a0a56e518fbf9b8b68ff5672cf4f56",
       "source_location": "https://github.com/cloudfoundry/cf-release.git",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v252-2-gbba4215e-1490800219.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-v259-1-gcfd0c08d-1497623253.tgz"
     },
     "cf-mysql" : {
       "version": "v35-1-g4315584f",
