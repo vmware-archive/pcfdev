@@ -1279,7 +1279,7 @@ properties:
         authorized-grant-types: authorization_code
         autoapprove: true
         override: true
-        redirect-uri: /login
+        redirect-uri: "https://uaa.local.pcfdev.io/login"
         scope: cloud_controller.admin,cloud_controller.read,cloud_controller.write,openid
         secret: ssh-proxy-secret
       tcp_emitter:
