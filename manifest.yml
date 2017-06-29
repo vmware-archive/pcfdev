@@ -2085,7 +2085,7 @@ properties:
         name: network_connectivity
         host: sql-db.service.cf.internal
     policy_server:
-      uaa_client_secret: admin
+      uaa_client_secret: network-policy-secret
       uaa_ca: |
         -----BEGIN CERTIFICATE-----
         MIIExzCCA6+gAwIBAgIJAOPFFRMyK2dVMA0GCSqGSIb3DQEBBQUAMIGdMR4wHAYD
