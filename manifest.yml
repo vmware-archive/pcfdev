@@ -1266,7 +1266,7 @@ properties:
         override: true
         secret: ''
         refresh-token-validity: 2592000
-        scope: cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.read,cloud_controller.write,doppler.firehose,network.admin,openid,password.write,routing.router_groups.read,routing.router_groups.write,scim.read,scim.write,uaa.user,network.admin
+        scope: cloud_controller.admin,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.read,cloud_controller.write,doppler.firehose,network.admin,openid,password.write,routing.router_groups.read,routing.router_groups.write,scim.read,scim.write,uaa.user,network.admin,network.write
       cloud_controller_username_lookup:
         authorities: scim.userids
         authorized-grant-types: client_credentials
@@ -1341,6 +1341,7 @@ properties:
         - scim.read
         - scim.write
         - network.admin
+        - network.write
     require_https: true
     jwt:
       policy:
