@@ -1317,7 +1317,7 @@ properties:
         secret: tcp-router-secret
       network-policy:
         authorities: uaa.resource,cloud_controller.admin_read_only
-        authorized_grant_types: client_credentials
+        authorized-grant-types: client_credentials
         secret: network-policy-secret
     admin:
       client_secret: admin-client-secret
