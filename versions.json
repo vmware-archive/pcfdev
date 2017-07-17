@@ -127,10 +127,10 @@
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/uaa-v34-1-g39fc85d-1497559675.tgz"
     },
     "cf-networking" : {
-      "version": "v0.25.0-1-g4f8a9c0",
-      "sha1": "692446ec4ae295b59965a6c7d71910800c493982",
+      "version": "v0.25.0-2-gf42bd7d",
+      "sha1": "423f0ae0dcd5caf97659e0e9b34592a205597ca4",
       "source_location": "https://github.com/cloudfoundry-incubator/cf-networking-release",
-      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-networking-v0.25.0-1-g4f8a9c0-1499994710.tgz"
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-networking-v0.25.0-2-gf42bd7d-1500308397.tgz"
     }
   }
 }
