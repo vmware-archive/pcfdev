@@ -24,7 +24,7 @@
       "source_location": "https://github.com/cloudfoundry/cf-mysql-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/cf-mysql-v35-1-g2ff76af5-1501012547.tgz"
     },
-    "cflinuxfs2" : {
+    "cflinuxfs2-rootfs" : {
       "version": "v1.116.0",
       "sha1": "fecbd6a141cd0956d319122d05ff210a096186ac",
       "source_location": "https://github.com/cloudfoundry/cflinuxfs2-rootfs-release.git",
@@ -120,12 +120,12 @@
       "source_location": "https://github.com/cloudfoundry/ruby-buildpack-release.git",
       "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/ruby-buildpack-1.6.37-1501017963.tgz"
     },
-  "staticfile-buildpack" : {
-    "version": "1.4.5",
-    "sha1": "44091b829ca732703002f69b93151b29c2d05c9f",
-    "source_location": "https://github.com/cloudfoundry/staticfile-buildpack-release.git",
-    "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/staticfile-buildpack-1.4.5-1500050172.tgz"
-  },
+    "staticfile-buildpack" : {
+      "version": "1.4.5",
+      "sha1": "44091b829ca732703002f69b93151b29c2d05c9f",
+      "source_location": "https://github.com/cloudfoundry/staticfile-buildpack-release.git",
+      "compiled_release_url": "https://s3.amazonaws.com/pcfdev/compiled-releases/staticfile-buildpack-1.4.5-1500050172.tgz"
+    },
     "uaa" : {
       "version": "v34-1-g2b93080",
       "sha1": "c4bb8f6b925dbc5d32a0e15c4d88f5f6ef1e7b30",
