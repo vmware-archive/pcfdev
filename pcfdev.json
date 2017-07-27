@@ -99,6 +99,11 @@
             "destination": "/tmp/manifest.yml"
         },
         {
+            "type": "file",
+            "source": "assets/agent/pcfdev-agent",
+            "destination": "/tmp/pcfdev-agent"
+        },
+        {
             "type": "shell",
             "only": ["virtualbox-ovf"],
             "remote_path": "/home/vcap/add_key.sh",
@@ -115,11 +120,15 @@
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
                 "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
 
-                "mkdir -p /var/pcfdev/api",
+                "mkdir -p /var/pcfdev",
+                "mkdir -p /var/vcap/store",
+
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "mv /tmp/manifest.yml /var/pcfdev/manifest.yml",
 
-                "mkdir -p /var/vcap/store",
+                "mv /tmp/pcfdev-agent /etc/init.d/pcfdev-agent",
+                "chmod +x /etc/init.d/pcfdev-agent",
+                "update-rc.d pcfdev-agent defaults",
 
                 "resolvconf --disable-updates",
                 "apt-get -y install dnsmasq",
@@ -155,8 +164,10 @@
                 "*) PROVIDER_TYPE=virtualbox ;;",
                 "esac",
 
-                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq '' $PROVIDER_TYPE",
-                "/var/pcfdev/stop"
+                "IP=$(ip route get 1 | awk '{print $NF;exit}')",
+
+                "curl -X POST -d { \"domain\":\"local.pcfdev.io\", \"ip\":\"$IP\",\"services\":\"redis,rabbitmq\",\"provider\":\"$PROVIDER_TYPE\" } 127.0.0.1:8090/provision",
+                "curl -X POST 127.0.0.1:8090/stop"
             ]
         },
         {
