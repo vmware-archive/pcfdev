@@ -133,9 +133,6 @@
                 "service nginx stop",
                 "update-rc.d -f nginx remove",
 
-                "curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -",
-                "apt-get install -y nodejs",
-
                 "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
 
                 "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.25.0&source=github-rel' | tar -C /usr/local/bin -xz",
