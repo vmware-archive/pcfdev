@@ -46,19 +46,6 @@ echo "$domain" > /var/pcfdev/domain
 
 sed -i '/\/proc\/sys\/net\/ipv4\/ip_local_port_range/d' /var/vcap/jobs/gorouter/bin/gorouter_ctl
 
-echo "$public_ip" > /var/pcfdev/public_ip
-silk_daemon_config=/var/vcap/jobs/silk-daemon/config/client-config.json
-silk_cni_config=/var/vcap/jobs/silk-cni/config/cni/cni-wrapper-plugin.conf
-
-# Update CNI config with current ip address
-echo $(jq --arg ip "$public_ip" \
-        'with_entries( . | if .key == "underlay_ip" then (.value |= $ip) else . end )' \
-        "$silk_daemon_config") > "$silk_daemon_config"
-
-echo $(jq --arg ip "$public_ip" \
-        'with_entries( . | if .key == "instance_address" then (.value |= $ip) else . end )' \
-        "$silk_cni_config") > "$silk_cni_config"
-
 # Point garden at HTTP_PROXY and HTTPS_PROXY
 pcfdev_http_proxy=$(. /etc/environment && echo "$HTTP_PROXY")
 pcfdev_https_proxy=$(. /etc/environment && echo "$HTTPS_PROXY")
