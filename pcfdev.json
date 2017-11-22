@@ -1,5 +1,7 @@
 {
     "variables": {
+        "source_ami": "",
+        "source_ova_path": "",
         "version": "0",
         "distro": "pcfdev",
         "cpus": "4",
@@ -21,7 +23,7 @@
         {
             "type": "amazon-ebs",
             "region": "us-east-1",
-            "source_ami": "ami-6012160a",
+            "source_ami": "{{user `source_ami`}}",
             "instance_type": "c4.2xlarge",
             "ami_name": "{{user `distro`}}-v{{user `version`}}",
             "ami_description": "{{user `eula_url`}}",
@@ -49,16 +51,12 @@
             "tags": {"Name": "v{{user `version`}}", "License":"{{user `eula_url`}}"}
         },
         {
-            "type": "virtualbox-iso",
-            "headless": true,
-            "vm_name": "{{user `distro`}}-v{{user `version`}}",
-            "guest_os_type": "Ubuntu_64",
-            "disk_size": "{{user `disk_size`}}000",
+            "type": "virtualbox-ovf",
+            "source_path": "{{user `source_ova_path`}}",
             "ssh_username": "vcap",
             "ssh_password": "vcap",
-            "iso_url": "https://pcfdev.s3.amazonaws.com/artifacts/ubuntu-14.04.3-server-amd64.iso",
-            "iso_checksum": "9e5fecc94b3925bededed0fdca1bd417",
-            "iso_checksum_type": "md5",
+            "headless": true,
+            "vm_name": "packer-{{user `distro`}}-v{{user `version`}}",
             "http_directory": "preseed",
             "ssh_timeout": "20m",
             "shutdown_command": "echo vcap | sudo -S shutdown -P now",
@@ -83,7 +81,6 @@
             ]
         }
     ],
-
     "provisioners": [
         {
             "type": "shell",
@@ -132,7 +129,7 @@
         {
             "type": "shell",
             "only": ["amazon-ebs"],
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
                 "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do sleep 1; done",
                 "ln -sf /usr/bin/mawk /usr/bin/awk"
@@ -140,7 +137,7 @@
         },
         {
             "type": "file",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "source": "assets/keys/key.pem",
             "destination": "/tmp/key.pem"
         },
@@ -151,9 +148,9 @@
         },
         {
             "type": "shell",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "remote_path": "/home/vcap/add_key.sh",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
                 "mkdir -p /home/vcap/.ssh",
                 "cp /tmp/key.pem /home/vcap/.ssh/authorized_keys"
@@ -161,31 +158,12 @@
         },
         {
             "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "inline": [
-                "apt-get -y install curl unzip zip jq sysstat vim",
-                "apt-get -y install libruby2.1 ruby2.1",
-                "apt-get -y install linux-generic",
-                "apt-get -y install aufs-tools",
-                "apt-get -y install libgcrypt20 libgcrypt20-dev",
-                "apt-get -y install postgresql-client-9.4",
-                "apt-get -y install nginx",
-                "service nginx stop",
-                "update-rc.d -f nginx remove",
-
-                "for version in $(ls /lib/modules); do apt-get install -y linux-image-extra-$version; done",
-
-                "curl -L 'https://cli.run.pivotal.io/stable?release=linux64-binary&version=6.21.1&source=github-rel' | tar -C /usr/local/bin -xz",
-                "curl -L 'https://github.com/cloudfoundry-incubator/routing-api-cli/releases/download/2.6.0/rtr-linux-amd64.tgz' | tar -C /usr/local/bin -xz",
-                "mv /usr/local/bin/rtr-linux-amd64 /usr/local/bin/rtr",
-                "curl -L 'https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz' | tar -C /usr/local -xz",
-                "ln -sf /usr/local/go/bin/go* /usr/local/bin/",
-                "curl -o /usr/local/bin/veritas -L https://github.com/pivotal-cf-experimental/veritas/releases/download/latest/veritas",
-                "chmod +x /usr/local/bin/veritas",
                 "echo 'UseDNS no' >> /etc/ssh/sshd_config",
                 "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config",
 
-                "mkdir -p /var/pcfdev",
+                "mkdir -p /var/pcfdev/api",
                 "echo local.pcfdev.io > /var/pcfdev/domain",
                 "mv /tmp/manifest.yml /var/pcfdev/manifest.yml",
 
@@ -207,7 +185,7 @@
         },
         {
             "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "remote_path": "/home/vcap/start_services.sh",
             "override": {
                 "amazon-ebs": { "remote_path": "/home/ubuntu/start_services.sh" }
@@ -219,26 +197,25 @@
                 "mv /opt/bosh-provisioner/assets/scripts/* /var/pcfdev",
                 "mv /opt/bosh-provisioner/assets/extras /var/pcfdev",
                 "mv /opt/bosh-provisioner/assets/versions /var/pcfdev/",
-                "ln -sf /usr/bin/ruby /var/vcap/bosh/bin",
-                "GEM_HOME=/var/vcap/packages/cf-uaac/bin gem install multi_json --no-ri --no-rdoc",
 
                 "case '{{build_type}}' in",
                 "amazon-ebs) PROVIDER_TYPE=aws ;;",
                 "*) PROVIDER_TYPE=virtualbox ;;",
                 "esac",
 
-                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq,spring-cloud-services '' $PROVIDER_TYPE",
+                "/var/pcfdev/provision local.pcfdev.io $(ip route get 1 | awk '{print $NF;exit}') redis,rabbitmq '' $PROVIDER_TYPE",
                 "/var/pcfdev/stop"
             ]
         },
         {
             "type": "shell",
-            "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
             "remote_path": "/home/vcap/cleanup.sh",
             "override": {
                 "amazon-ebs": { "remote_path": "/home/ubuntu/cleanup.sh" }
             },
             "inline": [
+                "rm -f /var/pcfdev/external-resolv.conf",
                 "tar czf /var/pcfdev/packer-syslogs.tgz /var/vcap/sys/log",
                 "rm -f /var/vcap/sys/log/*/*.log",
                 "{{user `dev`}} || rm -rf /opt/bosh-provisioner",
@@ -252,7 +229,7 @@
                 "echo 'vcap:vcap' | chpasswd",
                 "chown -R vcap: /var/vcap/store",
                 "chown -R vcap: /var/pcfdev",
-                "chown -R vcap /home/vcap/.ssh",
+                "chown -R vcap /home/vcap/.ssh || true",
                 "dd if=/dev/zero of=/EMPTY bs=1M 2>/dev/null || true",
                 "rm -f /EMPTY"
             ]
@@ -261,7 +238,7 @@
     "post-processors": [
         {
             "type": "shell-local",
-            "only": ["virtualbox-iso"],
+            "only": ["virtualbox-ovf"],
             "inline": ["ls $PWD/*/*.ova"],
             "keep_input_artifact": true
         },

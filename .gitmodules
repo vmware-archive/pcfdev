@@ -13,15 +13,15 @@
 [submodule "src/github.com/cppforlife/packer-bosh"]
 	path = src/github.com/cppforlife/packer-bosh
 	url = https://github.com/cppforlife/packer-bosh
-[submodule "src/pcfdev/vendor/github.com/golang/mock"]
-	path = src/pcfdev/vendor/github.com/golang/mock
+[submodule "src/provisioner/vendor/github.com/golang/mock"]
+	path = src/provisioner/vendor/github.com/golang/mock
 	url = https://github.com/pcfdev-forks/mock
-[submodule "src/pcfdev/vendor/golang.org/x/net"]
-	path = src/pcfdev/vendor/golang.org/x/net
+[submodule "src/provisioner/vendor/golang.org/x/net"]
+	path = src/provisioner/vendor/golang.org/x/net
 	url = https://github.com/golang/net
-[submodule "src/pcfdev/vendor/golang.org/x/text"]
-	path = src/pcfdev/vendor/golang.org/x/text
+[submodule "src/provisioner/vendor/golang.org/x/text"]
+	path = src/provisioner/vendor/golang.org/x/text
 	url = https://github.com/golang/text
-[submodule "src/pcfdev-api/vendor/gopkg.in/yaml.v2"]
-	path = src/pcfdev-api/vendor/gopkg.in/yaml.v2
+[submodule "src/api/vendor/gopkg.in/yaml.v2"]
+	path = src/api/vendor/gopkg.in/yaml.v2
 	url = https://github.com/go-yaml/yaml

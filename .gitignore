@@ -7,7 +7,9 @@
 /output
 /pkg
 /releases
-/src/pcfdev/pcfdev
+/src/provisioner/provision
+/src/api/api
+/pcfdev-base
 
 /bin
 !/bin/build
@@ -16,3 +18,5 @@
 !/bin/setup-packer
 
 NERD_tree_*
+
+/*.iml

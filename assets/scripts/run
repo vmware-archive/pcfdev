@@ -67,17 +67,22 @@ grep -q 'export TMPDIR=\/tmp\/cc_tmp' "$cc_worker_ctl" || sed -i '2iexport TMPDI
 # Add registries to insecure_docker_registries
 if [[ -n "$registries" ]]; then
   perl -p -i -e "s/.*-insecureDockerRegistry=.*\n//i" /var/vcap/jobs/garden/bin/garden_ctl
-  perl -p -i -e "s/.*-insecureDockerRegistry=.*\n//i" /var/vcap/jobs/stager/bin/stager_as_vcap
 
   insecureDockerRegistryOptions=""
   for registry in $(echo "$registries" | tr ',' '\n'); do
-    insecureDockerRegistryOptions="${insecureDockerRegistryOptions}-insecureDockerRegistry=$registry "
+    insecureDockerRegistryOptions="${insecureDockerRegistryOptions}--insecure-docker-registry=$registry "
   done
 
   if [[ -n "$insecureDockerRegistryOptions" ]]; then
-    sed -i "/-maxContainers/a$insecureDockerRegistryOptions \\\\" /var/vcap/jobs/garden/bin/garden_ctl
-    sed -i "/-dockerRegistryAddress/a$insecureDockerRegistryOptions \\\\" /var/vcap/jobs/stager/bin/stager_as_vcap
+    sed -i "\|/var/vcap/packages/guardian/bin/guardian|a$insecureDockerRegistryOptions \\\\" /var/vcap/jobs/garden/bin/garden_ctl
   fi
+
+  stager_config=$(jq \
+    --arg registries "$registries" \
+    '.insecure_docker_registries=($registries | split(","))' \
+    /var/vcap/jobs/stager/config/stager_config.json
+  )
+  echo "$stager_config" > /var/vcap/jobs/stager/config/stager_config.json
 fi
 
 >&3 2>&4 /var/pcfdev/start "$domain"
@@ -121,7 +126,8 @@ while [[ $(available_buildpacks) -lt 8 ]]; do
   sleep 1
 done
 
-setup_service_broker p-mysql http://mysql-broker.$domain mysql
+setup_service_broker p-mysql http://mysql-broker.$domain
+setup_service_broker local-volume http://localbroker.$domain
 
 if [[ -x /var/pcfdev/post-run ]]; then
   /var/pcfdev/post-run "$domain" "$services"

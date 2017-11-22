@@ -14,7 +14,7 @@ destination=$3
 
 pushd "$release_path" >/dev/null
   [[ -f Gemfile ]] && gem install bundler && bundle install || true
-  yes yes | bosh -n reset release
-  bosh -n create release --name "$release_name" --version 0 --with-tarball --force
-  mv "dev_releases/$release_name/${release_name}-0.tgz" "$destination"
+  yes yes | bosh -n reset-release
+  bosh -n create-release --name="$release_name" --version=0 --tarball=${release_name}-0.tgz --force
+  mv "${release_name}-0.tgz" "$destination"
 popd >/dev/null
