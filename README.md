@@ -1,3 +1,13 @@
+
+# Update on Certificate Issue with PCF Dev
+
+Please note we are actively working on a patch for the certificate issue discussed in the following issue - https://github.com/pivotal-cf/pcfdev/issues/273
+
+We will provide an update here when that patch release is available.
+
+Mac Users - we will be releasing an alpha release of our new version of PCF Dev shortly . This version makes uses of native hypervisors and will allow you to use BOSH with PCF Dev.
+*************************************************************
+
 # PCF Dev
 
 PCF Dev is a new distribution of Cloud Foundry designed to run on a developer’s laptop or workstation.  PCF Dev gives application developers the full Cloud Foundry experience in a lightweight, easy to install package.  PCF Dev is intended for application developers who wish to develop and debug their application locally on a full-featured Cloud Foundry.  PCF Dev is also an excellent getting started environment for developers interested in learning and exploring Cloud Foundry.
