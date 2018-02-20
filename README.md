@@ -5,7 +5,8 @@ Please note we are actively working on a patch for the certificate issue discuss
 
 We will provide an update here when that patch release is available.
 
-__Mac users__- we will be pushing an alpha release of our new version of PCF Dev shortly . This version makes uses of native hypervisors and will allow you to use BOSH with PCF Dev. Stay tuned for more details.
+__Mac users__- we will be pushing an alpha release of our new version of PCF Dev shortly. This version makes uses of native hypervisors and will allow you to use BOSH with PCF Dev. Stay tuned for more details.
+
 *************************************************************
 
 # PCF Dev
