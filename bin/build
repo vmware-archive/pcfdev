@@ -11,10 +11,8 @@ mkdir "$output_dir"
 "$pcfdev_dir/bin/setup-packer" "$output_dir/packer-bosh"
 "$pcfdev_dir/bin/fetch-assets" "$pcfdev_dir/versions.json" "$output_dir" 'oss'
 
-spiff merge \
-  "$pcfdev_dir/manifest.yml" \
-  <(echo "properties: {build: $(git -C "$pcfdev_dir" rev-parse HEAD)}") \
-  > "$output_dir/manifest.yml"
+build=$(git -C "$pcfdev_dir" rev-parse HEAD)
+bosh int "$pcfdev_dir/manifest.yml" -v git_commit=${build} --vars-store "$output_dir/generated-vars.yml" > "$output_dir/manifest.yml"
 
 base_ova_dir=$pcfdev_dir/pcfdev-base
 
