@@ -1,11 +1,11 @@
 
 # Update on Certificate Issue with PCF Dev
 
-Please note we are actively working on a patch for the certificate issue discussed in the following issue - https://github.com/pivotal-cf/pcfdev/issues/273
+Please note we are actively working on a patch for the certificate issue discussed here - https://github.com/pivotal-cf/pcfdev/issues/273
 
 We will provide an update here when that patch release is available.
 
-Mac Users - we will be pushing an alpha release of our new version of PCF Dev shortly . This version makes uses of native hypervisors and will allow you to use BOSH with PCF Dev. Stayed tuned for more details.
+__Mac users__- we will be pushing an alpha release of our new version of PCF Dev shortly . This version makes uses of native hypervisors and will allow you to use BOSH with PCF Dev. Stay tuned for more details.
 *************************************************************
 
 # PCF Dev
