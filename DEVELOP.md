@@ -6,7 +6,7 @@ To develop PCF Dev you will need to have the following tools installed:
 - [Virtualbox](https://www.virtualbox.org/) 5.0+
 - [Go](https://golang.org) 1.6.1+
 - [jq](https://stedolan.github.io/jq/) 1.5+
-- [spiff](https://github.com/cloudfoundry-incubator/spiff) 1.0.6+
+- [bosh v2 cli](https://bosh.io/docs/cli-v2.html#install) 2.0.48+
 
 ## Clone the PCF Dev source
 
@@ -19,7 +19,7 @@ git clone --recursive https://github.com/pivotal-cf/pcfdev.git
 To build an OSS-only PCF Dev OVA, run:
 
 ```bash
-./bin/build -only=virtualbox-iso # pass -debug for more output
+./bin/build -only=virtualbox-ovf # pass -debug for more output
 ```
 
 > Note: Support for VMware Fusion/Workstation has been discontinued. Support for AWS is temporarily suspended until a commercial version of PCF Dev becomes available from the AWS Marketplace.
@@ -29,7 +29,7 @@ To build an OSS-only PCF Dev OVA, run:
 After the PCF Dev box has been built, you need to use the PCF Dev CLI to launch the OVA. This will disable various checks for system requirements such as system memory. More information on installation of the CLI can be found [here](http://docs.pivotal.io/pcf-dev/index.html#installing).
 
 ```bash
-cf dev start -o output/output-virtualbox-iso/oss-v0.ova
+cf dev start -o output/output-virtualbox-ovf/packer-oss-v0.ova
 ```
 
 ### Customizing PCF Dev
