@@ -1,7 +1,6 @@
+# Update on PCF Dev
 
-# Update on Certificate Issue with PCF Dev
-
-The certificate issue has been resolved in v0.29.0
+This is the depricated version of PCF Dev - please visit the current Github repository https://github.com/cloudfoundry-incubator/cfdev for the latest updates
 
 *************************************************************
 
