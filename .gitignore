@@ -20,3 +20,5 @@
 NERD_tree_*
 
 /*.iml
+.idea
+output-*

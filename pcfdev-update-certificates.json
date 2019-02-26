@@ -1,0 +1,82 @@
+{
+    "variables": {
+        "source_ami": "",
+        "source_ova_path": "",
+        "version": "0",
+        "distro": "pcfdev",
+        "cpus": "4",
+        "memory": "4096",
+        "disk_size": "60",
+        "dev": "false",
+        "eula_url": "",
+        "security_group_id": "",
+        "subnet_id": "",
+        "vpc_id": "",
+        "ssh_keypair_name": "",
+        "ssh_private_key_file": ""
+    },
+    "builders": [
+        {
+            "type": "virtualbox-ovf",
+            "source_path": "{{user `source_ova_path`}}",
+            "ssh_username": "vcap",
+            "ssh_private_key_file" : "assets/keys/private-key.pem",
+            "headless": true,
+            "vm_name": "packer-{{user `distro`}}-v{{user `version`}}",
+            "http_directory": "preseed",
+            "ssh_timeout": "20m",
+            "shutdown_command": "echo vcap | sudo -S shutdown -P now",
+            "format": "ova",
+            "boot_command": [
+                "<esc><esc><enter><wait>",
+                "/install/vmlinuz noapic ",
+                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "hostname=pcfdev ",
+                "fb=false debconf/frontend=noninteractive ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                "initrd=/install/initrd.gz -- <enter>"
+            ],
+            "vboxmanage": [
+                [ "modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}" ],
+                [ "modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}" ],
+                [ "modifyvm", "{{.Name}}", "--natdnshostresolver1", "on" ],
+                [ "modifyvm", "{{.Name}}", "--nic1", "nat" ],
+                [ "modifyvm", "{{.Name}}", "--paravirtprovider", "minimal" ]
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "certs",
+            "destination": "/tmp/certs"
+        },
+        {
+            "type": "shell",
+            "execute_command": "{{ .Vars }} sudo -E sh -c '{{ .Path }}'",
+            "inline": [
+                "cp /tmp/certs/loggregator_ca.crt /var/vcap/jobs/doppler/config/certs/loggregator_ca.crt",
+                "cp /tmp/certs/doppler.crt /var/vcap/jobs/doppler/config/certs/doppler.crt",
+                "cp /tmp/certs/doppler.key /var/vcap/jobs/doppler/config/certs/doppler.key",
+
+                "cp /tmp/certs/loggregator_ca.crt /var/vcap/jobs/metron_agent/config/certs/loggregator_ca.crt",
+                "cp /tmp/certs/metron.crt /var/vcap/jobs/metron_agent/config/certs/metron_agent.crt",
+                "cp /tmp/certs/metron.key /var/vcap/jobs/metron_agent/config/certs/metron_agent.key",
+
+                "cp /tmp/certs/loggregator_ca.crt /var/vcap/jobs/loggregator_trafficcontroller/config/certs/loggregator_ca.crt",
+                "cp /tmp/certs/trafficcontroller.crt /var/vcap/jobs/loggregator_trafficcontroller/config/certs/trafficcontroller.crt",
+                "cp /tmp/certs/trafficcontroller.key /var/vcap/jobs/loggregator_trafficcontroller/config/certs/trafficcontroller.key"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "shell-local",
+            "only": ["virtualbox-ovf"],
+            "inline": ["ls $PWD/*/*.ova"],
+            "keep_input_artifact": true
+        }
+    ]
+}
