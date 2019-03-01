@@ -40,7 +40,7 @@ This is traffic from the app container to the virtual machine in which PCF Dev i
 
 ### Container-to-host
 
-This is traffic from the app container to the host on which the virtual machine is running. It is enabled by default. This can be used to run services on your host that are available to your apps in PCF Dev.  The IP address of the host accessible to the app is `192.168.11.1` or `host.pcfdev.io` (unless this address is already in use). For example, in order to connect your app to a MongoDB instance running on the host on port `27017`, run the following commands:
+This is traffic from the app container to the host on which the virtual machine is running. It is enabled by default. This can be used to run services on your host that are available to your apps in PCF Dev.  The IP address of the host accessible to the app is `192.168.11.1` or `host.cfdev.sh` (unless this address is already in use). For example, in order to connect your app to a MongoDB instance running on the host on port `27017`, run the following commands:
 
 ```bash
 cf create-user-provided-service my-mongo-db -p '{ "uri": "mongodb://<username>:<password>@host.pcfdev.io:27017/<database>" }'
