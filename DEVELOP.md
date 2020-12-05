@@ -19,7 +19,7 @@ git clone --recursive https://github.com/pivotal-cf/pcfdev.git
 To build an OSS-only PCF Dev OVA, run:
 
 ```bash
-./bin/build -only=virtualbox-iso # pass -debug for more output
+./bin/build -only=virtualbox-ovf # pass -debug for more output
 ```
 
 > Note: Support for VMware Fusion/Workstation has been discontinued. Support for AWS is temporarily suspended until a commercial version of PCF Dev becomes available from the AWS Marketplace.
@@ -29,8 +29,10 @@ To build an OSS-only PCF Dev OVA, run:
 After the PCF Dev box has been built, you need to use the PCF Dev CLI to launch the OVA. This will disable various checks for system requirements such as system memory. More information on installation of the CLI can be found [here](http://docs.pivotal.io/pcf-dev/index.html#installing).
 
 ```bash
-cf dev start -o output/output-virtualbox-iso/oss-v0.ova
+cf dev start -o output/output-virtualbox-ovf/packer-oss-v0.ova
 ```
+
+> Note: You have to use the ``-o`` option to import your custom created OVAs. The ``-import`` option only works with the OVA version that the PCF Dev plugin was built for and doesn't work for custom created OVAs.
 
 ### Customizing PCF Dev
 
@@ -50,7 +52,7 @@ Our build tool has the ability to build compiled releases or releases from sourc
     },
 ```
 
-If you would like to a different *compiled* release than is offered in the versions.json, simply make sure that the appropriate keys are modified.
+If you would like to use a different *compiled* release than is offered in the versions.json, simply make sure that the appropriate keys are modified.
 
 > Note: any necessary manifest changes can be done to the manifest.yml file at the root of this repo for a successful build.
 
